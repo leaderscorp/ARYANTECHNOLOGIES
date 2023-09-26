@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="account_move_inherit_inv_report" inherit_id="account.report_invoice_document">
+        <!--    Sno    -->
+
+        <xpath expr="//table[1]/thead/tr/th[1]" position="before" >
+            <th class="text-start" style ="width:1em;" ><span>S.NO</span></th>
+        </xpath>
+
+        <xpath expr="//table[1]/tbody/t[1]" position="before">
+            <t t-set="index" t-value="0"/>
+        </xpath>
+
+        <xpath expr="//table[1]/tbody/t/t[2]" position="after">
+            <t t-set="index" t-value="index+1"/>
+        </xpath>
+
+
+        <xpath expr="//table[1]/tbody/t/tr/t[1]/td[1]" position="before">
+            <td>
+                <!--                 <t t-set="index" t-value="index +1"/>-->
+                <!--                <p>abdsss</p>-->
+<!--                <t t-set="index" t-value="index+1"/>-->
+                <span><t  t-out="index"/></span>
+            </td>
+        </xpath>
+
+        <!--    Rate per unit    -->
+        <xpath expr="//table[1]/thead/tr/th[4]" position="replace">
+            <th name="th_priceunit" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Rate per Unit</span></th>
+        </xpath>
+        <!--     Total without GST   -->
+        <xpath expr="//table[1]/thead/tr/th[5]" position="before">
+            <th class="text-start " ><span>Total Without GST </span></th>
+        </xpath>
+        <xpath expr="//table[1]/tbody/t/tr[1]/t[1]/td[5]" position="before">
+            <td><span class="text-nowrap" t-field="line.price_subtotal" /> </td>
+        </xpath>
+        <!--Amount Included GST-->
+        <xpath expr="//table[1]/thead/tr/th[8]" position="after">
+            <th class="text-start " ><span>Amount inc GST</span></th>
+        </xpath>
+        <xpath expr="//table[1]/tbody/t/tr[1]/t[1]/td[8]" position="replace">
+            <td> <span class="text-nowrap" t-field="line.price_total" /></td>
+        </xpath>
+        <!--      GST Rate  -->
+        <xpath expr="//table[1]/thead/tr/th[7]" position="replace">
+            <th name="th_taxes" t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>GST Rate</span></th>
+        </xpath>
+        <!--        GST Amount-->
+        <xpath expr="//table[1]/thead/tr/th[8]" position="replace">
+            <th class="text-start " ><span>GST Amount</span></th>
+        </xpath>
+        <xpath expr="//table[1]/tbody/t/tr[1]/t[1]/td[7]" position="after">
+            <td> <span class="text-nowrap" t-field="line.check_tax" /></td>
+        </xpath>
+        <!--        total-->
+        <xpath expr="//table[1]/tbody" position="after">
+<!--            <div>-->
+<!--                <div class="col-12 pull-left">-->
+<!--                    <table class="table table-condensed">-->
+                    <tbody>
+                        <tr class="border-black">
+<!--                            <td class="pull-right col-1"></td>-->
+                            <td class="pull-right text-center col-1 fw-bold"  colspan="2">Total</td>
+<!--                            <td class="pull-right col-1"></td>-->
+<!--                            <td class="pull-right col-1"></td>-->
+                            <td class="pull-right col-1"></td>
+                            <td class="pull-right col-1"></td>
+                            <td class="pull-right col-1 fw-bold"> <span class="text-nowrap" t-field="o.amount_untaxed" /></td>
+                            <td class="pull-right col-1"></td>
+                            <td class="pull-right col-1 fw-bold"> <span class="text-nowrap" t-field="o.amount_tax" /></td>
+                            <td class="pull-right col-1 fw-bold"> <span class="text-nowrap" t-field="o.amount_total" /></td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="8" class="text-uppercase text-center fw-bold border-top border-dark">
+                                <span t-field="o.total_in_words"/><span class="text-capitalize" style="margin-left:0.5em;">Only</span>
+                            </td>
+                        </tr>
+                    </tbody>
+<!--                    </table>-->
+<!--                </div>-->
+<!--            </div>-->
+        </xpath>
+        <xpath expr="//t/div/div/div[2]" position="replace">
+                <div class="d-flex flex-row" style="margin-top:4em;">
+                    <div class="p-2">
+                        <h5 class="text-uppercase border-top border-dark fw-bold pt-2">For Iman Group</h5>
+                    </div>
+                </div>
+        </xpath>
+        <xpath expr="//t/div[1]" position="replace">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-6">
+                        <div>
+                            <t t-if="o and 'company_id' in o">
+                                <t t-set="company" t-value="o.company_id"/>
+                                <b>Date:</b>
+                                <span t-field="o.invoice_date"/>
+                                <br/>
+                                <b>Supplier Name:</b>
+                                <span t-field="company.name"/>
+                                <br/>
+                                <b>Invoice No:</b>
+                                <span t-field="o.name"/>
+                                <br/>
+                                <b>Address:</b>
+                                <span t-field="company.street"/>
+                                <br/>
+                                <b>Telephone:</b>
+                                <span t-field="company.phone"/>
+                                <br/>
+                                <b>NTN:</b>
+                                <span t-field="company.vat"/>
+                                <br/>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <b>Buyer's Name:</b>
+                        <span t-field="o.partner_id.name"/>
+                        <br/>
+                        <b>Buyer's Address:</b>
+                        <span t-field="o.partner_id.street"/>
+                        <br/>
+                        <b>Buyer's NTN:</b>
+                        <span t-field="o.partner_id.vat"/>
+                        <br/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//t/div[2]/div/h2" position="replace">
+                <h3 class="text-center mb-4">Sale Tax Invoice</h3>
+        </xpath>
+        <xpath expr="//t/div[2]/div/div[1]" position="replace"/>
+    </template>
+</odoo>
