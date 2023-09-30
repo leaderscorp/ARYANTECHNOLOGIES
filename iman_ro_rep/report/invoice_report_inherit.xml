@@ -36,6 +36,7 @@
         <xpath expr="//table[1]/tbody/t/tr[1]/t[1]/td[5]" position="before">
             <td><span class="text-nowrap" t-field="line.price_subtotal" /> </td>
         </xpath>
+
         <!--Amount Included GST-->
         <xpath expr="//table[1]/thead/tr/th[8]" position="after">
             <th class="text-start " ><span>Amount inc GST</span></th>
@@ -75,6 +76,7 @@
                         </tr>
                         <tr>
                             <td colspan="8" class="text-uppercase text-center fw-bold border-top border-dark">
+<!--                                 <span t-esc="number_to_words(o.amount_total)"/>-->
                                 <span t-field="o.total_in_words"/><span class="text-capitalize" style="margin-left:0.5em;">Only</span>
                             </td>
                         </tr>

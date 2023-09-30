@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="add_location_in_repair" name="Location" parent="repair.menu_repair_order" sequence="1"/>
+
+    </data>
+</odoo>

@@ -20,16 +20,17 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','repair' , 'account'],
+    'depends': ['base', 'repair' , 'account', 'sale','stock'],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
-        'views/views.xml',
+        # 'views/views.xml',
         'views/templates.xml',
-        'report/inherit_account_move_line.xml',
+        # 'report/inherit_account_move_line.xml',
         'report/inherit_repair_report.xml',
-        'report/invoice_report_inherit.xml'
+        'report/replace_invoice_report.xml',
+        # 'report/add_location_view_in_repair.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
