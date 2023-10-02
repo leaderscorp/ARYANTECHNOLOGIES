@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <!-- This Menu Item must have a parent and an action -->
-        <menuitem id="add_location_in_repair" name="Location" parent="repair.menu_repair_order" sequence="1"/>
 
-    </data>
+        <!-- This Menu Item must have a parent and an action -->
+<!--        <record id="repair.menu_repair_order" model="ir.ui.menu">-->
+<!--            <field name="view_id" ref="stock.view_stock_quant_tree_editable"/>-->
+<!--        </record>-->
+             <record model="ir.actions.act_window" id="repair_menu_open_quants"> <!-- Used in dashboard -->
+                <field name="name">Locations</field>
+                <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1, 'inventory_mode':True}</field>
+                <field name="res_model">stock.quant</field>
+                <field name="context">{}</field>
+                <field name="view_id" ref="stock.view_stock_quant_tree_editable"/>
+            </record>
+
+       <menuitem id="repair_menu_location" name="Locations" parent="repair.menu_repair_order" action="repair_menu_open_quants" groups="stock.group_stock_manager"/>
+
+
 </odoo>
