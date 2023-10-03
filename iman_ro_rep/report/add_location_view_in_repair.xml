@@ -7,9 +7,9 @@
 <!--        </record>-->
              <record model="ir.actions.act_window" id="repair_menu_open_quants"> <!-- Used in dashboard -->
                 <field name="name">Locations</field>
-                <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1, 'inventory_mode':True}</field>
+                <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1, 'inventory_mode':False, 'create': False}</field>
                 <field name="res_model">stock.quant</field>
-                <field name="context">{}</field>
+<!--                <field name="context">{}</field>-->
                 <field name="view_id" ref="stock.view_stock_quant_tree_editable"/>
             </record>
 

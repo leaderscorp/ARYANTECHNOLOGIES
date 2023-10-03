@@ -178,14 +178,14 @@
                                         <!--                                        <td class="pull-right col-1"></td>-->
                                         <!--                                        <td class="pull-right col-1"></td>-->
                                         <td  align="right" class="pull-right col-1 fw-bold">
-                                            <span class="text-nowrap" t-field="o.amount_untaxed" t-options="{'widget': 'float', 'precision': 2}"/>
+                                            <span class="text-nowrap" t-field="o.amount_untaxed" t-options="{'widget': 'float', 'precision': 2}"/> PKR
                                         </td>
                                         <td class="pull-right col-1"></td>
                                         <td align="right" class="pull-right col-1 fw-bold">
-                                            <span class="text-nowrap" t-field="o.amount_tax" t-options="{'widget': 'float', 'precision': 2}"/>
+                                            <span class="text-nowrap" t-field="o.amount_tax" t-options="{'widget': 'float', 'precision': 2}"/> PKR
                                         </td>
                                         <td align="right" class="pull-right col-1 fw-bold">
-                                            <span class="text-nowrap" t-field="o.amount_total" t-options="{'widget': 'float', 'precision': 2}"/>
+                                            <span class="text-nowrap" t-field="o.amount_total" t-options="{'widget': 'float', 'precision': 2}"/> PKR
                                         </td>
 
                                     </tr>
@@ -303,8 +303,8 @@
                     <div class="footer">
 <!--                        <p>-->
                             <div align="center">
-                                <strong>THIS IS A COMPUTER-GENERATED INVOICE AND DOESN`T NEED ANY SIGNATURE</strong>
-                                <strong>____________________________________________________________________________________________________________________________</strong>
+                                <p style="font-size: 12px;">THIS IS A COMPUTER-GENERATED INVOICE AND DOESN`T NEED ANY SIGNATURE</p>
+                                <p>____________________________________________________________________________________________________________________________</p>
                             </div>
 <!--                        </p>-->
                     </div>
