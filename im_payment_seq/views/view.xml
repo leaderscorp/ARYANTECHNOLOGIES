@@ -13,21 +13,10 @@
             <xpath expr="//div[hasclass('oe_title')]" position="before">
                 <div id="custom_seq_name">
                     <h1 class="text-start">
-<!--                        <field name="custom_name" attrs="{'invisible': [('company_id', '!=', 1)]}"/>-->
                         <field name="custom_name"/>
                     </h1>
                 </div>
             </xpath>
-<!--            <xpath expr="//div[hasclass('oe_title')]" position="replace">-->
-<!--                <div class="oe_title">-->
-<!--                    <p attrs="{'invisible': [('state', '!=', 'draft')]}">-->
-<!--                        <span>Draft</span>-->
-<!--                    </p>-->
-<!--                    <p attrs="{'invisible': [('state', '=', 'draft')]}">-->
-<!--                        <field name="name" readonly="1"/>-->
-<!--                    </p>-->
-<!--                </div>-->
-<!--            </xpath>-->
         </field>
     </record>
 
@@ -39,7 +28,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='journal_id']" position="before">
                 <field name="company_id" optional="hide"/>
-<!--                <field name="custom_name" attrs="{'invisible': [('company_id', '!=', 1)]}"/>-->
                 <field name="custom_name"/>
             </xpath>
         </field>
@@ -54,28 +42,13 @@
             <xpath expr="//div[hasclass('oe_title')]" position="before">
                 <div id="custom_seq_name" width="100%">
                     <h1 class="text-start">
-<!--<field name="custom_name"-->
-<!--attrs="{'invisible': ['|', ('company_id', '!=', 1), ('move_type', '!=', 'entry')]}"/>-->
-
                         <field name="custom_name"
                                attrs="{'invisible': [('move_type', '!=', 'entry')]}"/>
                     </h1>
                 </div>
             </xpath>
-<!--            <xpath expr="//div[@class='oe_title']/h1" position="replace">-->
-<!--                <p>-->
-<!--                    <field name="name"-->
-<!--                           attrs="{'invisible':[('name', '=', '/'), ('posted_before', '=', False), ('quick_edit_mode', '=', False)],                                 'readonly': [('state', '!=', 'draft')]}"-->
-<!--                           placeholder="Draft"/>-->
-
-<!--                    <span attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', '!=', '/'), ('quick_edit_mode', '=', True)]}">-->
-<!--                        Draft-->
-<!--                    </span>-->
-<!--                </p>-->
-<!--            </xpath>-->
         </field>
     </record>
-
 
     <!--  Account Move - Tree - sequence field and company field for multi comp -->
     <record id="im_custom_pay_field_view_tree_am" model="ir.ui.view">
@@ -85,8 +58,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="before">
                 <field name="company_id" optional="hide"/>
-<!--                <field name="custom_name"-->
-<!--                       attrs="{'invisible': [('company_id', '!=', 1)]}"/>-->
                 <field name="custom_name"/>
             </xpath>
         </field>
@@ -94,7 +65,7 @@
 
     <!--  Search Filters  -->
     <record id="im_custom_pay_field_view_search_am" model="ir.ui.view">
-        <field name="name">im_res_partner_customer_im_search</field>
+        <field name="name">im_res_partner_customer_am_search</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_account_move_filter"/>
         <field name="arch" type="xml">
@@ -104,6 +75,17 @@
             <xpath expr="//group" position="inside">
                 <filter name="custom_name" string="Voucher Num"
                         domain="[]" context="{'group_by':'custom_name'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="im_custom_pay_field_view_search_ap" model="ir.ui.view">
+        <field name="name">im_res_partner_customer_ap_search</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='journal_id']" position="after">
+                <field name="custom_name"/>
             </xpath>
         </field>
     </record>

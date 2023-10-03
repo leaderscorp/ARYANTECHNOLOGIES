@@ -175,17 +175,17 @@
                                         <td class="pull-right  text-center col-1 fw-bold" colspan="4" style="font-size:20px; margin-right  :20px;">Total</td>
                                         <!--                            <td class="pull-right col-1"></td>-->
                                         <!--                            <td class="pull-right col-1"></td>-->
-<!--                                        <td class="pull-right col-1"></td>-->
-<!--                                        <td class="pull-right col-1"></td>-->
+                                        <!--                                        <td class="pull-right col-1"></td>-->
+                                        <!--                                        <td class="pull-right col-1"></td>-->
                                         <td  align="right" class="pull-right col-1 fw-bold">
-                                            <span class="text-nowrap" t-field="o.amount_untaxed"/>
+                                            <span class="text-nowrap" t-field="o.amount_untaxed" t-options="{'widget': 'float', 'precision': 2}"/>
                                         </td>
                                         <td class="pull-right col-1"></td>
                                         <td align="right" class="pull-right col-1 fw-bold">
-                                            <span class="text-nowrap" t-field="o.amount_tax"/>
+                                            <span class="text-nowrap" t-field="o.amount_tax" t-options="{'widget': 'float', 'precision': 2}"/>
                                         </td>
                                         <td align="right" class="pull-right col-1 fw-bold">
-                                            <span class="text-nowrap" t-field="o.amount_total"/>
+                                            <span class="text-nowrap" t-field="o.amount_total" t-options="{'widget': 'float', 'precision': 2}"/>
                                         </td>
 
                                     </tr>
@@ -277,12 +277,12 @@
                                 </div>
                             </div>
                         </t>
-<!--                        <div t-if="not is_html_empty(o.narration)" name="comment">-->
-<!--                            <span t-field="o.narration"/>-->
-<!--                        </div>-->
-<!--                        <p t-if="not is_html_empty(o.fiscal_position_id.note)" name="note">-->
-<!--                            <span t-field="o.fiscal_position_id.note"/>-->
-<!--                        </p>-->
+                        <!--                        <div t-if="not is_html_empty(o.narration)" name="comment">-->
+                        <!--                            <span t-field="o.narration"/>-->
+                        <!--                        </div>-->
+                        <!--                        <p t-if="not is_html_empty(o.fiscal_position_id.note)" name="note">-->
+                        <!--                            <span t-field="o.fiscal_position_id.note"/>-->
+                        <!--                        </p>-->
                         <p t-if="o.invoice_incoterm_id" name="incoterm">
                             <strong>Incoterm: </strong><span t-field="o.invoice_incoterm_id.code"/> - <span t-field="o.invoice_incoterm_id.name"/>
                         </p>
@@ -293,6 +293,15 @@
                                 <img class="border border-dark rounded" t-att-src="qr_code_url"/>
                             </p>
                         </div>
+
+                    </div>
+                    <div class="footer">
+<!--                        <p>-->
+                            <div align="center">
+                                <strong>THIS IS A COMPUTER-GENERATED INVOICE AND DOESN`T NEED ANY SIGNATURE</strong>
+                                <strong>_____________________________________________________________________________________________________________________________________</strong>
+                            </div>
+<!--                        </p>-->
                     </div>
                 </t>
             </xpath>
