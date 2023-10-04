@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+im_inventory_rep.access_inventory_wizard_report,access_inventory_wizard_report,im_inventory_rep.model_inventory_wizard_report,base.group_user,1,1,1,1

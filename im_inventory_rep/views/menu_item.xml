@@ -1,0 +1,12 @@
+<odoo>
+  <data>
+
+
+    <menuitem name="Inventory Report Summary"
+              id="im_inventory_rep"
+              parent="stock.menu_warehouse_report"
+              sequence="350"
+              action="im_inventory_rep.im_inventory_window_action"/>
+
+  </data>
+</odoo>
