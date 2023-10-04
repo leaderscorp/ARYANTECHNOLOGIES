@@ -177,15 +177,12 @@
                                         <!--                            <td class="pull-right col-1"></td>-->
                                         <!--                                        <td class="pull-right col-1"></td>-->
                                         <!--                                        <td class="pull-right col-1"></td>-->
-                                        <td  align="right" class="pull-right col-1 fw-bold">
-                                            <span class="text-nowrap" t-field="o.amount_untaxed" t-options="{'widget': 'float', 'precision': 2}"/> PKR
+                                        <td  align="right" class="pull-right col-1 fw-bold">PKR&#160;<span class="text-nowrap" t-field="o.amount_untaxed" t-options="{'widget': 'float', 'precision': 2}"/>
                                         </td>
                                         <td class="pull-right col-1"></td>
-                                        <td align="right" class="pull-right col-1 fw-bold">
-                                            <span class="text-nowrap" t-field="o.amount_tax" t-options="{'widget': 'float', 'precision': 2}"/> PKR
+                                        <td align="right" class="pull-right col-1 fw-bold">PKR&#160;<span class="text-nowrap" t-field="o.amount_tax" t-options="{'widget': 'float', 'precision': 2}"/>
                                         </td>
-                                        <td align="right" class="pull-right col-1 fw-bold">
-                                            <span class="text-nowrap" t-field="o.amount_total" t-options="{'widget': 'float', 'precision': 2}"/> PKR
+                                        <td align="right" class="pull-right col-1 fw-bold">PKR&#160;<span class="text-nowrap" t-field="o.amount_total" t-options="{'widget': 'float', 'precision': 2}"/>
                                         </td>
 
                                     </tr>
