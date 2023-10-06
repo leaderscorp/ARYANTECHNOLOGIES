@@ -7,7 +7,7 @@
         <record id="sequence_im_account_payment_send_cash" model="ir.sequence">
             <field name="name">Cash Payment Send Sequence</field>
             <field name="code">cash.payment.send.sequence</field>
-            <field name="prefix">CPV</field>
+            <field name="prefix">CPV/%(year)s/%(month)s/</field>
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
@@ -19,7 +19,7 @@
         <record id="sequence_im_account_payment_send_bank" model="ir.sequence">
             <field name="name">Bank Payment Send Sequence</field>
             <field name="code">bank.payment.send.sequence</field>
-            <field name="prefix">BPV</field>
+            <field name="prefix">BPV/%(year)s/%(month)s/</field>
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
@@ -33,7 +33,7 @@
         <record id="sequence_im_account_payment_receive_cash" model="ir.sequence">
             <field name="name">Cash Payment Receive Sequence</field>
             <field name="code">cash.payment.receive.sequence</field>
-            <field name="prefix">CRV</field>
+            <field name="prefix">CRV/%(year)s/%(month)s/</field>
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
@@ -46,7 +46,7 @@
         <record id="sequence_im_account_payment_receive_bank" model="ir.sequence">
             <field name="name">Bank Payment Receive Sequence</field>
             <field name="code">bank.payment.receive.sequence</field>
-            <field name="prefix">BRV</field>
+            <field name="prefix">BRV/%(year)s/%(month)s/</field>
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
@@ -61,7 +61,7 @@
         <record id="sequence_im_account_payment_internal" model="ir.sequence">
             <field name="name">Internal Payment Receive Sequence</field>
             <field name="code">internal.payment.sequence</field>
-            <field name="prefix">CT</field>
+            <field name="prefix">CT/%(year)s/%(month)s/</field>
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>

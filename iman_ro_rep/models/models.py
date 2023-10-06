@@ -44,27 +44,3 @@ class AccountMoveNumWords(models.Model):
         #     rec.total_in_words = num2words(int(rec.amount_total), lang='en_US')
             rec.total_in_words = num2words(rec.amount_total, lang='en_US')
         #     # print(rec.total_in_words)
-
-    # def number_to_words(amount_total):
-    #     p = inflect.engine()
-    #     return p.number_to_words(amount_total)
-
-#
-# class SaleOrderInherit(models.Model):
-#     _inherit = 'sale.order'
-#
-#     @api.constrains('order_line.product_uom_qty')
-#     def _check_order_lines_quantity(self):
-#         for order in self:
-#             for line in order.order_line:
-#                 if line.product_uom_qty <= 0:
-#                     raise exceptions.ValidationError("Quantity on sale order line must be greater than 0.")
-#
-#     def action_confirm(self):
-#         for order in self:
-#             for line in order.order_line:
-#                 if line.product_uom_qty <= 0:
-#                     raise exceptions.ValidationError("Quantity on sale order line must be greater than 0.")
-#         res = super(SaleOrderInherit, self).action_confirm()
-#         return res
-#
