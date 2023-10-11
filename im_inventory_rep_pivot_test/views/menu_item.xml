@@ -1,0 +1,25 @@
+<odoo>
+    <data>
+        <record id="im_aml_product_tag" model="ir.ui.view">
+            <field name="name">im_aml_product_tag</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='name']" position="after">
+                    <!-- Add new fields here -->
+                    <field name="im_product_tag" optional="hide"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <menuitem name="Inventory Report Summary"
+                  id="im_inventory_rep_pivot_test"
+                  parent="stock.menu_warehouse_report"
+                  sequence="450"
+                  action="im_inventory_rep_pivot_test.im_ji_pivot_report_window_action"/>
+
+
+    </data>
+</odoo>
