@@ -31,6 +31,12 @@
                                         <b>NTN:</b>
                                         <span t-field="company.vat"/>
                                         <br/>
+                                        <b>Invoice Origin:</b>
+                                        <span t-field="o.invoice_origin"/>
+                                        <br/>
+                                        <b>Payment Ref:</b>
+                                        <span t-field="o.payment_reference"/>
+                                        <br/>
                                     </t>
                                 </div>
                             </div>
