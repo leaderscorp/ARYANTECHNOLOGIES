@@ -1,13 +1,13 @@
 <odoo>
     <data>
-        <record id="im_aml_product_tag" model="ir.ui.view">
-            <field name="name">im_aml_product_tag</field>
-            <field name="model">account.move.line</field>
-            <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <record id="im_pp_product_tag" model="ir.ui.view">
+            <field name="name">im_pp_product_tag</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.product_product_stock_tree"/>
             <field name="arch" type="xml">
 
-                <xpath expr="//field[@name='name']" position="after">
-                    <!-- Add new fields here -->
+                <xpath expr="//field[@name='display_name']" position="after">
+<!--                     Add new fields here-->
                     <field name="im_product_tag" optional="hide"/>
                 </xpath>
 

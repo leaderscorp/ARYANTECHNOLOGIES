@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "im_inventory_rep_pivot_test",
+    'name': "iman_op_oi_rep",
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
@@ -20,13 +20,16 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'stock', 'mrp'],
+    'depends': ['base' , 'stock'],
 
     # always loaded
     'data': [
-        'security/ir.model.access.csv',
-        'views/pivot.xml',
-        'views/menu_item.xml',
+        # 'security/ir.model.access.csv',
+        'views/views.xml',
+        'views/templates.xml',
+        'report/outward_gate_pass_report.xml',
+        'report/Inward_gate_pass_report.xml',
+        'report/despatch_note_report.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="iman_inward_gate_pass_report_doc">
+
+               <div class="header" style="border:1px solid black; padding:30px 0px;">
+                   <div class="row">
+                       <div class="col-6">
+
+                       </div>
+                       <div class="col-6 text-center">
+                           <h3>MATERIAL GATE PASS</h3>
+                           <h5 class="mt-2">Return Outward/Inward Gate Pass</h5>
+                       </div>
+                   </div>
+               </div>
+
+                <t t-call="web.external_layout">
+
+                    <div class="page" style="border:1px solid black; padding:15px; ">
+                        <div class="row">
+                            <div class="col-8">
+                                <p><b>Serial No:</b> </p><br/><br/>
+                                <p><b>Mr/Mrs/Ms:</b> <span t-field="o.partner_id.name"/></p>
+                                <p><b>Address:</b> <span t-field="o.partner_id.street"/></p>
+                            </div>
+                            <div class="col-4">
+                                <p><b>Date &amp; Time: </b><span t-field="o.date"/></p>
+                                <p><b>Sending Date:</b> <span t-field="o.scheduled_date"/></p>
+                                <p><b>Return Date:</b> <span t-field="o.date_done"/></p>
+                                <p><b>From Date: </b></p>
+                            </div>
+                        </div>
+                        <table class="table table_bordered mt-3">
+                            <thead>
+                                <tr>
+                                    <th style="width:10px;">S.No.</th>
+                                    <th class="w-25">Description</th>
+                                    <th>Qty</th>
+                                    <th>Model No:</th>
+                                    <th>Ref #</th>
+                                    <th>Remarks</th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                <t t-set="index" t-value="0"/>
+                                <t t-foreach="o.move_ids_without_package" t-as="line">
+                                    <t t-set="index" t-value="index+1"/>
+                                    <tr>
+                                        <td style="width:10px"><span name="Index"><t t-out="index"></t></span></td>
+                                        <td class="w-25"><span t-field="line.product_id.name"/></td>
+                                        <td><span t-field="line.product_uom_qty"/></td>
+                                        <td></td>
+                                        <td><span /></td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="row mb-3" style="padding:0px 10px;">
+                            <div class="col-12">
+                                <p>Date of Return Approx: </p>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:35px; margin-bottom:15px;">
+                            <div class="col-auto" style="height:150px; padding:10px; border:1px solid black; border_radius:5px;">
+                                <p>Issued By Mr. </p>
+                                <p>Signature: </p>
+                                <p>Date &amp; Time: </p>
+                            </div>
+                            <div class="col-auto" style="height:150px; padding:10px; border:1px solid black; border_radius:5px; margin-left:10px;">
+                                <p>Issued By Mr. </p>
+                                <p>Signature: </p>
+                                <p>Date &amp; Time: </p>
+                            </div>
+                            <div class="col-auto" style="height:150px; padding:10px; border:1px solid black; border_radius:5px; margin-left:10px;">
+                                <p>Issued By Mr. </p>
+                                <p>Signature: </p>
+                                <p>Date &amp; Time: </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer" style="border: 1px solid black;">
+                        <div class="row" style="padding:10px;">
+                            <div class="col-4">
+                                <span>White Copy: </span><br/>
+                                <span>Store</span>
+                            </div>
+                             <div class="col-4">
+                                <span>Bank Copy: </span><br/>
+                                <span>Gate Keeper</span>
+                            </div>
+                             <div class="col-4">
+                                <span>Pink Copy: </span><br/>
+                                <span>Issuing Department</span>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+        </template>
+         <template id="iman_inward_gate_pass_report">
+            <t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+                    <t t-call="iman_op_oi_rep.iman_inward_gate_pass_report_doc" />
+                </t>
+            </t>
+        </template>
+
+        <record id="iman_Inward_gate_rep_action" model="ir.actions.report">
+            <field name="name">Inward Gate Pass</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">iman_op_oi_rep.iman_inward_gate_pass_report</field>
+            <field name="report_file">iman_op_oi_rep.iman_inward_gate_pass_report</field>
+            <field name="print_report_name">'Inward Gate Pass'</field>
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>
