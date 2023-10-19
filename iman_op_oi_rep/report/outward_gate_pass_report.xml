@@ -4,29 +4,28 @@
         <template id="iman_outward_gate_pass_report_doc">
             <div class="header">
                             <div class="row">
-                                <div class="col-4">
-<!--                                    <span t-field="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 50px;"/>-->
+                                <div name="left-upper-side" class="col-4" t-if="not pre_printed_report">
+                                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 100px;" alt="Logo"/>
                                 </div>
-                                <div class="col-4" style="margin-top:90px;">
+                                <div class="col-4" style="margin-top:70px;">
                                       <div class="text-center">
                                         <h5 class="fw-bold">OUTWARD GATE PASS</h5>
+                                        <h6 class="fw-bold"><span t-field="o.name"/></h6>
                                       </div>
                                 </div>
                                 <div class="col-4" style="margin-top:30px;">
-                                    <table class="table table-bordered">
+                                    <table class="table table-bordered ">
                                         <tr>
-                                            <t t-foreach="o" t-as="record">
-                                                <td>SIR No: <span t-field="record.serial_number"/></td>
-                                            </t>
-                                            <td>OGP No:</td>
+                                            <td class="w-50">SIR No: </td>
+                                            <td class="w-50">OGP No:</td>
                                         </tr>
                                         <tr>
-                                            <td>Date:</td>
-                                            <td>OGP No:</td>
+                                            <td class="w-50">Date: <span t-field="o.date" t-options="{'widget': 'date'}"/></td>
+                                            <td class="w-50">Date:</td>
                                         </tr>
                                         <tr>
-                                            <td>Store No:</td>
-                                            <td></td>
+                                            <td class="w-50">Store No:</td>
+                                            <td class="w-50"></td>
                                         </tr>
 
                                     </table>
@@ -43,9 +42,9 @@
 <!--                                                <span t-field="company.logo"/>-->
 <!--                                            </t>-->
 <!--                        <t t-debug="pdb"/>-->
-
-                        <div class="page">
-                                <div class="row" style="border: 1px solid black">
+                        <br/>
+                        <div class="page" >
+                                <div class="row" style="border: 1px solid black;" >
                                         <div class="col-2" style="margin-left:5px;"><span>Purpose: </span></div>
                                         <div class="col-auto"><input type="checkbox"/><span style="margin-left:5px;">Repairable</span> </div>
                                         <div class="col-auto"><input type="checkbox"/><span style="margin-left:5px;">Sale</span></div>
@@ -82,7 +81,7 @@
                                             <t t-set="index" t-value="index+1"/>
                                             <tr>
                                                 <td align="center" name="index"><span><t t-out="index"/></span></td>
-                                                <td><span class="text-center" t-field="o.name"/></td>
+                                                <td><span class="text-center" /></td>
                                                 <td><span class="text-center" t-field="o.origin"/></td>
                                                 <td><span t-field="line.product_id.default_code"/></td>
                                                 <td><span class="text-center" t-field="line.product_id.name"/></td>

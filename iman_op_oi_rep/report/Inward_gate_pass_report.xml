@@ -5,9 +5,11 @@
 
                <div class="header" style="border:1px solid black; padding:30px 0px;">
                    <div class="row">
-                       <div class="col-6">
 
-                       </div>
+                            <div name="left-upper-side" class="col-6" t-if="not pre_printed_report">
+                                        <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 100px; margin-left:10px;" alt="Logo"/>
+                            </div>
+
                        <div class="col-6 text-center">
                            <h3>MATERIAL GATE PASS</h3>
                            <h5 class="mt-2">Return Outward/Inward Gate Pass</h5>
@@ -20,7 +22,7 @@
                     <div class="page" style="border:1px solid black; padding:15px; ">
                         <div class="row">
                             <div class="col-8">
-                                <p><b>Serial No:</b> </p><br/><br/>
+                                <p><b>Serial No: </b><span t-field="o.name"/> </p><br/><br/>
                                 <p><b>Mr/Mrs/Ms:</b> <span t-field="o.partner_id.name"/></p>
                                 <p><b>Address:</b> <span t-field="o.partner_id.street"/></p>
                             </div>
@@ -52,48 +54,35 @@
                                         <td class="w-25"><span t-field="line.product_id.name"/></td>
                                         <td><span t-field="line.product_uom_qty"/></td>
                                         <td></td>
-                                        <td><span /></td>
+                                        <td><span t-field="line.product_id.default_code"/></td>
                                         <td></td>
                                     </tr>
                                 </t>
                             </tbody>
                         </table>
-                        <div class="row mb-3" style="padding:0px 10px;">
+                        <div class="row " style="padding:0px 10px;">
                             <div class="col-12">
                                 <p>Date of Return Approx: </p>
                             </div>
                         </div>
-                        <div class="row" style="margin-top:35px; margin-bottom:15px;">
-                            <div class="col-auto" style="height:150px; padding:10px; border:1px solid black; border_radius:5px;">
-                                <p>Issued By Mr. </p>
-                                <p>Signature: </p>
-                                <p>Date &amp; Time: </p>
-                            </div>
-                            <div class="col-auto" style="height:150px; padding:10px; border:1px solid black; border_radius:5px; margin-left:10px;">
-                                <p>Issued By Mr. </p>
-                                <p>Signature: </p>
-                                <p>Date &amp; Time: </p>
-                            </div>
-                            <div class="col-auto" style="height:150px; padding:10px; border:1px solid black; border_radius:5px; margin-left:10px;">
-                                <p>Issued By Mr. </p>
-                                <p>Signature: </p>
-                                <p>Date &amp; Time: </p>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="footer" style="border: 1px solid black;">
-                        <div class="row" style="padding:10px;">
-                            <div class="col-4">
-                                <span>White Copy: </span><br/>
-                                <span>Store</span>
+                        <div class="row" style="margin-bottom:none;">
+                            <div class="col-auto" style="height:150px; padding:10px; padding-bottom:0px; border:1px solid black; border_radius:5px; border-bottom:1px solid black;">
+                                <p>Issued By Mr. </p>
+                                <p>Signature: </p>
+                                <p>Date &amp; Time: </p>
                             </div>
-                             <div class="col-4">
-                                <span>Bank Copy: </span><br/>
-                                <span>Gate Keeper</span>
+                            <div class="col-auto" style="height:150px; padding:10px; border:1px solid black; border_radius:5px; margin-left:10px;">
+                                <p>Issued By Mr. </p>
+                                <p>Signature: </p>
+                                <p>Date &amp; Time: </p>
                             </div>
-                             <div class="col-4">
-                                <span>Pink Copy: </span><br/>
-                                <span>Issuing Department</span>
+                            <div class="col-auto" style="height:150px; padding:10px; border:1px solid black; border_radius:5px; margin-left:10px;">
+                                <p>Issued By Mr. </p>
+                                <p>Signature: </p>
+                                <p>Date &amp; Time: </p>
                             </div>
                         </div>
                     </div>
@@ -107,7 +96,10 @@
                 </t>
             </t>
         </template>
-
+         <record id="iman_inward_gate_pass_paper_format" model="report.paperformat">
+            <field name="name">Inward Gate Pass Report</field>
+            <field name="margin_bottom">70</field>
+        </record>
         <record id="iman_Inward_gate_rep_action" model="ir.actions.report">
             <field name="name">Inward Gate Pass</field>
             <field name="model">stock.picking</field>

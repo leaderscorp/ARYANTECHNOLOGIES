@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "iman_ro_rep",
+    'name': "iman_pr_rep",
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
@@ -20,24 +20,17 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'repair' , 'account', 'sale','stock'],
+    'depends': ['base','account'],
 
     # always loaded
     'data': [
-        'security/ir.model.access.csv',
-        # 'views/views.xml',
+        # 'security/ir.model.access.csv',
+        'views/views.xml',
         'views/templates.xml',
-        # 'report/inherit_account_move_line.xml',
-        'report/inherit_repair_report.xml',
-        'report/replace_invoice_report.xml',
-        'report/add_location_view_in_repair.xml',
-        'report/new_invoice_report.xml'
+        'report/replace_payment_receipt.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
     ],
-    'installable':True,
-    'application':False,
-    'auto_install':False
 }
