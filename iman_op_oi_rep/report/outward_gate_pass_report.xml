@@ -5,28 +5,28 @@
             <div class="header">
                             <div class="row">
                                 <div name="left-upper-side" class="col-4" t-if="not pre_printed_report">
-                                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 100px;" alt="Logo"/>
+                                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 150px;" alt="Logo"/>
                                 </div>
                                 <div class="col-4" style="margin-top:70px;">
                                       <div class="text-center">
                                         <h5 class="fw-bold">OUTWARD GATE PASS</h5>
-                                        <h6 class="fw-bold"><span t-field="o.name"/></h6>
+<!--                                        <h6 class="fw-bold"><span t-field="o.name"/></h6>-->
                                       </div>
                                 </div>
                                 <div class="col-4" style="margin-top:30px;">
                                     <table class="table table-bordered ">
                                         <tr>
-                                            <td class="w-50">SIR No: </td>
-                                            <td class="w-50">OGP No:</td>
+                                            <td>SIR No: <span t-field="o.name"/></td>
+<!--                                            <td class="w-50">OGP No:</td>-->
                                         </tr>
                                         <tr>
-                                            <td class="w-50">Date: <span t-field="o.date" t-options="{'widget': 'date'}"/></td>
-                                            <td class="w-50">Date:</td>
+                                            <td>Date: <span t-field="o.date" t-options="{'widget': 'date'}"/></td>
+<!--                                            <td class="w-50">Date:</td>-->
                                         </tr>
-                                        <tr>
-                                            <td class="w-50">Store No:</td>
-                                            <td class="w-50"></td>
-                                        </tr>
+<!--                                        <tr>-->
+<!--                                            <td class="w-50">Store No:</td>-->
+<!--                                            <td class="w-50"></td>-->
+<!--                                        </tr>-->
 
                                     </table>
                                 </div>

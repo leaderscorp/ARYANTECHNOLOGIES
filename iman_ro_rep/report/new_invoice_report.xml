@@ -5,7 +5,7 @@
             <div class="header">
                 <div class="row" >
                     <div name="left-upper-side" class="col-6" t-if="not pre_printed_report">
-                        <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 100px;" alt="Logo"/>
+                        <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 140px;" alt="Logo"/>
                     </div>
 <!--                    <div class="col-6 text-start">-->
 <!--                        <img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % to_text(company_id.logo)"-->
@@ -13,21 +13,14 @@
 <!--                        <img t-att-src="o.company_id.logo"  />-->
 <!--                        <t t-debug="pdb"/>-->
 <!--                    </div>-->
-                    <div class="col-6 text-end" style="margin-top:50px;">
-                        <span t-field="o.company_id.street"/>
-                    </div>
+<!--                    <div class="col-6 text-end" style="margin-top:50px;">-->
+<!--                        <span t-field="o.company_id.street"/>-->
+<!--                    </div>-->
                 </div>
             </div>
             <t t-call="web.external_layout" >
                     <t t-set="o" t-value="o.with_context(lang=lang)" />
                     <t t-set="forced_vat" t-value="o.fiscal_position_id.foreign_vat"/> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
-<!--                    <div class="header">-->
-<!--                        <div class="row">-->
-<!--                            <div class="col-6 text-end">-->
-<!--                                <span t-field="o.street"/>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
                     <div class="container " style="margin-top:0px;">
                         <div class="row">
                             <div class="col-6">
@@ -62,7 +55,7 @@
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div>
+                                <div class="text-end">
                                     <b>Buyer's Name:</b>
                                     <span t-field="o.partner_id.name"/>
                                     <br/>

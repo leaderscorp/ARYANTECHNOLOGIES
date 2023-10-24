@@ -14,6 +14,7 @@
 <!--                    </div>-->
                     <t t-set="o" t-value="o.with_context(lang=lang)"/>
 
+
                     <div class="page">
 
 <!--                        <h3>-->
@@ -28,6 +29,16 @@
 <!--                                    <span t-field="o.date"/>-->
 <!--                                </div>-->
 <!--                            </div>-->
+                            <div class="row">
+                                 <div class="col-10 mb-1" t-if="o.partner_type">
+                                     <b >Bank Account: </b>
+                                    <span t-field="o.partner_bank_id"/>
+                                 </div>
+                                <div class="col-2 text-end" t-if="o.partner_type">
+                                     <b>NTN no: </b>
+                                    <span t-field="o.partner_id.vat"/>
+                                 </div>
+                            </div>
                             <div class="row">
                                 <div class="col-6 mb-1" t-if="o.partner_type">
 <!--                                    <t t-if="o.partner_type == 'customer'">-->
@@ -100,10 +111,20 @@
                         <table class="table table-sm">
                             <thead>
                                 <tr>
-                                    <th class="text-start">
-                                        <span>Account Title</span>
-                                        <span style="padding-left:130px">Account Code</span>
+                                    <th class="text-start" style="width:60%;">
+                                        <div class="row">
+                                            <div class="col-8 text-start">
+                                                <span>Account Title</span>
+                                            </div>
+
+                                            <div class="col-4 text-end">
+                                                <span>Account Code</span>
+                                            </div>
+                                        </div>
                                     </th>
+<!--                                    <th>-->
+<!--                                        <span>Account Code</span>-->
+<!--                                    </th>-->
 <!--                                    <th>-->
 <!--                                        <span>Invoice Number</span>-->
 <!--                                    </th>-->
@@ -128,17 +149,24 @@
 <!--                                <t t-debug="pdb"/>-->
                                     <tr>
                                         <td>
-                                            <span t-field="com.destination_account_id.name"/>
-                                            <span t-field="com.destination_account_id.code" style="padding-left:160px"/>
+                                            <div class="row">
+                                                <div class="col-8 text-start">
+                                                    <span t-field="com.partner_id"/>
+                                                </div>
+                                                <div class="col-4 text-end">
+                                                    <span t-field="com.destination_account_id.code" />
+                                                </div>
+                                            </div>
                                         </td>
+<!--                                        <td class="text-center"></td>-->
                                         <td class="text-end">
-                                            <span t-field="com.amount" t-options="{'widget': 'Float'}"/>
+                                            <span t-out="'{:,.2f}'.format(com.amount)" t-options="{'widget': 'Float'}"/>
                                         </td>
 <!--                                        <td class="text-end">-->
 <!--                                            <span t-field="com.amount"/>-->
 <!--                                        </td>-->
                                         <td class="text-end">
-                                            <span t-field="com.amount" t-options="{'widget': 'Float'}"/>
+                                            <span t-out="'{:,.2f}'.format(com.amount)" t-options="{'widget': 'Float'}"/>
                                         </td>
 
                                     </tr>
@@ -149,14 +177,17 @@
                                             <span>Total Amount</span>
 
                                         </td>
+<!--                                        <td>-->
+<!--                                            <span/>-->
+<!--                                        </td>-->
                                         <td class="text-end">
-                                            <span t-field="com.amount" t-options="{'widget': 'Float'}"/>
+                                            <span t-out="'{:,.2f}'.format(com.amount)" t-options="{'widget': 'Float'}"/>
                                         </td>
 <!--                                        <td class="text-end">-->
 <!--                                            <span t-field="com.amount"/>-->
 <!--                                        </td>-->
                                         <td class="text-end">
-                                            <span t-field="com.amount" t-options="{'widget': 'Float'}"/>
+                                            <span t-out="'{:,.2f}'.format(com.amount)" t-options="{'widget': 'Float'}"/>
                                         </td>
 
                                     </tr>
