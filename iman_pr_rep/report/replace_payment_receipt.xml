@@ -31,8 +31,14 @@
 <!--                            </div>-->
                             <div class="row" >
                                  <div class="col-9 mb-1" >
-                                     <b >Bank Account:</b>
-                                    <span t-field="o.journal_id.default_account_id"/>
+                                     <t t-if="o.journal_id.type == 'bank'">
+                                        <span><b>Bank Account:</b></span>
+                                         <span t-field="o.journal_id.default_account_id"/>
+                                    </t>
+                                    <t t-if="o.journal_id.type == 'cash'">
+                                        <span><b>Cash Account:</b></span>
+                                        <span t-field="o.journal_id.default_account_id"/>
+                                    </t>
                                  </div>
                                 <div class="col-3 text-end" t-if="o.partner_type">
                                      <b>NTN no: </b>
@@ -85,7 +91,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-6" t-if="o.amount">
-                                    <b >Voucher No:</b>
+                                    <b>Voucher No:</b>
                                     <span t-field="o.custom_name"/>
 <!--                                    Payment Amount:-->
 <!--                                    <span t-field="o.amount"-->
