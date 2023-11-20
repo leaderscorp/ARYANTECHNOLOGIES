@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "im_inventory_rep_pivot_test",
+    'name': "im_wip_rep",
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
@@ -20,14 +20,12 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'stock', 'mrp'],
+    'depends': ['base', 'stock', 'mrp', 'product'],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
-        'views/pivot.xml',
-        'views/menu_item.xml',
-        'views/stock_move.xml',
+        'views/views.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
