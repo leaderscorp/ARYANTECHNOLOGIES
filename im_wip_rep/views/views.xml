@@ -9,6 +9,7 @@
                     <field name="im_product_tag_p"/>
                     <field name="reference"/>
                     <field name="product_id"/>
+                    <field name="im_product_cost"/>
                     <field name="product_uom_qty"/>
                 </tree>
             </field>
@@ -20,6 +21,7 @@
             <field name="arch" type="xml">
                 <pivot>
                     <field name="product_uom_qty" type="measure"/>
+                    <field name="im_product_cost" type="measure"/>
                     <field name="im_product_tag_p"/>
                     <field name="product_id"/>
                 </pivot>
@@ -30,7 +32,7 @@
         <record model="ir.actions.act_window" id="im_wip_pivot_report_window_action">
             <field name="name">imaan wip pivot report</field>
             <field name="res_model">im.wip</field>
-            <field name="view_mode">tree,pivot</field>
+            <field name="view_mode">pivot,tree</field>
         </record>
 
         <!-- Top menu item -->

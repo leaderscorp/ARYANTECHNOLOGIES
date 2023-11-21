@@ -12,6 +12,7 @@ class im_wip_rep(models.Model):
 
     reference = fields.Char()
     product_uom_qty = fields.Float()
+    im_product_cost = fields.Float()
     product_id = fields.Many2one('product.product')
     im_product_tag_p = fields.Char()
 
@@ -27,6 +28,7 @@ class im_wip_rep(models.Model):
             product_uom_qty as product_uom_qty, 
             product_id as product_id, 
             im_product_tag_p as im_product_tag_p,
+            im_product_cost as im_product_cost,
             COALESCE(production_id, raw_material_production_id) as productions
             from stock_move 
             where im_mrp_state='draft' 
