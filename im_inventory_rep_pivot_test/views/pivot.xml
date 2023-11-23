@@ -17,6 +17,7 @@
             <field name="name">im_ji_pivot_report_window_action</field>
             <field name="res_model">stock.valuation.layer</field>
             <field name="view_mode">pivot</field>
+            <field name="domain">[('product_id.detailed_type', '=', 'product')]</field>
         </record>
     </data>
 </odoo>

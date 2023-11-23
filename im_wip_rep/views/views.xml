@@ -11,6 +11,8 @@
                     <field name="product_id"/>
                     <field name="im_product_cost"/>
                     <field name="product_uom_qty"/>
+                    <field name="im_total_cost"/>
+
                 </tree>
             </field>
         </record>
@@ -22,8 +24,10 @@
                 <pivot>
                     <field name="product_uom_qty" type="measure"/>
                     <field name="im_product_cost" type="measure"/>
-                    <field name="im_product_tag_p"/>
+                    <field name="im_total_cost" type="measure"/>
+                    <field name="im_product_tag_p" type="row"/>
                     <field name="product_id"/>
+
                 </pivot>
             </field>
         </record>
