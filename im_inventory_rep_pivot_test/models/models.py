@@ -46,7 +46,7 @@ class im_inventory_rep_pivot(models.Model):
     _inherit = 'product.product'
 
     im_product_tag = fields.Char(compute='_get_prod_tag', store=True)
-    # im_avg_cost = fields.Float(compute='_get_other_avg', store=True)
+    im_product_cost = fields.Float(compute='_get_prod_cost', store=True)
     im_qty = fields.Float(compute='_get_other_qty', store=True)
     im_total_val = fields.Float(compute='_get_other_total_val', store=True)
 
@@ -56,11 +56,10 @@ class im_inventory_rep_pivot(models.Model):
             record.im_product_tag = record.product_tmpl_id.im_product_tag_p
 
 
-    # @api.depends('product_tmpl_id')
-    # def _get_other_avg(self):
-    #     for record in self:
-            # print(record.get_avg_cost(id=record.product_tmpl_id.id))
-            # record.im_avg_cost = record.get_avg_cost(id=record.product_tmpl_id.id)
+    @api.depends('standard_price')
+    def _get_prod_cost(self):
+        for record in self:
+            record.im_product_cost = record.standard_price
 
     @api.depends('qty_available')
     def _get_other_qty(self):

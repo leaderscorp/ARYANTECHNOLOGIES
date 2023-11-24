@@ -28,6 +28,7 @@
         'views/pivot.xml',
         'views/menu_item.xml',
         'views/stock_move.xml',
+        'views/stock_quant.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
