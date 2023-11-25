@@ -1,0 +1,36 @@
+<odoo>
+    <data>
+         <record id="im_pp_product_avg" model="ir.ui.view">
+            <field name="name">im_pp_product_avg</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='group_standard_price']" position="inside">
+                    <field name="im_product_tag_p" invisible="1"/>
+                </xpath>
+            </field>
+         </record>
+
+        <record id="im_pp_product_tag" model="ir.ui.view">
+            <field name="name">im_pp_product_tag</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.product_product_stock_tree"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='display_name']" position="after">
+<!--                     Add new fields here-->
+                    <field name="im_product_tag" optional="hide"/>
+                </xpath>
+
+            </field>
+        </record>
+
+<!--        <menuitem name="Inventory Report Summary"-->
+<!--                  id="im_inventory_rep_pivot_test"-->
+<!--                  parent="stock.menu_warehouse_report"-->
+<!--                  sequence="450"-->
+<!--                  action="im_inventory_rep_pivot_test.im_ji_pivot_report_window_action"/>-->
+
+
+    </data>
+</odoo>

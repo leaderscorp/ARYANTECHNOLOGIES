@@ -1,0 +1,52 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="im_wip_pivot_report_tree">
+            <field name="name">Imaan WIP Tree</field>
+            <field name="model">im.wip</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="im_product_tag_p"/>
+                    <field name="reference"/>
+                    <field name="product_id"/>
+                    <field name="im_product_cost"/>
+                    <field name="product_uom_qty"/>
+                    <field name="im_total_cost"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="im_wip_pivot_report_pivot">
+            <field name="name">Imaan WIP Pivot Report</field>
+            <field name="model">im.wip</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="product_uom_qty" type="measure"/>
+                    <field name="im_product_cost" type="measure"/>
+                    <field name="im_total_cost" type="measure"/>
+                    <field name="im_product_tag_p" type="row"/>
+                    <field name="product_id"/>
+
+                </pivot>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="im_wip_pivot_report_window_action">
+            <field name="name">imaan wip pivot report</field>
+            <field name="res_model">im.wip</field>
+            <field name="view_mode">pivot,tree</field>
+        </record>
+
+        <!-- Top menu item -->
+
+        <menuitem name="WIP Report"
+                  id="im_wip_rep_menu_root"
+                  parent="stock.menu_warehouse_report"
+                  sequence="550"
+                  action="im_wip_rep.im_wip_pivot_report_window_action"/>
+
+
+    </data>
+</odoo>

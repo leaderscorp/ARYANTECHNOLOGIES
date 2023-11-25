@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+im_wip_rep.access_im_wip,access_im_wip,im_wip_rep.model_im_wip,base.group_user,1,1,1,1

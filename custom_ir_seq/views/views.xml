@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="custom_ir_seq.list">
+      <field name="name">custom_ir_seq list</field>
+      <field name="model">custom_ir_seq.custom_ir_seq</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="custom_ir_seq.action_window">
+      <field name="name">custom_ir_seq window</field>
+      <field name="res_model">custom_ir_seq.custom_ir_seq</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="custom_ir_seq.action_server">
+      <field name="name">custom_ir_seq server</field>
+      <field name="model_id" ref="model_custom_ir_seq_custom_ir_seq"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="custom_ir_seq" id="custom_ir_seq.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="custom_ir_seq.menu_1" parent="custom_ir_seq.menu_root"/>
+    <menuitem name="Menu 2" id="custom_ir_seq.menu_2" parent="custom_ir_seq.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="custom_ir_seq.menu_1_list" parent="custom_ir_seq.menu_1"
+              action="custom_ir_seq.action_window"/>
+    <menuitem name="Server to list" id="custom_ir_seq" parent="custom_ir_seq.menu_2"
+              action="custom_ir_seq.action_server"/>
+-->
+  </data>
+</odoo>

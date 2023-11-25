@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright 2019 Coop IT Easy
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <data>
+        <record model="ir.actions.act_window" id="im_inventory_window_action">
+            <field name="name">Imaan Inventory Wizard Form</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">inventory.wizard.report</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="iman_outward_gate_pass_report_doc">
+            <div class="header">
+                            <div class="row">
+                                <div name="left-upper-side" class="col-4" t-if="not pre_printed_report">
+                                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 150px;" alt="Logo"/>
+                                </div>
+                                <div class="col-4" style="margin-top:70px;">
+                                      <div class="text-center">
+                                        <h5 class="fw-bold">OUTWARD GATE PASS</h5>
+<!--                                        <h6 class="fw-bold"><span t-field="o.name"/></h6>-->
+                                      </div>
+                                </div>
+                                <div class="col-4" style="margin-top:30px;">
+                                    <table class="table table-bordered ">
+                                        <tr>
+                                            <td>SIR No: <span t-field="o.name"/></td>
+<!--                                            <td class="w-50">OGP No:</td>-->
+                                        </tr>
+                                        <tr>
+                                            <td>Date: <span t-field="o.date" t-options="{'widget': 'date'}"/></td>
+<!--                                            <td class="w-50">Date:</td>-->
+                                        </tr>
+<!--                                        <tr>-->
+<!--                                            <td class="w-50">Store No:</td>-->
+<!--                                            <td class="w-50"></td>-->
+<!--                                        </tr>-->
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+            <t t-call="web.external_layout">
+
+<!--                <t t-foreach="docs" t-as="o">-->
+<!--                    <t t-call="web.external_layout">-->
+<!--                                          <t t-set="o" t-value="o.with_context(lang=lang)" />-->
+<!--                                            <t t-if="o and 'company_id' in o">-->
+<!--                                                <t t-set="company" t-value="o.company_id"/>-->
+<!--                                                <span t-field="company.logo"/>-->
+<!--                                            </t>-->
+<!--                        <t t-debug="pdb"/>-->
+                        <br/>
+                        <div class="page" >
+                                <div class="row" style="border: 1px solid black;" >
+                                        <div class="col-2" style="margin-left:5px;"><span>Purpose: </span></div>
+                                        <div class="col-auto"><input type="checkbox"/><span style="margin-left:5px;">Repairable</span> </div>
+                                        <div class="col-auto"><input type="checkbox"/><span style="margin-left:5px;">Sale</span></div>
+                                        <div class="col-auto"><input type="checkbox"/><span style="margin-left:5px;">Loan</span> </div>
+                                        <div class="col-auto"><input type="checkbox"/><span style="margin-left:5px;">Sample</span> </div>
+                                        <div class="col-auto"><input type="checkbox"/><span style="margin-left:5px;">Refilling</span> </div>
+                                        <div class="col-auto"><input type="checkbox"/><span style="margin-left:5px;">Others</span> </div>
+                                </div>
+                                <div class="row mt-2" style="border: 1px solid black">
+                                    <div class="col-3 text-center" style="border-right: 1px solid black"><span>Reg/Sanctioned By</span></div>
+                                    <div class="col-6"></div>
+                                    <div class="col-3 text-center" style="border-left: 1px solid black"><span  style="margin-right:5px;">Returnable</span> <input type="checkbox"/><span style="margin-left:5px; margin-right:10px;">Yes</span><input type="checkbox"/><span style="margin-left:5px;">No</span></div>
+                                </div>
+                                <div class="row mt-2" style="border: 1px solid black">
+                                    <div class="col-5" style="border-right: 1px solid black; margin-left:5px;"><span>Project Name</span></div>
+                                    <div class="col-3" style="margin-left:5px;"><span style="margin-left:5px;">Site ID</span></div>
+                                    <div class="col-4" style="border-left: 1px solid black; "><span style="margin-left:5px;">Vehicle No:</span></div>
+                                </div>
+                                <table class="table table-bordered mt-2">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:10px;">S/No</th>
+                                            <th>DN #</th>
+                                            <th>P0 #</th>
+                                            <th>Item Code</th>
+                                            <th class="w-25">Description</th>
+                                            <th>U/M</th>
+                                            <th>Qty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="index" t-value="0"/>
+                                        <t t-foreach="o.move_ids_without_package" t-as="line">
+                                            <t t-set="index" t-value="index+1"/>
+                                            <tr>
+                                                <td align="center" name="index"><span><t t-out="index"/></span></td>
+                                                <td><span class="text-center" /></td>
+                                                <td><span class="text-center" t-field="o.origin"/></td>
+                                                <td><span t-field="line.product_id.default_code"/></td>
+                                                <td><span class="text-center" t-field="line.product_id.name"/></td>
+                                                <td><span class="text-center" t-field="line.product_uom"/></td>
+                                                <td><span class="text-center" t-field="line.product_uom_qty"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                        </div>
+                        <div class="footer">
+                            <div class="row">
+                                <div class="col-auto text-center" style="height:120px; border:1px solid black; border-radius:5px; padding-top:90px;"><span>Prepared By</span></div>
+                                <div class="col-auto text-center" style="height:120px; border:1px solid black; border-radius:5px; padding-top:90px; margin-left:15px;"><span>Incharge Store</span></div>
+                                <div class="col-auto text-center" style="height:120px; border:1px solid black; border-radius:5px; padding-top:90px; margin-left:15px;"><span>Approved By</span></div>
+                                <div class="col-auto text-center" style="height:120px; border:1px solid black; border-radius:5px; padding-top:90px; margin-left:15px;"><span>Received By</span></div>
+                            </div>
+                        </div>
+            </t>
+<!--                </t>-->
+<!--            </t>-->
+        </template>
+
+
+        <template id="iman_outward_gate_pass_report">
+            <t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+                    <t t-call="iman_op_oi_rep.iman_outward_gate_pass_report_doc" />
+                </t>
+            </t>
+        </template>
+
+        <record id="iman_outward_gate_rep_action" model="ir.actions.report">
+            <field name="name">Outward Gate Pass</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">iman_op_oi_rep.iman_outward_gate_pass_report</field>
+            <field name="report_file">iman_op_oi_rep.iman_outward_gate_pass_report</field>
+            <field name="print_report_name">'Outward Gate Pass'</field>
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+
+
+    </data>
+</odoo>
