@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="repair_report_inherit_template" inherit_id="repair.report_repairorder">
+        <xpath expr="//table/thead/tr/th[1]" position="replace"/>
+        <xpath expr="//table/tbody/t[1]/tr[2]/td[1]" position="replace"/>
+
+         <xpath expr="//table/tbody/t/tr[1]/td" position="replace">
+            <td colspan="7"><strong>Parts</strong></td>
+        </xpath>
+        <xpath expr="//table/thead/tr/th[1]" position="before">
+            <th class="w-25"><strong>Product</strong></th>
+<!--            <th class="w-25"><strong>Description</strong></th>-->
+        </xpath>
+        <xpath expr="//table/tbody/t[1]/tr[2]/td[1]" position="before">
+             <td class="text-start">
+                <span t-field="line.product_id"/>
+
+             </td>
+<!--            <td class="text-start" >-->
+<!--                <span t-field="line.product_id.description"/>-->
+
+<!--             </td>-->
+        </xpath>
+
+
+    </template>
+</odoo>

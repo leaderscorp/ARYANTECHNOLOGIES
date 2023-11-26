@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_custom_ir_seq_custom_ir_seq,custom_ir_seq.custom_ir_seq,model_custom_ir_seq_custom_ir_seq,base.group_user,1,1,1,1

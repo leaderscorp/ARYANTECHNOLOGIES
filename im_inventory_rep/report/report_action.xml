@@ -1,0 +1,13 @@
+<odoo>
+    <data>
+        <record id="im_inventory_report_xlsx_action" model="ir.actions.report">
+            <field name="name">Inventory Summary </field>
+            <field name="model">inventory.wizard.report</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">im_inventory_rep.im_inventory_rep_temp</field>
+            <field name="report_file">im_inventory_rep.im_inventory_rep_temp</field>
+            <!--    <field name="binding_model_id" ref="model_payslip_summary_wizard"/>-->
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

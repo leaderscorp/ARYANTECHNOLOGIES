@@ -1,0 +1,46 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="im_stock_quants_tree">
+            <field name="name">im_stock_quants_tree</field>
+            <field name="inherit_id" ref="stock.view_stock_quant_tree_inventory_editable"/>
+            <field name="model">stock.quant</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='quantity']" position="after">
+                    <field name="im_prod_tag" optional="hide"/>
+                    <field name="im_value" optional="hide"/>
+                    <field name="im_avg_cost" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="im_stock_quants_pivot">
+            <field name="name">im_stock_quants_pivot</field>
+            <field name="model">stock.quant</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="im_prod_tag" type="row"/>
+                    <field name="product_id"/>
+                    <field name="quantity" type="measure"/>
+                    <field name="im_avg_cost" type="measure"/>
+                    <field name="im_value" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="im_stock_quant_pivot_action">
+            <field name="name">im_stock_quant_pivot_action</field>
+            <field name="res_model">stock.quant</field>
+            <field name="view_mode">pivot</field>
+            <field name="context">{'search_default_on_hand': 1}</field>
+<!--            <field name="domain">[('product_id.detailed_type', '=', 'product')]</field>-->
+        </record>
+
+        <menuitem name="Inventory Report"
+                  id="im_inventory_rep_pivot_new"
+                  parent="stock.menu_warehouse_report"
+                  sequence="450"
+                  action="im_inventory_rep_pivot_test.im_stock_quant_pivot_action"/>
+
+
+    </data>
+</odoo>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <template id="iman_despatch_note_report_doc">
+            <div class="header">
+                <div class="row">
+                    <div class="col-3">
+                            <div name="left-upper-side" t-if="not pre_printed_report">
+                                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 100px;" alt="Logo"/>
+                            </div>
+                    </div>
+                    <div class="col-6 text-center" style="margin-top:50px;">
+                        <h3>Despatch Note</h3>
+                    </div>
+                    <div class="col-3" >
+                        <table class="table table-bordered small h- 25" >
+                            <tr>
+                                <th >DN No.</th>
+                                <td><span t-field="o.name"/></td>
+                            </tr>
+                            <tr>
+                                <th>Date</th>
+                                <td><span t-field="o.date"/></td>
+                            </tr>
+                            <tr>
+                                <th>location/Site</th>
+                                <td><span t-field="o.move_ids.location_id"/></td>
+                            </tr>
+                            <tr>
+                                <th>Consgnee</th>
+                                <td><span/></td>
+                            </tr>
+<!--                            <tr>-->
+<!--                                <th>OGP No.</th>-->
+<!--                                <td></td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <th>Date</th>-->
+<!--                                <td></td>-->
+<!--                            </tr>-->
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <t t-call="web.external_layout">
+                <div class="page" style="margin-top:200px">
+                   <table class="table table-bordered" >
+                       <thead>
+                           <tr>
+                               <th style="width:10px;">S/No.</th>
+                               <th>Item Code</th>
+                               <th>Number of Packages</th>
+                               <th>Item Description</th>
+                               <th>Engines Number</th>
+                               <th>U/M</th>
+                               <th>Qty</th>
+                               <th>Remarks</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                            <t t-set="index" t-value="0"/>
+                            <t t-foreach="o.move_ids_without_package" t-as="line">
+                                <t t-set="index" t-value="index+1"/>
+                           <tr>
+                               <td><span name="index" ><t t-out="index"/></span></td>
+                               <td><span t-field="o.name" /></td>
+                               <td><span t-field="line.product_id.default_code"/></td>
+                               <td><span t-field="line.product_id.name" /></td>
+                               <td><span/></td>
+                               <td><span t-field="line.product_uom" /></td>
+                               <td><span t-field="line.product_uom_qty" /></td>
+                               <td><span/></td>
+                           </tr>
+                           </t>
+                       </tbody>
+                   </table>
+
+                <div class="footer">
+<!--                    <h1>hello world</h1>-->
+                    <div class="row mb-3" style="padding:0px 10px;">
+                        <div class="row" style="margin-top:35px; margin-bottom:15px;">
+                            <div class="col-auto" style="height:250px; border:1px solid black; border_radius:5px;">
+                                <div class="text-center" style="border-bottom:1px solid black">
+                                    <span>
+                                        <b>INSPECTED BY</b>
+                                    </span>
+                                </div>
+                                <div style="padding:10px; height:80px">
+                                    <span style="margin-bottom:50px">Remarks:</span>
+                                    <br/>
+                                    <span style="padding: 60px">________________________________________</span>
+                                </div>
+                                <div style="padding:10px; border-top: 1px solid black; border-bottom: 1px solid black;">
+                                    <span>Name &amp;</span>
+                                    <br/>
+                                    <span>Position</span>
+                                </div>
+                                <div style="padding:10px; height:70px">
+                                    <span>Signature:</span>
+                                </div>
+                            </div>
+                            <div class="col-auto"
+                                 style="height:250px;  border:1px solid black; border_radius:5px; margin-left:10px;">
+                                <div class="text-center" style="border-bottom:1px solid black">
+                                    <span>
+                                        <b>DESPATCHED BY</b>
+                                    </span>
+                                </div>
+                                <div style="padding:10px; height:80px">
+                                    <span style="margin-bottom:50px">Remarks:</span>
+                                    <br/>
+                                    <span style="padding: 60px">________________________________________</span>
+                                </div>
+                                <div style="padding:10px; border-top: 1px solid black; border-bottom: 1px solid black;">
+                                    <span>Name &amp;</span>
+                                    <br/>
+                                    <span>Position</span>
+                                </div>
+                                <div style="padding:10px; height:70px">
+                                    <span>Signature:</span>
+                                </div>
+                            </div>
+                            <div class="col-auto"
+                                 style="height:250px; border:1px solid black; border_radius:5px; margin-left:10px;">
+                                <div class="text-center" style="border-bottom:1px solid black">
+                                    <span>
+                                        <b>RECEIVED BY</b>
+                                    </span>
+                                </div>
+                                <div style="padding:10px; height:80px">
+                                    <span style="margin-bottom:50px">Remarks:</span>
+                                    <br/>
+                                    <span style="padding: 60px">________________________________________</span>
+                                </div>
+                                <div style="padding:10px; border-top: 1px solid black; border-bottom: 1px solid black;">
+                                    <span>Name &amp;</span>
+                                    <br/>
+                                    <span>Position</span>
+                                </div>
+                                <div style="padding:10px; height:70px">
+                                    <span>Signature:</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="iman_despatch_note_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="iman_op_oi_rep.iman_despatch_note_report_doc"/>
+                </t>
+            </t>
+        </template>
+
+        <record id="iman_despatch_note_paper_format" model="report.paperformat">
+            <field name="name">Despatch Note Report</field>
+            <field name="format">A4</field>
+            <field name="orientation">Landscape</field>
+<!--            <field name="page_height">0</field>-->
+<!--            <field name="page_width">0</field>-->
+<!--            <field name="margin_top">0</field>-->
+            <field name="margin_bottom">70</field>
+<!--            <field name="margin_left">0</field>-->
+<!--            <field name="margin_right">0</field>-->
+<!--            <field name="header_spacing">0</field>-->
+<!--            <field name="dip">90</field>-->
+        </record>
+        <record id="iman_despatch_note_rep_action" model="ir.actions.report">
+            <field name="name">Despatch Note</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">iman_op_oi_rep.iman_despatch_note_report</field>
+            <field name="report_file">iman_op_oi_rep.iman_despatch_note_report</field>
+            <field name="print_report_name">'Despatch Note'</field>
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="iman_op_oi_rep.iman_despatch_note_paper_format"/>
+        </record>
+    </data>
+</odoo>
