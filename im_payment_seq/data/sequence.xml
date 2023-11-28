@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
+    <!--    -->
+    <!--  Iman  -->
+    <!--    -->
     <!--  Send  -->
     <!--  Cash  -->
     <data noupdate="1">
@@ -11,7 +13,7 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-<!--            <field name="company_id">1</field>-->
+            <field name="company_id">1</field>
         </record>
     </data>
     <!--  Bank  -->
@@ -23,7 +25,7 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-<!--            <field name="company_id">1</field>-->
+            <field name="company_id">1</field>
         </record>
     </data>
 
@@ -37,7 +39,7 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-<!--            <field name="company_id">1</field>-->
+            <field name="company_id">1</field>
         </record>
     </data>
 
@@ -50,7 +52,7 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-<!--            <field name="company_id">1</field>-->
+            <field name="company_id">1</field>
         </record>
     </data>
 
@@ -65,7 +67,81 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-<!--            <field name="company_id">1</field>-->
+            <field name="company_id">1</field>
+        </record>
+    </data>
+
+
+
+
+    <!--    -->
+    <!--  AT  -->
+    <!--    -->
+    <!--  Send  -->
+    <!--  Cash  -->
+    <data noupdate="1">
+        <record id="at_sequence_im_account_payment_send_cash" model="ir.sequence">
+            <field name="name">Cash Payment Send Sequence</field>
+            <field name="code">at.cash.payment.send.sequence</field>
+            <field name="prefix">CPV/%(year)s/%(month)s/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id">2</field>
+        </record>
+    </data>
+    <!--  Bank  -->
+    <data noupdate="1">
+        <record id="at_sequence_im_account_payment_send_bank" model="ir.sequence">
+            <field name="name">Bank Payment Send Sequence</field>
+            <field name="code">at.bank.payment.send.sequence</field>
+            <field name="prefix">BPV/%(year)s/%(month)s/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id">2</field>
+        </record>
+    </data>
+
+    <!--  Receive  -->
+    <!--  Cash  -->
+    <data noupdate="1">
+        <record id="at_sequence_im_account_payment_receive_cash" model="ir.sequence">
+            <field name="name">Cash Payment Receive Sequence</field>
+            <field name="code">at.cash.payment.receive.sequence</field>
+            <field name="prefix">CRV/%(year)s/%(month)s/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id">2</field>
+        </record>
+    </data>
+
+    <!--Bank-->
+    <data noupdate="1">
+        <record id="at_sequence_im_account_payment_receive_bank" model="ir.sequence">
+            <field name="name">Bank Payment Receive Sequence</field>
+            <field name="code">at.bank.payment.receive.sequence</field>
+            <field name="prefix">BRV/%(year)s/%(month)s/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id">2</field>
+        </record>
+    </data>
+
+    <!--  ########################  -->
+    <!--  CT  -->
+
+    <data noupdate="1">
+        <record id="at_sequence_im_account_payment_internal" model="ir.sequence">
+            <field name="name">Internal Payment Receive Sequence</field>
+            <field name="code">at.internal.payment.sequence</field>
+            <field name="prefix">CT/%(year)s/%(month)s/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id">2</field>
         </record>
     </data>
 

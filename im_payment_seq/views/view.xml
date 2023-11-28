@@ -59,6 +59,7 @@
             <xpath expr="//field[@name='partner_id']" position="before">
                 <field name="company_id" optional="hide"/>
                 <field name="custom_name"/>
+<!--                <field name="currency_id"/>-->
             </xpath>
         </field>
     </record>
@@ -75,6 +76,9 @@
             <xpath expr="//group" position="inside">
                 <filter name="custom_name" string="Voucher Num"
                         domain="[]" context="{'group_by':'custom_name'}"/>
+
+<!--                <filter name="currency_id" string="Currency"-->
+<!--                        domain="[]" context="{'group_by':'currency_id'}"/>-->
             </xpath>
         </field>
     </record>
