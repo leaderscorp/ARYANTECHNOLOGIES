@@ -29,7 +29,7 @@
         'views/templates.xml',
         # 'report/inherit_account_move_line.xml',
         'report/inherit_repair_report.xml',
-        # 'report/replace_invoice_report.xml',
+        'report/replace_invoice_report.xml',
         'report/add_location_view_in_repair.xml',
         'report/new_invoice_report.xml'
     ],

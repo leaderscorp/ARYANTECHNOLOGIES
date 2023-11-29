@@ -117,7 +117,7 @@
                         <table class="table table-sm">
                             <thead>
                                 <tr>
-                                    <th class="text-start" style="width:60%;">
+                                    <th class="text-start" style="width:50%;">
                                         <div class="row">
                                             <div class="col-8 text-start">
                                                 <span>Account Title</span>
@@ -135,8 +135,12 @@
 <!--                                        <span>Invoice Number</span>-->
 <!--                                    </th>-->
                                     <th>
-                                        <span>Amount</span>
+                                        <span>Reference</span>
                                     </th>
+                                    <th style="width:10%;">
+                                        <span>Invoice Amount</span>
+                                    </th>
+
                                     <!-- Add a column if there are different currencies -->
 <!--                                    <th t-if="otherCurrency" class="text-end">-->
 <!--                                        <span>Amount In Currency</span>-->
@@ -144,8 +148,11 @@
 <!--                                    <th>-->
 <!--                                        <span>W.H Tax</span>-->
 <!--                                    </th>-->
-                                    <th class="text-center">
-                                        <span>Total Amount</span>
+                                    <th class="text-center" style="width:10%;">
+                                        <span>Paid Amount</span>
+                                    </th>
+                                    <th class="text-center" style="width:10%;">
+                                        <span>Balance</span>
                                     </th>
                                 </tr>
                             </thead>
@@ -166,13 +173,23 @@
                                         </td>
 <!--                                        <td class="text-center"></td>-->
                                         <td class="text-end">
-                                            <span t-out="'{:,.2f}'.format(com.amount)" t-options="{'widget': 'Float'}"/>
+<!--                                            <span class="fw-bold">Narration: </span>-->
+                                            <span class="text-capitalize" t-field="o.ref"/>
                                         </td>
+                                        <td class="text-end">
+                                            <span t-out="'{:,.2f}'.format(o.amount_total)" t-options="{'widget': 'Float'}"/>
+                                        </td>
+
+
+
 <!--                                        <td class="text-end">-->
 <!--                                            <span t-field="com.amount"/>-->
 <!--                                        </td>-->
                                         <td class="text-end">
                                             <span t-out="'{:,.2f}'.format(com.amount)" t-options="{'widget': 'Float'}"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-out="'{:,.2f}'.format(o.amount_residual)" t-options="{'widget': 'Float'}"/>
                                         </td>
 
                                     </tr>
@@ -186,14 +203,21 @@
 <!--                                        <td>-->
 <!--                                            <span/>-->
 <!--                                        </td>-->
-                                        <td class="text-end">
-                                            <span t-out="'{:,.2f}'.format(com.amount)" t-options="{'widget': 'Float'}"/>
-                                        </td>
+
 <!--                                        <td class="text-end">-->
 <!--                                            <span t-field="com.amount"/>-->
 <!--                                        </td>-->
+                                         <td class="text-end">
+<!--                                            <span t-out="'{:,.2f}'.format(com.amount)" t-options="{'widget': 'Float'}"/>-->
+                                        </td>
+                                          <td class="text-end">
+                                            <span t-out="'{:,.2f}'.format(o.amount_total)" t-options="{'widget': 'Float'}"/>
+                                        </td>
                                         <td class="text-end">
                                             <span t-out="'{:,.2f}'.format(com.amount)" t-options="{'widget': 'Float'}"/>
+                                        </td>
+                                         <td class="text-end">
+                                            <span t-out="'{:,.2f}'.format(o.amount_residual)" t-options="{'widget': 'Float'}"/>
                                         </td>
 
                                     </tr>
@@ -271,16 +295,16 @@
 
 <!--                            </tbody>-->
                         </table>
-                         <tr>
-                                <td><b>Ledger Balance:</b></td>
-                                <div style="float:right; margin-right:10px;">
-                                    <td >0.00</td>
-                                </div>
-                         </tr>
+<!--                         <tr>-->
+<!--                                <td><b>Ledger Balance:</b></td>-->
+<!--                                <div style="float:right; margin-right:10px;">-->
+<!--                                    <td >0.00</td>-->
+<!--                                </div>-->
+<!--                         </tr>-->
                         <br/>
                         <br/>
                         <span class="fw-bold">Rupees: </span><span class="text-capitalize" t-field="o.total_in_words"/><br/>
-                        <span class="fw-bold">Narration: </span><span class="text-capitalize" t-field="o.ref"/>
+<!--                        <span class="fw-bold">Narration: </span><span class="text-capitalize" t-field="o.ref"/>-->
 
                     </div>
                     <div class="footer">
