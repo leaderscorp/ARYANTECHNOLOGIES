@@ -228,7 +228,7 @@
                             <div class="p-2">
                                 <h5 class="text-uppercase border-top border-dark fw-bold pt-2">For
                                     <t t-if="o.company_id.name == 'Aryan Tech'">
-                                        <span>Aryan Technologies Pvt Ltd.</span>
+                                        <span>Aryan Technologics Pvt Ltd.</span>
                                     </t>
                                      <t t-if="o.company_id.name == 'Iman Group'">
                                         <span t-field="o.company_id.name"/>
