@@ -109,7 +109,7 @@
                             <!--                            </div>-->
 
                             <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
-                            <h2 class="text-center" style="margin-bottom:30px;">Invoice</h2>
+                            <h2 class="text-center" style="margin-bottom:30px;">Sales Invoice</h2>
 <!--class="table table-sm o_main_table table-borderless"-->
                                     <table   name="invoice_line_table">
                                         <thead>
@@ -226,7 +226,14 @@
                         <br/>
                         <div class="d-flex flex-row mb-2" style="margin-top:4em;">
                             <div class="p-2">
-                                <h5 class="text-uppercase border-top border-dark fw-bold pt-2">For Iman Group</h5>
+                                <h5 class="text-uppercase border-top border-dark fw-bold pt-2">For
+                                    <t t-if="o.company_id.name == 'Aryan Tech'">
+                                        <span>Aryan Technologies Pvt Ltd.</span>
+                                    </t>
+                                     <t t-if="o.company_id.name == 'Iman Group'">
+                                        <span t-field="o.company_id.name"/>
+                                    </t>
+                                </h5>
                             </div>
                         </div>
 
