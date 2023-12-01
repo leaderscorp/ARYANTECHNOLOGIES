@@ -117,7 +117,7 @@
                         <table class="table table-sm">
                             <thead>
                                 <tr>
-                                    <th class="text-start" style="width:50%;">
+                                    <th class="text-start" style="width:40%;">
                                         <div class="row">
                                             <div class="col-8 text-start">
                                                 <span>Account Title</span>
@@ -131,9 +131,9 @@
 <!--                                    <th>-->
 <!--                                        <span>Account Code</span>-->
 <!--                                    </th>-->
-<!--                                    <th>-->
-<!--                                        <span>Invoice Number</span>-->
-<!--                                    </th>-->
+                                    <th style="width:10%;">
+                                        <span>Invoice/Bill Number</span>
+                                    </th>
                                     <th>
                                         <span>Reference</span>
                                     </th>
@@ -171,6 +171,10 @@
                                                 </div>
                                             </div>
                                         </td>
+                                        <td class="text-end">
+                                            <span class="text-capitalize" t-field="o.reconciled_invoice_ids.name"/>
+                                            <span class="text-capitalize" t-field="o.reconciled_bill_ids.name"/>
+                                        </td>
 <!--                                        <td class="text-center"></td>-->
                                         <td class="text-end">
 <!--                                            <span class="fw-bold">Narration: </span>-->
@@ -207,6 +211,8 @@
 <!--                                        <td class="text-end">-->
 <!--                                            <span t-field="com.amount"/>-->
 <!--                                        </td>-->
+                                         <td class="text-end">
+                                         </td>
                                          <td class="text-end">
 <!--                                            <span t-out="'{:,.2f}'.format(com.amount)" t-options="{'widget': 'Float'}"/>-->
                                         </td>
