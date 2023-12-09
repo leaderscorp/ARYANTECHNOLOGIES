@@ -1,5 +1,30 @@
+<!--<?xml version="1.0" encoding="UTF-8" ?>-->
 <odoo>
-  <data>
 
-  </data>
+
+     <record id="im_sequence_description_field_view_form_ap" model="ir.ui.view">
+        <field name="name">im_sequence_description_field_view_form_ap</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id" ref="repair.view_repair_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/div[hasclass('oe_title')]" position="replace">
+                 <label class="o_form_label" for="seq_des"/>
+                        <h1 class="d-flex">
+                            <field name="priority" widget="priority" class="me-3"/>
+                            <field name="seq_des"/>
+                        </h1>
+            </xpath>
+        </field>
+    </record>
+
+     <record id="im_sequence_description_field_view_tree_ap" model="ir.ui.view">
+        <field name="name">im_sequence_description_field_view_tree_ap</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id" ref="repair.view_repair_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="replace">
+                <field name="seq_des"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
