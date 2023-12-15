@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+<!--    -d Iman_updated_db -u iman_pr_rep-->
     <data>
         <template id="new_invoice_report_template_iman_doc">
             <div class="header">
@@ -33,7 +34,8 @@
                                         <b>Supplier Name:</b>
                                         <span t-field="company.name"/>
                                         <br/>
-                                        <b>Invoice No:</b>
+                                        <b><span t-if="o.move_type == 'out_invoice'">Invoice No:</span>
+                                            <span t-else="">Bill No:</span></b>
                                         <span t-field="o.name"/>
                                         <br/>
                                         <b>Address:</b>
@@ -45,7 +47,8 @@
                                         <b>NTN:</b>
                                         <span t-field="company.vat"/>
                                         <br/>
-                                        <b>Invoice Origin:</b>
+                                        <b><span t-if="o.move_type == 'out_invoice'">Invoice Origin:</span>
+                                            <span t-else="">Bill Origin:</span></b>
                                         <span t-field="o.invoice_origin"/>
                                         <br/>
                                         <b>Payment Ref:</b>
@@ -228,7 +231,7 @@
                             <div class="p-2">
                                 <h5 class="text-uppercase border-top border-dark fw-bold pt-2">For
                                     <t t-if="o.company_id.name == 'Aryan Tech'">
-                                        <span>Aryan Technologies Pvt Ltd.</span>
+                                        <span>Aryan Technologics Pvt Ltd.</span>
                                     </t>
                                      <t t-if="o.company_id.name == 'Iman Group'">
                                         <span t-field="o.company_id.name"/>

@@ -131,15 +131,26 @@
 <!--                                    <th>-->
 <!--                                        <span>Account Code</span>-->
 <!--                                    </th>-->
-                                    <th style="width:10%;">
-                                        <span>Invoice/Bill Number</span>
-                                    </th>
+
+                                        <t t-if="o.reconciled_invoice_ids"><span> <th style="width:10%;">Invoice Number</th></span></t>
+                                        <t t-if="o.reconciled_bill_ids"><th style="width:10%;"><span>Bill Number</span></th></t>
+                                        <t t-else=""/>
+
                                     <th>
                                         <span>Reference</span>
                                     </th>
+                                    <t t-if="o.reconciled_invoice_ids">
                                     <th style="width:10%;">
+
                                         <span>Invoice Amount</span>
                                     </th>
+                                    </t>
+                                    <t t-if="o.reconciled_bill_ids">
+                                    <th style="width:10%;">
+
+                                        <span>Bill Amount</span>
+                                    </th>
+                                    </t>
 
                                     <!-- Add a column if there are different currencies -->
 <!--                                    <th t-if="otherCurrency" class="text-end">-->
@@ -171,18 +182,29 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="text-end">
-                                            <span class="text-capitalize" t-field="o.reconciled_invoice_ids.name"/>
-                                            <span class="text-capitalize" t-field="o.reconciled_bill_ids.name"/>
-                                        </td>
+<!--                                        <t t-foreach="o" t-as="val">-->
+
+
+                                            <span t-if="o.reconciled_invoice_ids"><td class="text-end"><span class="text-capitalize" t-field="o.inv_id_ref"/></td></span>
+                                            <span t-if="o.reconciled_bill_ids"><td class="text-end"><span class="text-capitalize" t-field="o.bill_id_ref"/></td></span>
+<!--                                            <span class="text-capitalize" t-field="o.inv_id_ref"/>-->
+<!--                                            <span class="text-capitalize" t-field="o.bill_id_ref"/>-->
+
+<!--                                            <span class="text-capitalize" t-field="o.bill_id_ref"/>-->
+
+<!--                                        </t>-->
+
+
 <!--                                        <td class="text-center"></td>-->
                                         <td class="text-end">
 <!--                                            <span class="fw-bold">Narration: </span>-->
                                             <span class="text-capitalize" t-field="o.ref"/>
                                         </td>
-                                        <td class="text-end">
-                                            <span t-out="'{:,.2f}'.format(o.amount_total)" t-options="{'widget': 'Float'}"/>
-                                        </td>
+
+
+                                            <span t-if="o.reconciled_invoice_ids"><td class="text-end"><span t-out="'{:,.2f}'.format(o.inv_balance_ref_total)" t-options="{'widget': 'Float'}"/></td></span>
+                                            <span t-if="o.reconciled_bill_ids"><td class="text-end"><span t-out="'{:,.2f}'.format(o.bill_balance_ref_total)" t-options="{'widget': 'Float'}"/></td></span>
+
 
 
 
@@ -193,7 +215,10 @@
                                             <span t-out="'{:,.2f}'.format(com.amount)" t-options="{'widget': 'Float'}"/>
                                         </td>
                                         <td class="text-end">
-                                            <span t-out="'{:,.2f}'.format(o.amount_residual)" t-options="{'widget': 'Float'}"/>
+                                            <span t-if="o.reconciled_invoice_ids"><span t-out="'{:,.2f}'.format(o.inv_balance_ref_total - com.amount)"/></span>
+                                            <span t-if="o.reconciled_bill_ids"><span t-out="'{:,.2f}'.format(o.bill_balance_ref_total - com.amount)"/></span>
+<!--                                            <span t-out="'{:,.2f}'.format(o.inv_balance)"/>-->
+<!--                                            <span t-out="'{:,.2f}'.format(o.bill_balance)"/>-->
                                         </td>
 
                                     </tr>
@@ -211,19 +236,27 @@
 <!--                                        <td class="text-end">-->
 <!--                                            <span t-field="com.amount"/>-->
 <!--                                        </td>-->
+                                        <span t-if="o.reconciled_invoice_ids">
                                          <td class="text-end">
                                          </td>
+                                        </span>
+                                        <span t-if="o.reconciled_bill_ids">
+                                         <td class="text-end">
+                                         </td>
+                                        </span>
                                          <td class="text-end">
 <!--                                            <span t-out="'{:,.2f}'.format(com.amount)" t-options="{'widget': 'Float'}"/>-->
                                         </td>
-                                          <td class="text-end">
-                                            <span t-out="'{:,.2f}'.format(o.amount_total)" t-options="{'widget': 'Float'}"/>
-                                        </td>
+
+                                           <span t-if="o.reconciled_invoice_ids"><td class="text-end"><span t-out="'{:,.2f}'.format(o.inv_balance_ref_total)" t-options="{'widget': 'Float'}"/> </td></span>
+                                           <span t-if="o.reconciled_bill_ids"><td class="text-end"><span t-out="'{:,.2f}'.format(o.bill_balance_ref_total)" t-options="{'widget': 'Float'}"/></td></span>
+
                                         <td class="text-end">
                                             <span t-out="'{:,.2f}'.format(com.amount)" t-options="{'widget': 'Float'}"/>
                                         </td>
                                          <td class="text-end">
-                                            <span t-out="'{:,.2f}'.format(o.amount_residual)" t-options="{'widget': 'Float'}"/>
+                                             <span t-if="o.reconciled_invoice_ids"><span t-out="'{:,.2f}'.format(o.inv_balance_ref_total - com.amount)"/></span>
+                                            <span t-if="o.reconciled_bill_ids"><span t-out="'{:,.2f}'.format(o.bill_balance_ref_total - com.amount)"/></span>
                                         </td>
 
                                     </tr>
