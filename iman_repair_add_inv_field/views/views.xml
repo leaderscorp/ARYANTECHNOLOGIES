@@ -17,6 +17,7 @@
         </field>
     </record>
 
+
      <record id="im_sequence_description_field_view_tree_ap" model="ir.ui.view">
         <field name="name">im_sequence_description_field_view_tree_ap</field>
         <field name="model">repair.order</field>
@@ -24,6 +25,18 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="replace">
                 <field name="seq_des"/>
+            </xpath>
+        </field>
+    </record>
+     <record id="view_repair_order_form_filter_inherit" model="ir.ui.view">
+        <field name="name">im_sequence_description_field_view_tree_ap_search</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id" ref="repair.view_repair_order_form_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="description" string="Repair Description" />
+                <field name="seq_des" string="Repair Reference" />
+
             </xpath>
         </field>
     </record>

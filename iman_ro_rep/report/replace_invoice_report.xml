@@ -26,7 +26,10 @@
                                         <b>Supplier Name:</b>
                                         <span t-field="company.name"/>
                                         <br/>
-                                        <b>Invoice No:</b>
+
+                                        <b><span t-if="o.type == 'out_invoice'">Invoice</span>
+                                            <span t-else="">Bill</span></b>
+
                                         <span t-field="o.name"/>
                                         <br/>
                                         <b>Address:</b>
