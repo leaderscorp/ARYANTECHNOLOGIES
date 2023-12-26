@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_journal_dashboard_kanban_reports_inherit" model="ir.ui.view">
+            <field name="name">account.journal.dashboard.kanban.reports.inherit</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@t-if='dashboard.nb_lines_bank_account_balance &gt; 0']"
+                    position="before">
+                    <div class="row">
+                        <div id="dashboard_bank_cash_balance_gl_custom"
+                            class="col overflow-hidden text-start">
+                            <a type="object" name="action_open_balance_gl" title="Balance GL">Balance
+                                GL</a>
+                        </div>
+                        <div class="col-auto text-end">
+                            <a type="object" name="action_open_balance_gl" title="Balance GL">
+                                <span class="o_kanban_monetary">
+                                    <field name="balance_gl" />
+                                    <span> Rs.</span>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+
+
+<!-- <record id="account_journal_dashboard_kanban_reports_inherit" model="ir.ui.view">
+    <field name="name">account.journal.dashboard.kanban.reports.inherit</field>
+    <field name="model">account.journal</field>
+    <field name="inherit_id"
+        ref="account_reports.account_reports_journal_dashboard_kanban_view" />
+    <field name="arch" type="xml"></field>
+    <xpath expr="//div[@id='dashboard_bank_cash_balance']" position="after">
+        <div class="row">
+            <div id="dashboard_bank_cash_balance_gl_custom"
+                class="col overflow-hidden text-start">
+                <a type="object" name="action_open_balance_gl" title="Balance GL">Balance GL</a>
+            </div>
+            <div class="col-auto text-end">
+                <a type="object" name="action_open_balance_gl" title="Balance GL">
+                    <span class="o_kanban_monetary">
+                        <field name="balance_gl" />
+                    </span>
+                </a>
+            </div>
+        </div>
+    </xpath>
+</record> -->
