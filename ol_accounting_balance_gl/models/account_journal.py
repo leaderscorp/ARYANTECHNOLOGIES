@@ -3,6 +3,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 import ast
 
+
 class AccountJournalInherit(models.Model):
     _inherit = 'account.journal'
 
