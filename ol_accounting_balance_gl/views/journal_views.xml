@@ -16,9 +16,12 @@
                         </div>
                         <div class="col-auto text-end">
                             <a type="object" name="action_open_balance_gl" title="Balance GL">
+<!--                                <span>-->
                                 <span class="o_kanban_monetary">
-                                    <field name="balance_gl" />
-                                    <span> Rs.</span>
+<!--                                    <t t-esc="dashboard.balance_gl" widget="float"/>-->
+                                    <field name="balance_gl"/>
+                                    <span> </span><field name="amount_currency_symbol"/>
+<!--                                    <span> Rs.</span>-->
                                 </span>
                             </a>
                         </div>
