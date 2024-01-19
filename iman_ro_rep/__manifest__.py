@@ -27,6 +27,7 @@
         'security/ir.model.access.csv',
         # 'views/views.xml',
         'views/templates.xml',
+        'views/restrict_location.xml',
         # 'report/inherit_account_move_line.xml',
         'report/inherit_repair_report.xml',
         'report/replace_invoice_report.xml',

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="iman_repair_location_id_hide" model="ir.ui.view">
+        <field name="name">iman.repair.location.id.hide</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id" ref="repair.view_repair_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_id']" position="attributes">
+                <attribute name="domain">
+                    [('name', '!=' , 'Islamabad')]
+                </attribute>
+            </xpath>
+        </field>
+        </record>
+         <record id="iman_repair_line_location_id_hide" model="ir.ui.view">
+            <field name="name">iman.repair.line.location.id.hide</field>
+            <field name="model">repair.order</field>
+            <field name="inherit_id" ref="repair.view_repair_order_form"/>
+            <field name="arch" type="xml">
+<!--                <xpath expr="//field[@name='operations']//form/group[1]/group[2]//field[@name='location_id']" position="attributes">-->
+                <xpath expr="//field[@name='operations']/tree//field[@name='location_id']" position="attributes">
+                      <attribute name="domain">
+                        [('name', '!=' , 'Islamabad')]
+                    </attribute>
+                </xpath>
+                <xpath expr="//field[@name='operations']/tree//field[@name='location_dest_id']" position="attributes">
+                      <attribute name="domain">
+                        [('name', '!=' , 'Islamabad')]
+                    </attribute>
+                </xpath>
+            </field>
+        </record>
+</odoo>
