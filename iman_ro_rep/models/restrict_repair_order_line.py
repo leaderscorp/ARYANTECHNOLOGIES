@@ -4,7 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class IMRepairOrderRestrict(models.Model):
     _inherit = 'repair.order'
-    newfield=fields.Char(string='test')
+
     def action_validate(self):
         for order in self:
             products_with_insufficient_quantity = [

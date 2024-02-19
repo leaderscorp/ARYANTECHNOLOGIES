@@ -5,7 +5,7 @@
         <xpath expr="//table/tbody/t[1]/tr[2]/td[1]" position="replace"/>
 
          <xpath expr="//table/tbody/t/tr[1]/td" position="replace">
-            <td colspan="7"><strong>Parts</strong></td>
+            <td colspan="8"><strong>Description</strong></td>
         </xpath>
         <xpath expr="//table/thead/tr/th[1]" position="before">
             <th class="w-25"><strong>Product</strong></th>
@@ -14,7 +14,6 @@
         <xpath expr="//table/tbody/t[1]/tr[2]/td[1]" position="before">
              <td class="text-start">
                 <span t-field="line.product_id"/>
-
              </td>
 <!--            <td class="text-start" >-->
 <!--                <span t-field="line.product_id.description"/>-->
@@ -22,6 +21,92 @@
 <!--             </td>-->
         </xpath>
 
+        <xpath expr="//p[@t-field='o.quotation_notes']" position="before">
+
+            <h4 style="margin-top: 20px;">Terms And Condition</h4>
+        </xpath>
+
+        <xpath expr="//h2" position="after">
+
+            <div>
+                <strong>Quotation Subject:</strong>
+                <p t-field="o.description" class="m-0"/>
+            </div>
+        </xpath>
+
+
+
+        <xpath expr="//table/thead/tr/t/th[1]" position="after">
+            <th class="text-start " ><span>Total Without GST </span></th>
+        </xpath>
+        <xpath expr="//table/thead/tr/t/th[4]" position="before">
+            <th class="text-start " ><span>GST Amount</span></th>
+        </xpath>
+
+<!--        <xpath expr="//table/thead/tr/th[3]" position="after">-->
+<!--            <th class="text-start " ><span>GST Amount</span></th>-->
+<!--        </xpath>-->
+
+        <xpath expr="//table/thead/tr/t/th[5]" position="replace">
+            <th class="text-start " ><span>Amount Inc GST </span></th>
+        </xpath>
+
+    <xpath expr="//table/tbody/t[1]/tr[2]/t/td[1]" position="after">
+             <td class="text-start">
+                <span t-field="line.price_subtotal"/>
+                 <t t-set="sub" t-value="line.price_subtotal"/>
+                 <t t-set="total" t-value="line.price_total"/>
+                 <t t-set="line_tax" t-value="total - sub"/>
+             </td>
+    </xpath>
+
+
+
+    <xpath expr="//table/tbody/t[1]/tr[2]/t/td[4]" position="before">
+            <td>
+
+                 <span t-esc="round(line_tax, 2)"/>
+            </td>
+    </xpath>
+        <xpath expr="//table/tbody/t[1]/tr[2]/t/td[5]" position="replace">
+            <td>
+
+               <span class="text-nowrap"  t-field="line.price_total"/>
+            </td>
+    </xpath>
+
+        <xpath expr="//table/tbody" position="after">
+
+                    <tbody>
+                          <tr class="border-black">
+
+                            <td class="pull-right text-center col-1 fw-bold"  colspan="2">Total</td>
+                              <td class="pull-right col-1 fw-bold"></td>
+                              <td class="pull-right col-1 fw-bold"> <span class="text-nowrap" t-field="o.amount_untaxed" /></td>
+                              <td class="pull-right col-1 fw-bold"></td>
+                              <td class="pull-right col-1 fw-bold"> <span class="text-nowrap" t-field="o.amount_tax" /></td>
+                              <td class="pull-right col-1 fw-bold"> <span class="text-nowrap" t-field="o.amount_total" /></td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="7" class="text-uppercase text-center fw-bold border-top border-dark">
+
+                                <span t-field="o.total_in_wordss"/><span class="text-capitalize" style="margin-left:0.5em;">Only</span>
+                            </td>
+                        </tr>
+                    </tbody>
+
+        </xpath>
+<!--<xpath expr="//div[@id='informations']/div[@class='col-3 bm-2'][4]" position="after">-->
+<!--    <div class="col-3 bm-2">-->
+<!--     <strong>Job Completion Date:</strong>-->
+<!--    <p t-field="o.job_completion_date" t-options="{'widget': 'date'}" class="m-0"/>-->
+<!--    </div>-->
+<!--</xpath>-->
+
+<xpath expr="//div[@id='total']" position="attributes">
+    <attribute name="style">display:none;</attribute>
+</xpath>
 
     </template>
 </odoo>

@@ -44,3 +44,4 @@ class AccountMoveNumWords(models.Model):
         #     rec.total_in_words = num2words(int(rec.amount_total), lang='en_US')
             rec.total_in_words = num2words(rec.amount_total, lang='en_US')
         #     # print(rec.total_in_words)
+
