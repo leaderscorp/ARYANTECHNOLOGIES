@@ -61,6 +61,19 @@
     </xpath>
 
 
+<!-- <xpath expr="//table/thead/tr/th[2]" position="replace">-->
+<!--    <th class="text-center" style="width: 30px;">QTY</th>-->
+<!--</xpath>-->
+
+<!--<xpath expr="//table/tbody/t[1]/tr[2]/td[2]" position="replace">-->
+<!--            <td style="width: 30px;">-->
+
+<!--                 <span t-field="line.product_uom_qty"/>-->
+<!--                 <span groups="uom.group_uom" t-field="line.product_uom.name"/>-->
+<!--            </td>-->
+<!--</xpath>-->
+
+
 
     <xpath expr="//table/tbody/t[1]/tr[2]/t/td[4]" position="before">
             <td>
@@ -75,13 +88,19 @@
             </td>
     </xpath>
 
+     <xpath expr="//table/tbody/t[1]/tr[2]/t/td[3]" position="replace">
+     <td class="text-center">
+        <span t-esc="','.join(map(lambda x: x.description.split(' ')[1] if ' ' in x.description else x.description, line.tax_id))"/>
+    </td>
+    </xpath>
+
+
         <xpath expr="//table/tbody" position="after">
 
                     <tbody>
                           <tr class="border-black">
 
-                            <td class="pull-right text-center col-1 fw-bold"  colspan="2">Total</td>
-                              <td class="pull-right col-1 fw-bold"></td>
+                            <td class="pull-right text-center col-1 fw-bold"  colspan="3">Total</td>
                               <td class="pull-right col-1 fw-bold"> <span class="text-nowrap" t-field="o.amount_untaxed" /></td>
                               <td class="pull-right col-1 fw-bold"></td>
                               <td class="pull-right col-1 fw-bold"> <span class="text-nowrap" t-field="o.amount_tax" /></td>

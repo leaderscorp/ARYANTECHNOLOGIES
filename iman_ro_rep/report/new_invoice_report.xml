@@ -31,7 +31,12 @@
                                         <b>Date:</b>
                                         <span t-field="o.invoice_date"/>
                                         <br/>
-                                        <b>Supplier Name:</b>
+                                        <t t-if="o.repair_ids">
+                                            <b>Job Completion Date:</b>
+                                            <span t-field="o.repair_ids.job_completion_date"/>
+                                            <br/>
+                                        </t>
+                                        <b>Supplierr Name:</b>
                                         <span t-field="company.name"/>
                                         <br/>
                                         <b><span t-if="o.move_type == 'out_invoice'">Invoice No:</span>

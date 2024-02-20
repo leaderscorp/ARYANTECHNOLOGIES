@@ -9,9 +9,9 @@
                 <xpath expr="//field[@name='schedule_date']" position="after">
                     <field name="job_completion_date"/>
                 </xpath>
-                <xpath expr="//field[@name='guarantee_limit']" position="after">
-                    <field name="invoice_method"/>
-                </xpath>
+<!--                <xpath expr="//field[@name='guarantee_limit']" position="after">-->
+<!--                    <field name="invoice_method"/>-->
+<!--                </xpath>-->
 
             </field>
         </record>
