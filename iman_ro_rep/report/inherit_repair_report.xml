@@ -29,6 +29,9 @@
                                 <b>NTN:</b>
                                 <span t-field="company.vat"/>
                                 <br/>
+                                <b>Payment Reference:</b>
+                                <span t-field="o.seq_des"/>
+                                <br/>
                             </t>
                         </div>
                     </div>
