@@ -1,119 +1,269 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <template id="repair_report_inherit_template" inherit_id="repair.report_repairorder">
-        <xpath expr="//table/thead/tr/th[1]" position="replace"/>
-        <xpath expr="//table/tbody/t[1]/tr[2]/td[1]" position="replace"/>
+         <xpath expr="//t[2]" position="replace">
+             <t t-call="web.external_layout">
+             <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
+               <div class="container">
+                <div class="row">
 
-         <xpath expr="//table/tbody/t/tr[1]/td" position="replace">
-            <td colspan="8"><strong>Description</strong></td>
-        </xpath>
-        <xpath expr="//table/thead/tr/th[1]" position="before">
-            <th class="w-25"><strong>Product</strong></th>
-<!--            <th class="w-25"><strong>Description</strong></th>-->
-        </xpath>
-        <xpath expr="//table/tbody/t[1]/tr[2]/td[1]" position="before">
-             <td class="text-start">
-                <span t-field="line.name"/>
-             </td>
-<!--            <td class="text-start" >-->
-<!--                <span t-field="line.product_id.description"/>-->
+                    <div class="col-6">
+                        <div>
+                            <t t-if="o and 'company_id' in o">
+                                <t t-set="company" t-value="o.company_id"/>
+                                <b>Date:</b>
+                                <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options="{'widget': 'date'}" class="m-0"/>
+                                <br/>
+                                <b>Supplier Name:</b>
+                                <span t-field="company.name"/>
+                                <br/>
+                                <b>Invoice No:</b>
+                                <span t-field="o.name"/>
+                                <br/>
+                                <b>Address:</b>
+                                <span t-field="company.street"/>
+                                <br/>
+                                <b>Telephone:</b>
+                                <span t-field="company.phone"/>
+                                <br/>
+                                <b>NTN:</b>
+                                <span t-field="company.vat"/>
+                                <br/>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <b>Buyer's Name:</b>
+                        <span t-field="o.partner_id.name"/>
+                        <br/>
+                        <b>Buyer's Address:</b>
+                        <span t-field="o.partner_id.street"/>
+                        <br/>
+                        <b>Buyer's NTN:</b>
+                        <span t-field="o.partner_id.vat"/>
+                        <br/>
+                    </div>
+                </div>
+            </div>
 
+                <div class="page">
+                    <div class="oe_structure"/>
+
+                    <h2 class="text-center mt-4 mb-4">
+                        QUOTATION
+
+                    </h2>
+
+                    <table class="table table-sm o_main_table">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Products</th>
+                                <th class="text-center">Quantity</th>
+                                <t t-if="o.invoice_method != 'none'">
+                                    <th class="text-center">Rate Per unit</th>
+                                    <th class="text-center">Total Without GST</th>
+                                    <th class="text-center">GST Rate</th>
+                                    <th class="text-center">GST amount</th>
+                                    <th class="text-center">Amount Inc Gst</th>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="o.operations">
+                                <tr class="bg-200 o_line_section"><td colspan="7"><strong>Description</strong></td></tr>
+                                <tr t-foreach="o.operations" t-as="line">
+                                    <td>
+                                        <p t-if="line.type == 'add'"><span t-field="line.name" /></p>
+                                        <p t-if="line.type == 'remove'"><span t-field="line.name"/></p>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line.product_uom_qty"/>
+                                        <span groups="uom.group_uom" t-field="line.product_uom.name"/>
+                                    </td>
+                                    <t t-if="(line.repair_id.invoice_method != 'none')">
+                                        <td class="text-center">
+                                            <span t-field="line.price_unit"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-field="line.price_subtotal"/>
+                                            <t t-set="sub" t-value="line.price_subtotal"/>
+                                            <t t-set="total" t-value="line.price_total"/>
+                                            <t t-set="line_tax" t-value="total - sub"/>
+                                        </td>
+                                        <td class="text-center">
+                                             <span t-esc="','.join(map(lambda x: x.description.split(' ')[1] if ' ' in x.description else x.description, line.tax_id))"/>
+                                        </td>
+
+                                        <td>
+
+                                        <span t-esc="round(line_tax, 2)"/>
+                                        </td>
+                                        <td class="text-center o_price_total">
+                                            <span t-field="line.price_total" t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
+                                       </td>
+                                    </t>
+                                </tr>
+                            </t>
+                            <t t-if="o.fees_lines">
+                                <tr class="bg-200 o_line_section"><td colspan="7"><strong>Operations</strong></td></tr>
+                                <tr t-foreach="o.fees_lines" t-as="fees">
+                                    <td>
+                                        <span t-field="fees.name"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="fees.product_uom_qty"/>
+                                        <span groups="uom.group_uom" t-field="fees.product_uom.name"/>
+                                    </td>
+                                    <t t-if="(fees.repair_id.invoice_method != 'none')">
+                                        <td class="text-end">
+                                            <span t-field="fees.price_unit"/>
+                                        </td>
+
+                                         <td class="text-center">
+                                            <span t-field="fees.price_subtotal"/>
+                                            <t t-set="sub" t-value="fees.price_subtotal"/>
+                                            <t t-set="total" t-value="fees.price_total"/>
+                                            <t t-set="fees_tax" t-value="total - sub"/>
+                                        </td>
+
+                                        <td class="text-center">
+                                             <span t-esc="','.join(map(lambda x: x.description.split(' ')[1] if ' ' in x.description else x.description, fees.tax_id))"/>
+                                        </td>
+                                        <td>
+
+                                        <span t-esc="round(fees_tax, 2)"/>
+                                        </td>
+                                        <td class="text-end o_price_total">
+                                            <span t-field="fees.price_total"
+                                                t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
+                                       </td>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+
+
+
+                    <p t-field="o.quotation_notes"/>
+                    <div class="oe_structure"/>
+                </div>
+             </t>
+         </xpath>
+<!--        <xpath expr="//table/thead/tr/th[1]" position="replace"/>-->
+<!--        <xpath expr="//table/tbody/t[1]/tr[2]/td[1]" position="replace"/>-->
+
+<!--         <xpath expr="//table/tbody/t/tr[1]/td" position="replace">-->
+<!--            <td colspan="8"><strong>Description</strong></td>-->
+<!--        </xpath>-->
+<!--        <xpath expr="//table/thead/tr/th[1]" position="before">-->
+<!--            <th class="w-25"><strong>Product</strong></th>-->
+<!--&lt;!&ndash;            <th class="w-25"><strong>Description</strong></th>&ndash;&gt;-->
+<!--        </xpath>-->
+<!--        <xpath expr="//table/tbody/t[1]/tr[2]/td[1]" position="before">-->
+<!--             <td class="text-start">-->
+<!--                <span t-field="line.product_id"/>-->
 <!--             </td>-->
-        </xpath>
+<!--&lt;!&ndash;            <td class="text-start" >&ndash;&gt;-->
+<!--&lt;!&ndash;                <span t-field="line.product_id.description"/>&ndash;&gt;-->
+
+<!--&lt;!&ndash;             </td>&ndash;&gt;-->
+<!--        </xpath>-->
 
         <xpath expr="//p[@t-field='o.quotation_notes']" position="before">
 
             <h4 style="margin-top: 20px;">Terms And Condition</h4>
         </xpath>
 
-<!--        <xpath expr="//h2" position="after">-->
+<!--&lt;!&ndash;        <xpath expr="//h2" position="after">&ndash;&gt;-->
 
-<!--            <div>-->
-<!--                <strong>Quotation Subject:</strong>-->
-<!--                <p t-field="o.description" class="m-0"/>-->
-<!--            </div>-->
+<!--&lt;!&ndash;            <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <strong>Quotation Subject:</strong>&ndash;&gt;-->
+<!--&lt;!&ndash;                <p t-field="o.description" class="m-0"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;        </xpath>&ndash;&gt;-->
+
+
+
+<!--        <xpath expr="//table/thead/tr/t/th[1]" position="after">-->
+<!--            <th class="text-center" ><span>Total Without GST </span></th>-->
+<!--        </xpath>-->
+<!--        <xpath expr="//table/thead/tr/t/th[4]" position="before">-->
+<!--            <th class="text-center" ><span>GST Amount</span></th>-->
 <!--        </xpath>-->
 
+<!--&lt;!&ndash;        <xpath expr="//table/thead/tr/th[3]" position="after">&ndash;&gt;-->
+<!--&lt;!&ndash;            <th class="text-start " ><span>GST Amount</span></th>&ndash;&gt;-->
+<!--&lt;!&ndash;        </xpath>&ndash;&gt;-->
 
-
-        <xpath expr="//table/thead/tr/t/th[1]" position="after">
-            <th class="text-center" ><span>Total Without GST </span></th>
-        </xpath>
-        <xpath expr="//table/thead/tr/t/th[4]" position="before">
-            <th class="text-center" ><span>GST Amount</span></th>
-        </xpath>
-
-<!--        <xpath expr="//table/thead/tr/th[3]" position="after">-->
-<!--            <th class="text-start " ><span>GST Amount</span></th>-->
+<!--        <xpath expr="//table/thead/tr/t/th[5]" position="replace">-->
+<!--            <th class="text-center" ><span>Amount Inc GST </span></th>-->
 <!--        </xpath>-->
 
-        <xpath expr="//table/thead/tr/t/th[5]" position="replace">
-            <th class="text-center" ><span>Amount Inc GST </span></th>
-        </xpath>
-
-    <xpath expr="//table/tbody/t[1]/tr[2]/t/td[1]" position="after">
-             <td class="text-start">
-                <span t-field="line.price_subtotal"/>
-                 <t t-set="sub" t-value="line.price_subtotal"/>
-                 <t t-set="total" t-value="line.price_total"/>
-                 <t t-set="line_tax" t-value="total - sub"/>
-             </td>
-    </xpath>
+<!--    <xpath expr="//table/tbody/t[1]/tr[2]/t/td[1]" position="after">-->
+<!--             <td class="text-start">-->
+<!--                <span t-field="line.price_subtotal"/>-->
+<!--                 <t t-set="sub" t-value="line.price_subtotal"/>-->
+<!--                 <t t-set="total" t-value="line.price_total"/>-->
+<!--                 <t t-set="line_tax" t-value="total - sub"/>-->
+<!--             </td>-->
+<!--    </xpath>-->
 
 
- <xpath expr="//table/thead/tr/th[2]" position="replace">
-    <th class="text-center">QTY</th>
-</xpath>
-
-         <xpath expr="//table/thead/tr/t/th[1]" position="replace">
-    <th class="text-center">Rate Per unit</th>
-</xpath>
-
-          <xpath expr="//table/thead/tr/t/th[3]" position="replace">
-    <th class="text-center">Gst Rate</th>
-</xpath>
-
-<!--<xpath expr="//table/tbody/t[1]/tr[2]/td[2]" position="replace">-->
-<!--            <td style="width: 30px;">-->
-
-<!--                 <span t-field="line.product_uom_qty"/>-->
-<!--                 <span groups="uom.group_uom" t-field="line.product_uom.name"/>-->
-<!--            </td>-->
+<!-- <xpath expr="//table/thead/tr/th[2]" position="replace">-->
+<!--    <th class="text-center">QTY</th>-->
 <!--</xpath>-->
 
+<!--         <xpath expr="//table/thead/tr/t/th[1]" position="replace">-->
+<!--    <th class="text-center">Rate Per unit</th>-->
+<!--</xpath>-->
+
+<!--          <xpath expr="//table/thead/tr/t/th[3]" position="replace">-->
+<!--    <th class="text-center">Gst Rate</th>-->
+<!--</xpath>-->
+
+<!--&lt;!&ndash;<xpath expr="//table/tbody/t[1]/tr[2]/td[2]" position="replace">&ndash;&gt;-->
+<!--&lt;!&ndash;            <td style="width: 30px;">&ndash;&gt;-->
+
+<!--&lt;!&ndash;                 <span t-field="line.product_uom_qty"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                 <span groups="uom.group_uom" t-field="line.product_uom.name"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            </td>&ndash;&gt;-->
+<!--&lt;!&ndash;</xpath>&ndash;&gt;-->
 
 
-    <xpath expr="//table/tbody/t[1]/tr[2]/t/td[4]" position="before">
-            <td>
 
-                 <span t-esc="round(line_tax, 2)"/>
-            </td>
-    </xpath>
-        <xpath expr="//table/tbody/t[1]/tr[2]/t/td[5]" position="replace">
-            <td>
+<!--    <xpath expr="//table/tbody/t[1]/tr[2]/t/td[4]" position="before">-->
+<!--            <td>-->
 
-               <span class="text-nowrap"  t-field="line.price_total"/>
-            </td>
-    </xpath>
+<!--                 <span t-esc="round(line_tax, 2)"/>-->
+<!--            </td>-->
+<!--    </xpath>-->
+<!--        <xpath expr="//table/tbody/t[1]/tr[2]/t/td[5]" position="replace">-->
+<!--            <td>-->
 
-     <xpath expr="//table/tbody/t[1]/tr[2]/t/td[3]" position="replace">
-     <td class="text-center">
-        <span t-esc="','.join(map(lambda x: x.description.split(' ')[1] if ' ' in x.description else x.description, line.tax_id))"/>
-    </td>
-    </xpath>
+<!--               <span class="text-nowrap"  t-field="line.price_total"/>-->
+<!--            </td>-->
+<!--    </xpath>-->
 
-<xpath expr="//div[@id='informations']" position="before">
-    <div style="text-align: center; margin-top: 40px; margin-bottom: 40px;">
-        <h2 style="text-transform: capitalize;">QUOTATION</h2>
-    </div>
-</xpath>
+<!--     <xpath expr="//table/tbody/t[1]/tr[2]/t/td[3]" position="replace">-->
+<!--     <td class="text-center">-->
+<!--        <span t-esc="','.join(map(lambda x: x.description.split(' ')[1] if ' ' in x.description else x.description, line.tax_id))"/>-->
+<!--    </td>-->
+<!--    </xpath>-->
+
+<!--<xpath expr="//div[@id='informations']" position="before">-->
+<!--    <div style="text-align: center; margin-top: 40px; margin-bottom: 40px;">-->
+<!--        <h2 style="text-transform: capitalize;">QUOTATION</h2>-->
+<!--    </div>-->
+<!--</xpath>-->
 
 
 
 
 
         <xpath expr="//table/tbody" position="after">
-    <tbody style="border: 1px solid #000;">
+                <tbody style="border: 1px solid #000;">
         <tr class="border-black">
             <td class="pull-right text-center col-1 fw-bold"  colspan="3">Total</td>
             <td class="pull-right col-1 fw-bold"> <span class="text-nowrap" t-field="o.amount_untaxed" /></td>
@@ -127,74 +277,33 @@
             </td>
         </tr>
     </tbody>
+
 </xpath>
 
-<!--<xpath expr="//div[@id='informations']/div[@class='col-3 bm-2'][4]" position="after">-->
-<!--    <div class="col-3 bm-2">-->
-<!--     <strong>Job Completion Date:</strong>-->
-<!--    <p t-field="o.job_completion_date" t-options="{'widget': 'date'}" class="m-0"/>-->
-<!--    </div>-->
+<!--&lt;!&ndash;<xpath expr="//div[@id='informations']/div[@class='col-3 bm-2'][4]" position="after">&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="col-3 bm-2">&ndash;&gt;-->
+<!--&lt;!&ndash;     <strong>Job Completion Date:</strong>&ndash;&gt;-->
+<!--&lt;!&ndash;    <p t-field="o.job_completion_date" t-options="{'widget': 'date'}" class="m-0"/>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;</xpath>&ndash;&gt;-->
+
+<!--<xpath expr="//div[@id='total']" position="attributes">-->
+<!--    <attribute name="style">display:none;</attribute>-->
+<!--</xpath>-->
+<!--<xpath expr="//h2" position="attributes">-->
+<!--    <attribute name="style">display: none;</attribute>-->
 <!--</xpath>-->
 
-<xpath expr="//div[@id='total']" position="attributes">
-    <attribute name="style">display:none;</attribute>
-</xpath>
-<xpath expr="//h2" position="attributes">
-    <attribute name="style">display: none;</attribute>
-</xpath>
 
+<!--        <xpath expr="//div[@id='informations']" position="attributes">-->
+<!--    <attribute name="style">display: none;</attribute>-->
+<!--</xpath><xpath expr="//t[@t-set='address']" position="replace">-->
 
-        <xpath expr="//div[@id='informations']" position="attributes">
-    <attribute name="style">display: none;</attribute>
-</xpath><xpath expr="//t[@t-set='address']" position="replace">
-    <div class="container">
-        <div class="row">
-            <div class="col-6">
-                <div>
-                    <t t-set="today_date" t-value="datetime.datetime.now().strftime('%Y-%m-%d')"/>
-                    <b>Date:</b>
-                    <span t-esc="today_date"/>
-                    <br/>
-                    <t t-if="o and 'company_id' in o">
-                        <t t-set="company" t-value="o.company_id"/>
-                        <b>Supplier Name:</b>
-                        <span t-field="company.name"/>
-                        <br/>
+<!--</xpath>-->
 
-                        <b>Address:</b>
-                        <span t-field="company.street"/>
-                        <br/>
-                        <b>Telephone:</b>
-                        <span t-field="company.phone"/>
-                        <br/>
-                        <b>NTN:</b>
-                        <span t-field="company.vat"/>
-                        <br/>
-                        <b>Payment Ref:</b>
-<!--                        <span t-field="o.name"/>-->
-                        <span t-field="o.seq_des"/>
-                        <br/>
-                    </t>
-                </div>
-            </div>
-            <div class="col-6">
-                <b>Buyer's Name:</b>
-                <span t-field="o.partner_id.name"/>
-                <br/>
-                <b>Buyer's Address:</b>
-                <span t-field="o.partner_id.street"/>
-                <br/>
-                <b>Buyer's NTN:</b>
-                <span t-field="o.partner_id.vat"/>
-                <br/>
-            </div>
-        </div>
-    </div>
-</xpath>
-
-<xpath expr="//div[@class='oe_structure']" position="replace">
-    <div/>
-</xpath>
+<!--<xpath expr="//div[@class='oe_structure']" position="replace">-->
+<!--    <div/>-->
+<!--</xpath>-->
 
 
 
