@@ -22,7 +22,7 @@
         </xpath>
 
         <xpath expr="//p[@t-field='o.quotation_notes']" position="before">
-product_id
+
             <h4 style="margin-top: 20px;">Terms And Condition</h4>
         </xpath>
 
