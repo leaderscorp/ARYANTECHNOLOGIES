@@ -13,7 +13,7 @@
         </xpath>
         <xpath expr="//table/tbody/t[1]/tr[2]/td[1]" position="before">
              <td class="text-start">
-                <span t-field="line.product_id"/>
+                <span t-field="line.name"/>
              </td>
 <!--            <td class="text-start" >-->
 <!--                <span t-field="line.product_id.description"/>-->
@@ -22,7 +22,7 @@
         </xpath>
 
         <xpath expr="//p[@t-field='o.quotation_notes']" position="before">
-
+product_id
             <h4 style="margin-top: 20px;">Terms And Condition</h4>
         </xpath>
 
@@ -171,7 +171,8 @@
                         <span t-field="company.vat"/>
                         <br/>
                         <b>Payment Ref:</b>
-                        <span t-field="o.name"/>
+<!--                        <span t-field="o.name"/>-->
+                        <span t-field="o.seq_des"/>
                         <br/>
                     </t>
                 </div>
