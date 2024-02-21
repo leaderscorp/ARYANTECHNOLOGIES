@@ -7,6 +7,9 @@
          <xpath expr="//table/tbody/t/tr[1]/td" position="replace">
             <td colspan="8"><strong>Description</strong></td>
         </xpath>
+        <xpath expr="//table/tbody/t[2]/tr[1]/td" position="replace">
+            <td colspan="8"><strong>Operations</strong></td>
+        </xpath>
         <xpath expr="//table/thead/tr/th[1]" position="before">
             <th class="w-25"><strong>Product</strong></th>
 <!--            <th class="w-25"><strong>Description</strong></th>-->
@@ -60,6 +63,16 @@
              </td>
     </xpath>
 
+         <xpath expr="//table/tbody/t[2]/tr[2]/t/td[1]" position="after">
+             <td class="text-start">
+                <span t-field="fees.price_subtotal"/>
+                 <t t-set="sub" t-value="fees.price_subtotal"/>
+                 <t t-set="total" t-value="fees.price_total"/>
+                 <t t-set="line_tax" t-value="total - sub"/>
+             </td>
+    </xpath>
+
+
 
  <xpath expr="//table/thead/tr/th[2]" position="replace">
     <th class="text-center">QTY</th>
@@ -89,10 +102,25 @@
                  <span t-esc="round(line_tax, 2)"/>
             </td>
     </xpath>
+
+         <xpath expr="//table/tbody/t[2]/tr[2]/t/td[4]" position="before">
+            <td>
+
+                 <span t-esc="round(line_tax, 2)"/>
+            </td>
+    </xpath>
+
         <xpath expr="//table/tbody/t[1]/tr[2]/t/td[5]" position="replace">
             <td>
 
                <span class="text-nowrap"  t-field="line.price_total"/>
+            </td>
+    </xpath>
+
+         <xpath expr="//table/tbody/t[2]/tr[2]/t/td[5]" position="replace">
+            <td>
+
+               <span class="text-nowrap"  t-field="fees.price_total"/>
             </td>
     </xpath>
 
@@ -102,6 +130,11 @@
     </td>
     </xpath>
 
+        <xpath expr="//table/tbody/t[2]/tr[2]/t/td[3]" position="replace">
+     <td class="text-center">
+        <span t-esc="','.join(map(lambda x: x.description.split(' ')[1] if ' ' in x.description else x.description, fees.tax_id))"/>
+    </td>
+    </xpath>
 <xpath expr="//div[@id='informations']" position="before">
     <div style="text-align: center; margin-top: 40px; margin-bottom: 40px;">
         <h2 style="text-transform: capitalize;">QUOTATION</h2>
