@@ -6,16 +6,20 @@ class AccountRepairOrderNumWords(models.Model):
 
     job_completion_date = fields.Date(string = "Job Completion Date")
 
-    # invoice_method = fields.Selection([
-    #     ("b4repair", "Before Repair"),
-    #     ("after_repair", "After Repair")],
-    #     string="Invoice Method",
-    #     default='after_repair',
-    #     index=True,
-    #     readonly=True,
-    #     required=True,
-    #     states={'draft': [('readonly', False)]},
-    #     help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.')
+    invoice_method2 = fields.Selection([
+        ("b4repair", "Before Repair"),
+        ("after_repair", "After Repair")],
+        string="Invoice Method",
+        default='after_repair',
+        index=True,
+        required=True,
+        states={'draft': [('readonly', False)]},
+        help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.')
+
+
+    @api.onchange('invoice_method2')
+    def _onchange_invoice_method2(self):
+        self.invoice_method = self.invoice_method2
 
     check_tax = fields.Float(
         string='tax amt',
