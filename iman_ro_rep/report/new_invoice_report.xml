@@ -31,7 +31,12 @@
                                         <b>Date:</b>
                                         <span t-field="o.invoice_date"/>
                                         <br/>
-                                        <b>Supplier Name:</b>
+                                        <t t-if="o.repair_ids">
+                                            <b>Job Completion Date:</b>
+                                            <span t-field="o.repair_ids.job_completion_date"/>
+                                            <br/>
+                                        </t>
+                                        <b>Supplierr Name:</b>
                                         <span t-field="company.name"/>
                                         <br/>
                                         <b><span t-if="o.move_type == 'out_invoice'">Invoice No:</span>
@@ -279,9 +284,11 @@
                                 </div>
                             </div>
                         </t>
-                        <!--                        <div t-if="not is_html_empty(o.narration)" name="comment">-->
-                        <!--                            <span t-field="o.narration"/>-->
-                        <!--                        </div>-->
+                                                <div t-if="not is_html_empty(o.narration)" name="comment">
+                                                    SERVICES TERMS AND CONDITIONS: <span t-field="o.narration"/>
+
+
+                                                </div>
                         <!--                        <p t-if="not is_html_empty(o.fiscal_position_id.note)" name="note">-->
                         <!--                            <span t-field="o.fiscal_position_id.note"/>-->
                         <!--                        </p>-->

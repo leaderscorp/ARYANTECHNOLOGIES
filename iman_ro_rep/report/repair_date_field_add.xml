@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="iman_repair_job_comp_field" model="ir.ui.view">
+            <field name="name">iman.repair.job.field</field>
+            <field name="model">repair.order</field>
+            <field name="inherit_id" ref="repair.view_repair_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='schedule_date']" position="after">
+                    <field name="job_completion_date"/>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_method']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_method']" position="after">
+                    <field name="invoice_method2"/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>
