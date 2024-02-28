@@ -19,8 +19,8 @@ class iman_trans_hide_loc_from_user(models.Model):
             elif rec.user_id.id == 10:
                 return {
                     'domain': {
-                        'location_id': [('complete_name', 'in', ['WH', 'WH/Islamabad', 'ASW/Islamabad'])],
-                        'location_dest_id': [('complete_name', 'in', ['WH', 'WH/Islamabad', 'ASW/Islamabad'])]
+                        'location_id': [('complete_name', 'in', ['WH', 'WH/Islamabad', 'ASW/Islamabad', 'Prod/Stock'])],
+                        'location_dest_id': [('complete_name', 'in', ['WH', 'WH/Islamabad', 'ASW/Islamabad', 'Prod/Stock'])]
                     }
                 }
             else:
