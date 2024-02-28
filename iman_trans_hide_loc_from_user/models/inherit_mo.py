@@ -4,11 +4,11 @@ from odoo import models, fields, api
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    # remaining_quantity = fields.Float(
-    #     string='Remaining Quantity',
-    #     default=0.0,
+    remaining_quantity = fields.Float(
+        string='Remaining Quantity',
+        default=0.0,
     #     compute='_compute_remaining_quantity'
-    # )
+    )
 
     # def _compute_remaining_quantity(self):
     #     for move in self:
