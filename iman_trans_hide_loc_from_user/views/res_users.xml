@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+        <record id="iman_res_user_locations" model="ir.ui.view">
+            <field name="name">iman_res_user_locations</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Rights" groups="base.group_erp_manager">
+                        <group>
+                            <group string="Location">
+                                <field name="location_ids" widget="many2many_tags"/>
+                            </group>
+                            <group string="Operation Types">
+                                <field name="picking_type_ids" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
