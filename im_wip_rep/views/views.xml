@@ -37,16 +37,22 @@
             <field name="name">imaan wip pivot report</field>
             <field name="res_model">im.wip</field>
             <field name="view_mode">pivot,tree</field>
+            <field name="domain">[('im_product_tag_p' , '!=', 'Finish Good'), ('im_product_tag_p' , '!=', 'FINISH GOOD')]</field>
         </record>
 
         <!-- Top menu item -->
 
+<!--        <menuitem name="WIP Report"-->
+<!--                  id="im_wip_rep_menu_root"-->
+<!--                  parent="stock.menu_warehouse_report"-->
+<!--                  sequence="550"-->
+<!--                  action="im_wip_rep.im_wip_pivot_report_window_action"/>-->
         <menuitem name="WIP Report"
-                  id="im_wip_rep_menu_root"
-                  parent="stock.menu_warehouse_report"
-                  sequence="550"
+                  id="im_wip_rep_menu_root_dashboard"
+                  parent="spreadsheet_dashboard.spreadsheet_dashboard_menu_root"
+                  sequence="200"
                   action="im_wip_rep.im_wip_pivot_report_window_action"/>
 
-
     </data>
+<!--    	spreadsheet_dashboard.spreadsheet_dashboard_menu_root-->
 </odoo>

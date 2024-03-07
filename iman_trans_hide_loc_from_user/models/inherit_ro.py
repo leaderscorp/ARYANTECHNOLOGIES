@@ -14,8 +14,5 @@ class InheritRepairOrder(models.Model):
         if data == []:
             domain = []
         else:
-            domain = {
-                'location_id': [('id', 'in', data)],
-                'location_dest_id': [('id', 'in', data)]
-            }
+            domain = {'location_id': [('id', 'in', data)]}
         return {'domain': domain}
