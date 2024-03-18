@@ -13,7 +13,7 @@ class AccountRepairOrderNumWords(models.Model):
         default='after_repair',
         index=True,
         required=True,
-        states={'draft': [('readonly', False)]},
+        states={'draft': [('readonly', False)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.')
 
 
