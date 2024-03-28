@@ -22,8 +22,15 @@ class repair(models.Model):
                     ])
 
                 if prod_in_comp and comp.product_id.detailed_type == 'product':
-                    if 0 < prod_in_comp.quantity < comp.product_uom_qty:
+                    # print('stock qty', prod_in_comp.quantity, '\n', 'parts qty', comp.product_uom_qty)
+                    # print(0 < prod_in_comp.quantity < comp.product_uom_qty, '\n')
+                    # print(prod_in_comp.quantity < comp.product_uom_qty)
+                    # print(0.0 < prod_in_comp.quantity)
+                    if prod_in_comp.quantity < comp.product_uom_qty:
                         message = f"Product: {comp.product_id.name} has low quantity than requested quantity in {comp.location_id.display_name}"
+                        raise UserError(message)
+                    elif 0.0 < prod_in_comp.quantity:
+                        message = f"Product: {comp.product_id.name} quantity is zero in {comp.location_id.display_name}"
                         raise UserError(message)
 
                 elif not prod_in_comp and comp.product_id.detailed_type == 'product':
