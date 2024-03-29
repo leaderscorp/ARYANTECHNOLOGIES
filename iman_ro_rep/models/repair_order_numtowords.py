@@ -43,7 +43,8 @@ class AccountRepairOrderNumWords(models.Model):
     @api.depends('amount_total')
     def int_to_words(self):
         for rec in self:
-            rec.total_in_wordss = num2words(rec.amount_total, lang='en_US')
+            two_num = round(rec.amount_total, 2)
+            rec.total_in_wordss = num2words(two_num, lang='en_US')
 
 
     @api.depends('operations.tax_id.amount')
