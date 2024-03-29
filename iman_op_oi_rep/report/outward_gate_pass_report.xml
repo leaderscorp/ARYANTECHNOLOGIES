@@ -23,10 +23,9 @@
                                             <td>Date: <span t-field="o.date" t-options="{'widget': 'date'}"/></td>
 <!--                                            <td class="w-50">Date:</td>-->
                                         </tr>
-<!--                                        <tr>-->
-<!--                                            <td class="w-50">Store No:</td>-->
-<!--                                            <td class="w-50"></td>-->
-<!--                                        </tr>-->
+                                        <tr>
+                                            <td>Source Document: <span t-field="o.origin"/></td>
+                                        </tr>
 
                                     </table>
                                 </div>
