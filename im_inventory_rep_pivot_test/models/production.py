@@ -30,3 +30,5 @@ class im_mrp_production(models.Model):
     def _get_other_total_val(self):
         for record in self:
             record.im_total_val = record.product_id.qty_available * record.product_id.standard_price
+
+
