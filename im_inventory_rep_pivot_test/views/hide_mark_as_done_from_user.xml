@@ -9,12 +9,13 @@
             <field name="arch" type="xml">
                 <xpath expr="//header" position="inside">
                     <field name="hide_button" invisible="True"/>
+                    <field name="env_user" invisible="True"/>
                 </xpath>
 
                 <xpath expr="//header/button[@name='action_confirm']" position="attributes">
 <!--                    <attribute name="attrs">{'invisible': [('picking_type_id', '=', 42)]}</attribute>-->
 <!--                    <attribute name="attrs">{'invisible': [('user_id', '=', 11),('picking_type_id', '=', 44)]}</attribute>-->
-                    <attribute name="attrs">{'invisible': [('hide_button', '=', True), ('user_id', '=', 11),('picking_type_id', '=', 44)]}</attribute>
+                    <attribute name="attrs">{'invisible': [('hide_button', '=', True), ('env_user', '=', 11),('picking_type_id', '=', 44)]}</attribute>
                 </xpath>
 
             </field>

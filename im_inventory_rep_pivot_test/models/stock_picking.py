@@ -15,6 +15,16 @@ class im_mo_requestion(models.Model):
         default=False
     )
 
+    env_user = fields.Integer(
+        compute='_onchange_user'
+    )
+
+    def _onchange_user(self):
+        for rec in self:
+            rec.env_user = rec.env.user.id
+            # print(rec.env_user)
+
+
     # @api.model
     # def get_view(self, view_id=None, view_type='form', **options):
     #     res = super(im_mo_requestion, self).get_view(view_id, view_type, **options)
