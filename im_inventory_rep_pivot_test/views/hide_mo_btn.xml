@@ -14,7 +14,11 @@
                 <xpath expr="//header/button[@name='action_confirm']" position="attributes">
                     <attribute name="attrs">{'invisible': ['|', ('state', '!=', 'draft'), ('env_user', '=', 10)]}</attribute>
                 </xpath>
-
+                <!-- button_mark_done[3]-->
+                <!-- {'invisible': ['|', ('move_raw_ids', '=', []), '&', '|',('state', 'not in', ('confirmed', 'progress')), ('qty_producing', '!=', 0), ('state', '!=', 'to_close')]}-->
+                <xpath expr="//header/button[@name='button_mark_done'][3]" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|', ('env_user', '=', 10), '|', ('move_raw_ids', '=', []), '&amp;', '|',('state', 'not in', ('confirmed', 'progress')), ('qty_producing', '!=', 0), ('state', '!=', 'to_close')]}</attribute>
+                </xpath>
             </field>
         </record>
 
