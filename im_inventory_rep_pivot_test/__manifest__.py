@@ -25,10 +25,13 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'data/action.xml',
         'views/pivot.xml',
         'views/menu_item.xml',
         'views/stock_move.xml',
         'views/stock_quant.xml',
+        'views/hide_mark_as_done_from_user.xml',
+        'views/hide_mo_btn.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

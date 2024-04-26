@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit Form View to Modify it -->
+        <record id="mo_hide_btn" model="ir.ui.view">
+            <field name="name">mo_hide_btn</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <field name="env_user" invisible="True"/>
+                </xpath>
+
+                <xpath expr="//header/button[@name='action_confirm']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|', ('state', '!=', 'draft'), ('env_user', '=', 10)]}</attribute>
+                </xpath>
+                <!-- button_mark_done[3]-->
+                <!-- {'invisible': ['|', ('move_raw_ids', '=', []), '&', '|',('state', 'not in', ('confirmed', 'progress')), ('qty_producing', '!=', 0), ('state', '!=', 'to_close')]}-->
+                <xpath expr="//header/button[@name='button_mark_done'][3]" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|', ('env_user', '=', 10), '|', ('move_raw_ids', '=', []), '&amp;', '|',('state', 'not in', ('confirmed', 'progress')), ('qty_producing', '!=', 0), ('state', '!=', 'to_close')]}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
