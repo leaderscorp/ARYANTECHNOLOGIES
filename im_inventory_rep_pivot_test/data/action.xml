@@ -40,7 +40,7 @@ for rec in records:
 
     vals = {
     'picking_type_id': picking_type_id,
-    'origin': rec.name,
+    'origin': rec.product_id.name,
     'move_ids_without_package': oper_list,
     'hide_button': True
     }
