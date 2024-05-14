@@ -1,0 +1,108 @@
+<odoo>
+    <data>
+
+        <record id="requisition_received_tree_view" model="ir.ui.view">
+            <field name="name">Requisition Received Tree</field>
+            <field name="model">request.model</field>
+            <field name="arch" type="xml">
+                <tree string="Received Requisitions" create="false">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="requestor_name"/>
+                    <field name="req_picking_type"/>
+                    <button type="object" name="get_formview_action_received" string="View Request" icon="fa-edit"/>
+
+                    <!-- Add other fields to display in the tree view -->
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="requisition_form_view_received" model="ir.ui.view">
+            <field name="name">Requisition Form</field>
+            <field name="model">request.model</field>
+            <field name="arch" type="xml">
+                <form create="false" >
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,approved"/>
+
+<!--<button name="action_transfer" string="Create Transfer" type="object" class="btn-primary"-->
+<!--        attrs="{'invisible': ['|', ('state', 'in', ('draft','approved')), ('transfer_created', '=', True)]}"/>-->
+
+                    </header>
+                    <sheet>
+                        <group>
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </group>
+                        <group>
+                            <field name="req_from" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="transfer_created" readonly="1"/>
+                            <field name="req_transfer_id_state" readonly="1"/>
+
+                            <field name="req_to" attrs="{'readonly': [('id', '!=', False)]}"/>
+
+                            <!-- Field: req_picking_type (Read-only during creation) -->
+                            <field name="req_picking_type" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="req_transfer_id" readonly="1"/>
+                        </group>
+
+                        <group>
+                            <field name="location_dest_id" readonly="1" attrs="{'readonly': [('state', 'in' , ['sent','approved'])]}"/>
+                        </group>
+
+                        <notebook>
+                            <page string="Products Information">
+                                <field name="req_line_ids" widget="one2many_list" attrs="{'readonly': [('state', 'in' , ['sent','approved'])]}">
+                                    <tree editable="bottom" create="1" edit="1">
+                                        <field name="product_id"/>
+<!--                                        <field name="location_id"/>-->
+<!--                                        <field name="location_dest_id"/>-->
+                                        <field name="product_uom_quantity"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="requisition_received_action" model="ir.actions.act_window">
+            <field name="name">All Requisitions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">request.model</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain"></field>
+        </record>
+
+        <record id="requisition_received_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="requisition_received_tree_view"/>
+            <field name="act_window_id" ref="requisition_received_action"/>
+        </record>
+
+        <record id="requisition_received_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="requisition_form_view_received"/>
+            <field name="act_window_id" ref="requisition_received_action"/>
+        </record>
+
+
+        <!-- Top menu item -->
+
+        <menuitem name="requesition_module" id="requesition_module.menu_root"/>
+
+
+        <record id="menu_requisitions_received" model="ir.ui.menu">
+            <field name="name">All Requisitions Received</field>
+            <field name="action" ref="requisition_received_action"/>
+            <field name="parent_id" ref="requesition_module.menu_root"/>
+            <field name="sequence" type="int">10</field>
+        </record>
+
+
+    </data>
+</odoo>

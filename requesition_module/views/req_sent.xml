@@ -1,0 +1,100 @@
+<odoo>
+    <data>
+
+        <record id="requisition_sent_tree_view" model="ir.ui.view">
+            <field name="name">Requisition Sent Tree</field>
+            <field name="model">request.model</field>
+            <field name="arch" type="xml">
+                <tree string="Sent Requisitions">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="recipient_name"/>
+                    <field name="req_picking_type"/>
+                    <button type="object" name="get_formview_action_sent" string="View Request" icon="fa-edit"/>
+                    <!-- Add other fields to display in the tree view -->
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="requisition_form_view_sent" model="ir.ui.view">
+            <field name="name">Requisition Form</field>
+            <field name="model">request.model</field>
+            <field name="arch" type="xml">
+                <form model="request.model">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,approved"/>
+                        <!--                <button name="action_approve" string="Approve" type="object" class="btn-primary"/>-->
+                        <!--                <button name="action_sent" string="Send" type="object" class="btn-secondary"/>-->
+                    </header>
+                    <sheet>
+                        <group>
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </group>
+                        <group>
+                            <field name="req_from" readonly="1"/>
+                            <field name="req_to" attrs="{'readonly': [('id', '!=', False)]}" domain="[('id', '!=', context.get('uid'))]"/>
+
+                            <!-- Field: req_picking_type (Read-only during creation) -->
+                            <field name="req_picking_type" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <!--                    <field name="state"/>-->
+                        </group>
+                        <group>
+                            <field name="location_dest_id"/>
+                        </group>
+
+                        <notebook>
+                    <page string="Products Information">
+                        <field name="req_line_ids" widget="one2many_list" attrs="{'readonly': [('state', 'in' , ['sent','approved'])]}">
+                            <tree editable="bottom">
+                                <field name="product_id"/>
+<!--                                <field name="location_id" readonly="0"/>-->
+<!--                                <field name="location_dest_id" readonly="0"/>-->
+                                <field name="product_uom_quantity"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+
+        <record id="requisition_sent_action" model="ir.actions.act_window">
+            <field name="name">Requisitions Sent</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">request.model</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('req_from', '=', context.get('uid'))]</field>
+        </record>
+
+
+        <record id="requisition_sent_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="requisition_sent_tree_view"/>
+            <field name="act_window_id" ref="requisition_sent_action"/>
+        </record>
+
+        <record id="requisition_sent_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="requisition_form_view_sent"/>
+            <field name="act_window_id" ref="requisition_sent_action"/>
+        </record>
+
+
+
+        <record id="menu_requisitions_sent" model="ir.ui.menu">
+            <field name="name">Requisitions Sent</field>
+            <field name="action" ref="requisition_sent_action"/>
+            <field name="parent_id" ref="requesition_module.menu_root"/>
+            <field name="sequence" type="int">20</field>
+        </record>
+
+
+
+    </data>
+</odoo>
