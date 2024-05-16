@@ -50,6 +50,8 @@
 
                         <group>
                             <field name="location_dest_id" readonly="1" attrs="{'readonly': [('state', 'in' , ['sent','approved'])]}"/>
+                            <field name="date_field" readonly="1"/>
+                            <field name="description" readonly="1"/>
                         </group>
 
                         <notebook>

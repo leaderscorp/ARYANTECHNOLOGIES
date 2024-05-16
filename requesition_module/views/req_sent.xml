@@ -43,6 +43,8 @@
                         </group>
                         <group>
                             <field name="location_dest_id"/>
+                            <field name="date_field" readonly="1"/>
+                            <field name="description" attrs="{'readonly': [('id', '!=', False)]}"/>
                         </group>
 
                         <notebook>

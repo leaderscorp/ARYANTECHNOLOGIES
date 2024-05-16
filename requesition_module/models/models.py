@@ -14,6 +14,8 @@ class Requisition(models.Model):
 
     ], string="Status", default='draft')
 
+    date_field = fields.Date(string='Date', default=lambda self: fields.Date.context_today(self))
+    description = fields.Char(string="Description")
 
     req_from = fields.Many2one('res.users', string="Request From", default=lambda  self:self.env.user)
     req_to = fields.Many2one('res.users', string="Request To")
@@ -22,13 +24,16 @@ class Requisition(models.Model):
         string="Warehouse",
         domain=[('id', 'in', [52])],
     )
-    req_picking_type = fields.Many2one(
-        'stock.picking.type',
-        string="Operation Type",
-        domain=[('id', 'in', [52])],
-    )
+    # req_picking_type = fields.Many2one(
+    #     'stock.picking.type',
+    #     string="Operation Type",
+    #     domain=[('id', 'in', [52])],
+    # )
     req_line_ids = fields.One2many('requisition.line', 'req_id')
-    location_dest_id = fields.Many2one('stock.location', domain="[('complete_name', 'ilike', 'ASW/')]", string='Destination Location')
+    location_dest_id = fields.Many2one('stock.location',
+                                       domain=[('id', 'in', [28])],
+                                       string='Destination Location')
+
     transfer_created = fields.Boolean(default=False)
     # Computed field to display the name of the requestor
     requestor_name = fields.Char(string="Requestor", related='req_from.name', readonly=True)
@@ -46,7 +51,7 @@ class Requisition(models.Model):
 
     req_transfer_id = fields.Many2one(
         'stock.picking',
-        'Transfer created from this req'
+        'Transfer No'
     )
     req_transfer_id_state = fields.Char(string="Transfer Order State",
                                              compute='_req_transfer_state',
