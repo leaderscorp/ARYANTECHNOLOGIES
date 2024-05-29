@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data>
+<!--        -d iman_test_database -u iman_op_oi_rep-->
         <template id="iman_inward_gate_pass_report_doc">
 
                <div class="header" style="border:1px solid black; padding:30px 0px;">
@@ -22,18 +23,23 @@
                     <div class="page" style="border:1px solid black; padding:15px; ">
                         <div class="row">
                             <div class="col-8">
-                                <p><b>Serial No: </b><span t-field="o.name"/> </p><br/><br/>
+                                <p><b>Serial No: </b><span t-field="o.name"/> </p>
+                                <p><b>SO No: </b><span t-field="o.x_studio_so_no"/> </p>
+                                <p><b>MO No: </b><span t-field="o.x_studio_mo_no"/> </p>
                                 <p><b>Mr/Mrs/Ms:</b> <span t-field="o.partner_id.name"/></p>
                                 <p><b>Address:</b> <span t-field="o.partner_id.street"/></p>
                             </div>
                             <div class="col-4">
+                                <p><b>Source Location: </b><span t-field="o.location_id"/> </p>
+                                <p><b>Destination Location: </b><span t-field="o.location_dest_id"/></p>
                                 <p><b>Date &amp; Time: </b><span t-field="o.date"/></p>
                                 <p><b>Sending Date:</b> <span t-field="o.scheduled_date"/></p>
                                 <p><b>Return Date:</b> <span t-field="o.date_done"/></p>
                                 <p><b>From Date: </b></p>
+
                             </div>
                         </div>
-                        <table class="table table_bordered mt-3">
+                        <table class="table table_bordered mt-0">
                             <thead>
                                 <tr>
                                     <th style="width:10px;">S.No.</th>
