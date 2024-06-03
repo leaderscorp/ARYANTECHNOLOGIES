@@ -43,6 +43,26 @@
 <!--                        <t t-debug="pdb"/>-->
                         <br/>
                         <div class="page" >
+                                <div class="row">
+
+                                     <div class="col-6">
+                                         <span><b>SO No: </b><span t-field="o.x_studio_so_no"/> </span>
+                                     </div>
+                                     <div class="col-6">
+                                         <span><b>MO No: </b><span t-field="o.x_studio_mo_no"/></span>
+                                     </div>
+
+                                </div>
+                                <div class="row">
+
+                                     <div class="col-6">
+                                         <span><b>Source Location: </b><span t-field="o.location_id"/> </span>
+                                     </div>
+                                     <div class="col-6">
+                                         <span><b>Destination Location: </b><span t-field="o.location_dest_id"/></span>
+                                     </div>
+
+                                </div>
                                 <div class="row" style="border: 1px solid black;" >
                                         <div class="col-2" style="margin-left:5px;"><span>Purpose: </span></div>
                                         <div class="col-auto"><input type="checkbox"/><span style="margin-left:5px;">Repairable</span> </div>

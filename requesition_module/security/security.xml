@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+<!--<record id="group_requisition_managers" model="res.groups">-->
+<!--    <field name="name">Requisition Managers</field>-->
+<!---->
+<!--</record>-->
+<!---->
+<!--<record id="security_requisition_model_group" model="ir.model.access">-->
+<!--    <field name="name">Requisition Access</field>-->
+<!--    <field name="model_id" ref="model_request_model"/>-->
+<!--    <field name="group_id" ref="group_requisition_managers"/>-->
+<!--    <field name="perm_read" eval="True"/>-->
+<!--    <field name="perm_write" eval="True"/>-->
+<!--    <field name="perm_create" eval="True"/>-->
+<!--    <field name="perm_unlink" eval="False"/>-->
+<!--</record>-->
+    </data>
+</odoo>

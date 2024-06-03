@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+
+        <!-- Define the Request Model -->
+        <record model="ir.model" id="model_request_model">
+            <field name="name">Request Model</field>
+            <field name="model">request.model</field>
+            <field name="state">manual</field>
+        </record>
+
+        <!-- Define Record Rule to Restrict Access -->
+        <record id="record_rule_requisitions_sent" model="ir.rule">
+            <field name="name">Requisition Sent Record Rule</field>
+            <field name="model_id" ref="model_request_model"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Define Group for Requisition Users -->
+        <record model="res.groups" id="group_requisition_user">
+            <field name="name">Requisition Users</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+
+</data>
+</odoo>
