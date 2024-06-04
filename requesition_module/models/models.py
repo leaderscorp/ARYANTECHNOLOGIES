@@ -22,7 +22,7 @@ class Requisition(models.Model):
     req_picking_type = fields.Many2one(
         'stock.picking.type',
         string="Warehouse",
-        domain=[('id', 'in', [57])],
+        domain=[('id', 'in', [43])],
     )
     # req_picking_type = fields.Many2one(
     #     'stock.picking.type',
