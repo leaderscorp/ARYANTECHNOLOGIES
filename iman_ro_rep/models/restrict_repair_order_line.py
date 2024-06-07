@@ -19,3 +19,4 @@ class IMRepairOrderRestrict(models.Model):
                 )
             else:
                 super(IMRepairOrderRestrict, order).action_validate()
+

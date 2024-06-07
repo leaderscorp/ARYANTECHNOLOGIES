@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+
 {
     'name': "iman_ro_rep",
 
@@ -26,13 +28,13 @@
     'data': [
         'security/ir.model.access.csv',
         # 'views/views.xml',
-        'views/templates.xml',
-        # 'report/inherit_account_move_line.xml',
+        # 'views/inherit_account_move_line.xml',
         'report/inherit_repair_report.xml',
-        'report/replace_invoice_report.xml',
-        'report/add_location_view_in_repair.xml',
         'report/new_invoice_report.xml',
-         'report/repair_date_field_add.xml'
+        'report/replace_invoice_report.xml',
+
+        'views/add_location_view_in_repair.xml',
+        'views/repair_date_field_add.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

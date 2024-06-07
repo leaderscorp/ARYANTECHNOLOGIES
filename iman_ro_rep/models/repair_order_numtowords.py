@@ -1,4 +1,5 @@
 from odoo import models,fields,api
+from odoo.exceptions import UserError
 from num2words import num2words
 
 class AccountRepairOrderNumWords(models.Model):
@@ -6,15 +7,15 @@ class AccountRepairOrderNumWords(models.Model):
 
     job_completion_date = fields.Date(string = "Job Completion Date")
 
-    invoice_method2 = fields.Selection([
-        ("b4repair", "Before Repair"),
-        ("after_repair", "After Repair")],
-        string="Invoice Method",
-        default='after_repair',
-        index=True,
-        required=True,
-        states={'draft': [('readonly', False)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.')
+    # invoice_method2 = fields.Selection([
+    #     ("b4repair", "Before Repair"),
+    #     ("after_repair", "After Repair")],
+    #     string="Invoice Method",
+    #     default='after_repair',
+    #     index=True,
+    #     required=True,
+    #     states={'draft': [('readonly', False)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+    #     help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.')
 
 
     @api.onchange('invoice_method2')
@@ -58,3 +59,10 @@ class AccountRepairOrderNumWords(models.Model):
                 # total_tax = tax_amount
                 # print(total_tax)
                 # item.check_tax = total_tax
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        if res.invoice_method == 'none':
+            raise UserError('Please change the invoicing method')
+        return res
