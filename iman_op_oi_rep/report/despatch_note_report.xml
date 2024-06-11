@@ -28,8 +28,8 @@
                                 <td><span t-field="o.move_ids.location_id"/></td>
                             </tr>
                             <tr>
-                                <th>Consgnee</th>
-                                <td><span/></td>
+                                <th>SO No.</th>
+                                <td><span t-field="o.x_studio_so_no"/></td>
                             </tr>
 <!--                            <tr>-->
 <!--                                <th>OGP No.</th>-->
@@ -44,8 +44,17 @@
                 </div>
             </div>
             <t t-call="web.external_layout">
+
                 <div class="page" style="margin-top:200px">
-                   <table class="table table-bordered" >
+                    <div class="row" style="margin-top:10px">
+                        <div class="col-6">
+                            <span><b>Customer Name: </b><span t-field="o.partner_id"/> </span>
+                        </div>
+                        <div class="col-6">
+                            <span><b>Address: </b><span t-field="o.partner_id.street"/></span>
+                        </div>
+                    </div>
+                   <table class="table table-bordered" style="margin-top:10px">
                        <thead>
                            <tr>
                                <th style="width:10px;">S/No.</th>
