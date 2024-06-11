@@ -11,7 +11,7 @@
                             </div>
                     </div>
                     <div class="col-6 text-center" style="margin-top:50px;">
-                        <h3>Despatch Note</h3>
+                        <h3>Dispatch Note</h3>
                     </div>
                     <div class="col-3" >
                         <table class="table table-bordered small h- 25" >
@@ -48,10 +48,12 @@
                 <div class="page" style="margin-top:200px">
                     <div class="row" style="margin-top:10px">
                         <div class="col-6">
-                            <span><b>Customer Name: </b><span t-field="o.partner_id"/> </span>
+                            <span><b>Customer Name: </b><span t-field="o.partner_id"/> </span><br/>
+                            <span><b>Sale Order: </b><span t-field="o.origin"/> </span>
                         </div>
                         <div class="col-6">
-                            <span><b>Address: </b><span t-field="o.partner_id.street"/></span>
+                            <span><b>Address: </b><span t-field="o.partner_id.street"/></span><br/>
+                            <span><b>Status: </b><span t-field="o.state"/></span>
                         </div>
                     </div>
                    <table class="table table-bordered" style="margin-top:10px">
@@ -180,7 +182,7 @@
 <!--            <field name="dip">90</field>-->
         </record>
         <record id="iman_despatch_note_rep_action" model="ir.actions.report">
-            <field name="name">Despatch Note</field>
+            <field name="name">Dispatch Note</field>
             <field name="model">stock.picking</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">iman_op_oi_rep.iman_despatch_note_report</field>
