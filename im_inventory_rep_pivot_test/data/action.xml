@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright 2019 Coop IT Easy
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <data>
+        <record id="im_mo_requestion" model="ir.actions.server">
+        <field name="name">IM MO Requisition</field>
+        <field name="model_id" ref="mrp.model_mrp_production" />
+        <field name="binding_model_id" ref="mrp.model_mrp_production" />
+        <field name="state">code</field>
+        <field name="code">
+# Available variables:
+#  - env: Odoo Environment on which the action is triggered
+#  - model: Odoo Model of the record on which the action is triggered; is a void recordset
+#  - record: record on which the action is triggered; may be void
+#  - records: recordset of all records on which the action is triggered in multi-mode; may be void
+#  - time, datetime, dateutil, timezone: useful Python libraries
+#  - float_compare: Odoo function to compare floats based on specific precisions
+#  - log: log(message, level='info'): logging function to record debug information in ir.logging table
+#  - UserError: Warning Exception to use with raise
+#  - Command: x2Many commands namespace
+# To return an action, assign: action = {...}
+
+transfer = env['stock.picking']
+picking_type_id = 44
+operation_type = env['stock.picking.type'].browse(picking_type_id)
+
+for rec in records:
+    oper_list = []
+    for line in rec.move_raw_ids:
+        oper_list.append({
+          'name':line.name,
+          'product_id': line.product_id.id,
+          'product_uom_qty': line.product_uom_qty,
+          'location_id': operation_type.default_location_src_id.id,
+          'location_dest_id': operation_type.default_location_dest_id.id
+        })
+
+    vals = {
+    'picking_type_id': picking_type_id,
+    'origin': rec.product_id.name,
+    'move_ids_without_package': oper_list,
+    'hide_button': True
+    }
+    new_context = rec._context
+
+    t=transfer.create(vals)
+
+    action = {
+        'type': 'ir.actions.act_window',
+        'res_id': t.id,
+        'res_model': 'stock.picking',
+        'view_mode': 'form',
+        'context': {'stock_picking_id': t.id},
+        'view_id' : rec.env.ref('stock.view_picking_form').id,
+    }
+        </field>
+    </record>
+    </data>
+</odoo>

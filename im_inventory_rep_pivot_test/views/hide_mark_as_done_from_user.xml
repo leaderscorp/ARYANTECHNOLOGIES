@@ -13,15 +13,31 @@
                 </xpath>
 
                 <xpath expr="//header/button[@name='action_confirm']" position="attributes">
-                    <!-- <attribute name="attrs">{'invisible': [('picking_type_id', '=', 42)]}</attribute> -->
-                    <!-- <attribute name="attrs">{'invisible': [('user_id', '=', 11),('picking_type_id', '=', 44)]}</attribute> -->
-                    <attribute name="attrs">{'invisible': [('hide_button', '=', True), ('env_user', '=', 11),('picking_type_id', '=', 44)]}</attribute>
+                    <attribute name="attrs">{'invisible': [
+                        '|',('show_mark_as_todo', '=', False),
+                        '|', ('env_user', '=', 11),
+                        '&amp;', ('hide_button', '=', True),('picking_type_id', '=', 44)
+                        ]}
+                    </attribute>
                 </xpath>
-                <xpath expr="//header/button[@name='button_validate']" position="attributes">
-                    <!-- <attribute name="attrs">{'invisible': [('picking_type_id', '=', 42)]}</attribute> -->
-                    <!-- <attribute name="attrs">{'invisible': [('user_id', '=', 11),('picking_type_id', '=', 44)]}</attribute> -->
-                    <attribute name="attrs">{'invisible': [('env_user', '=', 11),('state', 'in', ['assigned'])]}</attribute>
+
+                <xpath expr="//header/button[@name='button_validate'][1]" position="attributes">
+                    <attribute name="attrs">{'invisible': [
+                        '|', ('env_user', '=', 11),
+                        '|', ('state', 'in', ('waiting','confirmed')), ('show_validate', '=', False)
+                        ]}
+                    </attribute>
                 </xpath>
+
+                <xpath expr="//header/button[@name='button_validate'][2]" position="attributes">
+                    <attribute name="attrs">{'invisible': [
+                        '|', ('env_user', '=', 11),
+                        '|', ('state', 'not in', ('waiting','confirmed')), ('show_validate', '=', False)
+                        ]}
+                    </attribute>
+                </xpath>
+
+
 
             </field>
         </record>
