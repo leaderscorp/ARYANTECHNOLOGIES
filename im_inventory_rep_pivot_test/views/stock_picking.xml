@@ -16,12 +16,11 @@
                 <!-- For Production User  -->
                 <!-- ++++++++++++++++++++ -->
 
-                <!-- Hide Action Confirm from prod user if picing_id = 44 -->
+                <!-- Hide Action Confirm from prod user if picing_id = 42 -->
                 <xpath expr="//header/button[@name='action_confirm']" position="attributes">
                     <attribute name="attrs">{'invisible': [
                         '|',('show_mark_as_todo', '=', False),
-                        '|', ('env_user', '=', 11),
-                        '&amp;', ('hide_button', '=', True),('picking_type_id', '=', 44)
+                        ('env_user', '=', 11),
                         ]}
                     </attribute>
                 </xpath>
@@ -49,11 +48,11 @@
                 <!-- For Store User  -->
                 <!-- ++++++++++++++++++++ -->
 
-                <!-- Make Detailed Operations ReadOnly if picking type = 44 -->
+                <!-- Make Detailed Operations ReadOnly if picking type = 42 -->
                 <xpath expr="//field[@name='move_line_ids_without_package']" position="attributes">
                     <attribute name="attrs">{'readonly': [
                         '|',
-                        '&amp;', ('env_user', '=', 10), ('picking_type_id', '=', 44),
+                        '&amp;', ('env_user', '=', 10), ('picking_type_id', '=', 42),
                         '|',
                         '|', ('show_operations', '=', False), ('state', '=', 'cancel'),
                         '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)
@@ -63,19 +62,43 @@
                         ]}
                     </attribute>
                 </xpath>
-                <!-- Make Operations ReadOnly if picking type = 44 -->
+                <!-- Make Operations ReadOnly if picking type = 42 -->
                 <xpath expr="//field[@name='move_ids_without_package']" position="attributes">
                     <attribute name="attrs">{'readonly': [
                         '|',
                         '&amp;', ('state', '=', 'done'), ('is_locked', '=', True),
-                        '&amp;', ('env_user', '=', 10), ('picking_type_id', '=', 44)
+                        '&amp;', ('env_user', '=', 10), ('picking_type_id', '=', 42)
                         ]}
                     </attribute>
+                <!-- <attribute name="delete">False</attribute> -->
                 </xpath>
 
+                <!-- ++++++++++++++++++++ -->
+                <!-- Other fields  -->
+                <!-- ++++++++++++++++++++ -->
+                <xpath expr="//field[@name='owner_id']" position="after">
+                    <field name="so_num" string="SO No"
+                           attrs="{'invisible': [('picking_type_id', '!=', 42)]}"/>
+                    <field name="mo_num" string="Mo No"
+                           attrs="{'invisible': [('picking_type_id', '!=', 42)]}"/>
+                </xpath>
             </field>
         </record>
 
 
+        <!-- Inherit Tree View to Modify it -->
+        <record id="im_stock_picking_tree_view_inherit" model="ir.ui.view">
+            <field name="name">im_stock_picking_tree_view_inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="so_num" optional="show"/>
+                    <field name="mo_num" optional="show"/>
+                </xpath>
+
+            </field>
+        </record>
     </data>
 </odoo>
