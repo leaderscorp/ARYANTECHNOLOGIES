@@ -49,7 +49,7 @@
                     <div class="row" style="margin-top:10px">
                         <div class="col-6">
                             <span><b>Customer Name: </b><span t-field="o.partner_id"/> </span><br/>
-                            <span><b>Sale Order: </b><span t-field="o.origin"/> </span>
+                            <span><b>Source Document: </b><span t-field="o.origin"/> </span>
                         </div>
                         <div class="col-6">
                             <span><b>Address: </b><span t-field="o.partner_id.street"/></span><br/>
