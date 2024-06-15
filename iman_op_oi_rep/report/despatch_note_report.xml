@@ -29,7 +29,7 @@
                             </tr>
                             <tr>
                                 <th>SO No.</th>
-                                <td><span t-field="o.x_studio_so_no"/></td>
+                                <td><span t-field="o.so_num"/></td>
                             </tr>
 <!--                            <tr>-->
 <!--                                <th>OGP No.</th>-->
@@ -49,7 +49,7 @@
                     <div class="row" style="margin-top:10px">
                         <div class="col-6">
                             <span><b>Customer Name: </b><span t-field="o.partner_id"/> </span><br/>
-                            <span><b>Sale Order: </b><span t-field="o.origin"/> </span>
+                            <span><b>Source Document: </b><span t-field="o.origin"/> </span>
                         </div>
                         <div class="col-6">
                             <span><b>Address: </b><span t-field="o.partner_id.street"/></span><br/>

@@ -42,14 +42,21 @@
 <!--                                            </t>-->
 <!--                        <t t-debug="pdb"/>-->
                         <br/>
-                        <div class="page" >
+                        <div class="page">
+
+                                <div class="row" >
+
+                                     <div class="col-6">
+                                         <span><b>Status: </b><span t-field="o.state"/></span>
+                                     </div>
+                                </div>
                                 <div class="row">
 
                                      <div class="col-6">
-                                         <span><b>SO No: </b><span t-field="o.x_studio_so_no"/> </span>
+                                         <span><b>SO No: </b><span t-field="o.so_num"/> </span>
                                      </div>
                                      <div class="col-6">
-                                         <span><b>MO No: </b><span t-field="o.x_studio_mo_no"/></span>
+                                         <span><b>MO No: </b><span t-field="o.mo_num"/></span>
                                      </div>
 
                                 </div>

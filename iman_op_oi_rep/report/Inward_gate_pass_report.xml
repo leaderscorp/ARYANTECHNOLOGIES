@@ -23,9 +23,10 @@
                     <div class="page" style="border:1px solid black; padding:15px; ">
                         <div class="row">
                             <div class="col-8">
+                                <p><b>Status: </b><span t-field="o.state"/></p>
                                 <p><b>Serial No: </b><span t-field="o.name"/> </p>
-                                <p><b>SO No: </b><span t-field="o.x_studio_so_no"/> </p>
-                                <p><b>MO No: </b><span t-field="o.x_studio_mo_no"/> </p>
+                                <p><b>SO No: </b><span t-field="o.so_num"/> </p>
+                                <p><b>MO No: </b><span t-field="o.mo_num"/> </p>
                                 <p><b>Mr/Mrs/Ms:</b> <span t-field="o.partner_id.name"/></p>
                                 <p><b>Address:</b> <span t-field="o.partner_id.street"/></p>
                             </div>
