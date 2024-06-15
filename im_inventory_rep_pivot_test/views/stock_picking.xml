@@ -78,9 +78,9 @@
                 <!-- ++++++++++++++++++++ -->
                 <xpath expr="//field[@name='owner_id']" position="after">
                     <field name="so_num" string="SO No"
-                           attrs="{'invisible': [('picking_type_id', '!=', 42)]}"/>
+                           attrs="{'invisible': [('picking_type_id', '!=', 44)]}"/>
                     <field name="mo_num" string="Mo No"
-                           attrs="{'invisible': [('picking_type_id', '!=', 42)]}"/>
+                           attrs="{'invisible': [('picking_type_id', '!=', 44)]}"/>
                 </xpath>
             </field>
         </record>
