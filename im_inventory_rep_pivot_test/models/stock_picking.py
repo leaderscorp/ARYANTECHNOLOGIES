@@ -4,7 +4,7 @@ from lxml import etree
 from odoo import models, fields, api
 
 # PRODUCTION_UID = 11
-# REQUESTION_PICKING_TYPE_ID = 44
+# REQUESTION_PICKING_TYPE_ID = 42
 
 class im_mo_requestion(models.Model):
     _inherit = 'stock.picking'
@@ -17,6 +17,14 @@ class im_mo_requestion(models.Model):
 
     env_user = fields.Integer(
         compute='_onchange_user'
+    )
+
+    mo_num = fields.Char(
+        string='MO No'
+    )
+
+    so_num = fields.Char(
+        string='SO No'
     )
 
     def _onchange_user(self):
@@ -48,7 +56,7 @@ class im_mo_requestion(models.Model):
     #         print(res['arch'])
             # print(record.picking_type_id.id)
             # uid = user_id of production user (11)
-            # picking_type_id = requestion operation type (44)
+            # picking_type_id = requestion operation type (42)
             # if action_confirm and uid == PRODUCTION_UID and record.picking_type_id.id == REQUESTION_PICKING_TYPE_ID:
             #     print(action_confirm[0].attrib.items())
                 # action_confirm[0].set('modifiers', '{"invisible": true}')

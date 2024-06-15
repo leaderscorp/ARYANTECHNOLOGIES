@@ -24,7 +24,7 @@
 # To return an action, assign: action = {...}
 
 transfer = env['stock.picking']
-picking_type_id = 44
+picking_type_id = 42
 operation_type = env['stock.picking.type'].browse(picking_type_id)
 
 for rec in records:
@@ -42,7 +42,8 @@ for rec in records:
     'picking_type_id': picking_type_id,
     'origin': rec.product_id.name,
     'move_ids_without_package': oper_list,
-    'hide_button': True
+    'hide_button': True,
+    'mo_num': rec.name
     }
     new_context = rec._context
 

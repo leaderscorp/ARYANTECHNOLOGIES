@@ -29,7 +29,7 @@
                             </tr>
                             <tr>
                                 <th>SO No.</th>
-                                <td><span t-field="o.x_studio_so_no"/></td>
+                                <td><span t-field="o.so_num"/></td>
                             </tr>
 <!--                            <tr>-->
 <!--                                <th>OGP No.</th>-->
