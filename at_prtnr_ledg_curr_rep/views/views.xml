@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    <data>-->
+
+
+<!--    </data>-->
+
+    <record id="partner_ledger_currency_report_action" model="ir.actions.report">
+            <field name="name">AT Partner Ledger</field>
+            <field name="model">at.partner.ledger.currency.report</field>
+            <field name="report_type">xlsx</field>
+            <field name="report_name">at_prtnr_ledg_curr_rep.at_partner_ledger_currency_report</field>
+            <field name="report_file">at_prtnr_ledg_curr_rep.at_partner_ledger_currency_report</field>
+            <field name="binding_type">report</field>
+        </record>
+</odoo>

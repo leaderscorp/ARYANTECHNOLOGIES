@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    <record model="ir.ui.view" id="view_partner_ledger_currency_report_form">
+            <field name="name">Partner Ledger Currency Report</field>
+            <field name="model">at.partner.ledger.currency.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="partner_id_name" widget="many2many_tags"/>
+                            <field name="start_date" />
+                            <field name="end_date" />
+                        </group>
+                        <group>
+                            <field name="partner_id_curr"  widget="many2many_tags"/>
+                            <field name="partner_account" />
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="get_curr_rep_xlsx" string="Print Report" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="partner_ledger_currency_report_window_action" model="ir.actions.act_window">
+            <field name="name">Partner Ledger Currency Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">at.partner.ledger.currency.report</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem id="partner_ledger_report_menu" name="Print Report" parent="account_accountant.menu_accounting"  action="partner_ledger_currency_report_window_action" sequence="400"/>
+         <!-- Define the action for the report -->
+
+    </data>
+</odoo>
