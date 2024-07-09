@@ -11,7 +11,7 @@ class CurrencyReportXlsx(models.AbstractModel):
         bold = workbook.add_format({'bold': True})
 
         # Define the headings
-        headings = ['S#', 'Reference', 'Detail', 'Matching Currency', 'Dr', 'Cr', 'Balance', 'Rate']
+        headings = ['S#', 'Reference','Partner', 'Detail', 'Matching Currency', 'Dr', 'Cr', 'Balance', 'Rate']
 
         # Group data by currency
         grouped_data = {}
@@ -41,12 +41,13 @@ class CurrencyReportXlsx(models.AbstractModel):
                 row += 1
                 sheet.write(row, 0, sno)
                 sheet.write(row, 1, value['reference'])
-                sheet.write(row, 2, value['name'])
-                sheet.write(row, 3, value['currency'])
-                sheet.write(row, 4, value['debit'], floating_point)
-                sheet.write(row, 5, value['credit'], floating_point)
-                sheet.write(row, 6, value['balance'], floating_point)
-                sheet.write(row, 7, value['currency_rate'], floating_point)
+                sheet.write(row, 2, value['partner'])
+                sheet.write(row, 3, value['name'])
+                sheet.write(row, 4, value['currency'])
+                sheet.write(row, 5, value['debit'], floating_point)
+                sheet.write(row, 6, value['credit'], floating_point)
+                sheet.write(row, 7, value['balance'], floating_point)
+                sheet.write(row, 8, value['currency_rate'], floating_point)
 
                 # Update totals
                 total_debit += value['debit']
@@ -55,10 +56,10 @@ class CurrencyReportXlsx(models.AbstractModel):
 
             # Write the totals row
             row += 3
-            sheet.write(row, 3, 'Total', bold)
-            sheet.write(row, 4, total_debit, floating_point)
-            sheet.write(row, 5, total_credit, floating_point)
-            sheet.write(row, 6, total_balance, floating_point)
+            sheet.write(row, 4, 'Total', bold)
+            sheet.write(row, 5, total_debit, floating_point)
+            sheet.write(row, 6, total_credit, floating_point)
+            sheet.write(row, 7, total_balance, floating_point)
 
             # Add an empty row between different currency sections
             row += 5
