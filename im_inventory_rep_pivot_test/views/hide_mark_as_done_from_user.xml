@@ -16,12 +16,13 @@
                 <!-- For Production User  -->
                 <!-- ++++++++++++++++++++ -->
 
-                <!-- Hide Action Confirm from prod user if picing_id = 44 -->
+                <!-- Hide Action Confirm from prod user if picing_id = 42 -->
                 <xpath expr="//header/button[@name='action_confirm']" position="attributes">
                     <attribute name="attrs">{'invisible': [
                         '|',('show_mark_as_todo', '=', False),
-                        '|', ('env_user', '=', 11),
-                        '&amp;', ('hide_button', '=', True),('picking_type_id', '=', 44)
+                        '|',
+                        '&amp;', ('env_user', '=', 11),('picking_type_id', '!=', 35 ),
+                        '&amp;', ('hide_button', '=', True),('picking_type_id', '=', 42)
                         ]}
                     </attribute>
                 </xpath>
@@ -29,7 +30,8 @@
                 <!-- Hide Action Validate from prod user -->
                 <xpath expr="//header/button[@name='button_validate'][1]" position="attributes">
                     <attribute name="attrs">{'invisible': [
-                        '|', ('env_user', '=', 11),
+                        '|',
+                        '&amp;', ('env_user', '=', 11), ('picking_type_id', '!=', 35 ),
                         '|', ('state', 'in', ('waiting','confirmed')), ('show_validate', '=', False)
                         ]}
                     </attribute>
@@ -39,7 +41,8 @@
                 <!-- Hide Action Validate2 from prod user -->
                 <xpath expr="//header/button[@name='button_validate'][2]" position="attributes">
                     <attribute name="attrs">{'invisible': [
-                        '|', ('env_user', '=', 11),
+                        '|',
+                        '&amp;', ('env_user', '=', 11), ('picking_type_id', '!=', 35 ),
                         '|', ('state', 'not in', ('waiting','confirmed')), ('show_validate', '=', False)
                         ]}
                     </attribute>
@@ -53,7 +56,7 @@
                 <xpath expr="//field[@name='move_line_ids_without_package']" position="attributes">
                     <attribute name="attrs">{'readonly': [
                         '|',
-                        '&amp;', ('env_user', '=', 10), ('picking_type_id', '=', 44),
+                        '&amp;', ('env_user', '=', 10), ('picking_type_id', '=', 42),
                         '|',
                         '|', ('show_operations', '=', False), ('state', '=', 'cancel'),
                         '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)
@@ -68,7 +71,7 @@
                     <attribute name="attrs">{'readonly': [
                         '|',
                         '&amp;', ('state', '=', 'done'), ('is_locked', '=', True),
-                        '&amp;', ('env_user', '=', 10), ('picking_type_id', '=', 44)
+                        '&amp;', ('env_user', '=', 10), ('picking_type_id', '=', 42)
                         ]}
                     </attribute>
                 </xpath>
