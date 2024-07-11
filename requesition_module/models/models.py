@@ -6,57 +6,93 @@ class Requisition(models.Model):
     _name = 'request.model'
     _description = 'Requisition Module'
 
-    name = fields.Char(string="Requisition Number", default=lambda self: _('New'))
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('sent', 'Sent'),
-        ('approved', 'Approved'),
+    name = fields.Char(
+        string="Requisition Number",
+        default=lambda self: _('New')
+    )
 
-    ], string="Status", default='draft')
+    state = fields.Selection(
+        selection=[
+            ('draft', 'Draft'),
+            ('sent', 'Sent'),
+            ('approved', 'Approved'), ],
+        string="Status",
+        default='draft'
+    )
 
-    date_field = fields.Date(string='Date', default=lambda self: fields.Date.context_today(self))
+    date_field = fields.Date(
+        string='Date',
+        default=lambda self: fields.Date.context_today(self)
+    )
+
     description = fields.Char(string="Description")
 
-    req_from = fields.Many2one('res.users', string="Request From", default=lambda  self:self.env.user)
-    req_to = fields.Many2one('res.users', string="Request To")
+    req_from = fields.Many2one(
+        comodel_name='res.users',
+        string='Request From',
+        default=lambda self: self.env.user
+    )
+
+    req_to = fields.Many2one(
+        comodel_name='res.users',
+        string='Request To'
+    )
+
     req_picking_type = fields.Many2one(
-        'stock.picking.type',
-        string="Warehouse",
+        comodel_name='stock.picking.type',
+        string='Warehouse',
         domain=[('id', 'in', [43])],
     )
+
     # req_picking_type = fields.Many2one(
     #     'stock.picking.type',
     #     string="Operation Type",
     #     domain=[('id', 'in', [52])],
     # )
-    req_line_ids = fields.One2many('requisition.line', 'req_id')
-    location_dest_id = fields.Many2one('stock.location',
-                                       domain=[('id', 'in', [28])],
-                                       string='Destination Location')
+
+    req_line_ids = fields.One2many(
+        comodel_name='requisition.line',
+        inverse_name='req_id'
+    )
+
+    location_dest_id = fields.Many2one(
+        comodel_name='stock.location',
+        domain=[('id', 'in', [28])],
+        string='Destination Location'
+    )
 
     transfer_created = fields.Boolean(default=False)
+
     # Computed field to display the name of the requestor
-    requestor_name = fields.Char(string="Requestor", related='req_from.name', readonly=True)
-   
+    requestor_name = fields.Char(
+        string="Requestor",
+        related='req_from.name',
+        readonly=True
+    )
+
     @api.onchange('req_to')
     def prrr(self):
-        print("Request To",self.req_to)
-
-
+        print("Request To", self.req_to)
 
     # Computed field to display the name of the recipient
-    recipient_name = fields.Char(string="Recipient", related='req_to.name', readonly=True)
+    recipient_name = fields.Char(
+        string="Recipient",
+        related='req_to.name',
+        readonly=True
+    )
     received = fields.Boolean(default=False)
     sent = fields.Boolean(default=False)
 
     req_transfer_id = fields.Many2one(
-        'stock.picking',
-        'Transfer No'
+        comodel_name='stock.picking',
+        string='Transfer No'
     )
-    req_transfer_id_state = fields.Char(string="Transfer Order State",
-                                             compute='_req_transfer_state',
-                                             readonly=True)
 
+    req_transfer_id_state = fields.Char(
+        string="Transfer Order State",
+        compute='_req_transfer_state',
+        readonly=True
+    )
 
     def _req_transfer_state(self):
         if self.req_transfer_id:
@@ -69,19 +105,12 @@ class Requisition(models.Model):
         else:
             self.req_transfer_id_state = 'Transfer Order Not Created'
 
-
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            print(vals)
             vals['name'] = self.env['ir.sequence'].next_by_code('request.sequence') or _('New')
             user_id = self._context['uid']
-
             vals['state'] = 'sent'
-
-
-
-
         return super(Requisition, self).create(vals_list)
 
     @api.onchange('req_picking_type')
@@ -123,43 +152,48 @@ class Requisition(models.Model):
     #         if rec.req_transfer_id and rec.req_transfer_id.state == 'done':
     #             rec.state = 'approved'
 
-
-
     def get_received_requisitions(self):
-        print("Received",self.search([('req_to', '=', self.env.user.id)]))
+        # print("Received", self.search([('req_to', '=', self.env.user.id)]))
         return self.search([('req_to', '=', self.env.user.id)])
 
     # Method to filter records for the current user's sent requisitions
 
     def get_sent_requisitions(self):
-        print("Sent",self.search([('req_from', '=', self.env.user.id)]))
+        # print("Sent", self.search([('req_from', '=', self.env.user.id)]))
         return self.search([('req_from', '=', self.env.user.id)])
 
     def get_formview_action_sent(self):  # No decorator needed for Odoo < 10, implicitly recordset method for Odoo >= 10
 
         # Return the form view action for the current record
-        action = self.env.ref('requesition_module.requisition_form_view_sent').id  # Replace with your form view action ID
-        return {'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_id': self.id,
-                'res_model': self._name,
-                'views': [(action, 'form')],
-                'context': self.env.context,
-                }
+        action = self.env.ref(
+            'requesition_module.requisition_form_view_sent').id  # Replace with your form view action ID
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'res_model': self._name,
+            'views': [(action, 'form')],
+            'context': self.env.context,
+        }
 
-    def get_formview_action_received(self):  # No decorator needed for Odoo < 10, implicitly recordset method for Odoo >= 10
+    def get_formview_action_received(
+            self):  # No decorator needed for Odoo < 10, implicitly recordset method for Odoo >= 10
 
         # Return the form view action for the current record
-        action = self.env.ref('requesition_module.requisition_form_view_received').id  # Replace with your form view action ID
-        return {'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_id': self.id,
-                'res_model': self._name,
-                'views': [(action, 'form')],
-                'context': self.env.context,
-                }
+        action = self.env.ref(
+            'requesition_module.requisition_form_view_received').id  # Replace with your form view action ID
+
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'res_model': self._name,
+            'views': [(action, 'form')],
+            'context': self.env.context,
+        }
+
     def action_transfer(self):
         self.transfer_created = True
 
@@ -168,7 +202,6 @@ class Requisition(models.Model):
         # operation_type = self.env['stock.picking.type'].search(domain)
         operation_type = self.req_picking_type
 
-
         for rec in self:
             line_list = []
             for line in rec.req_line_ids:
@@ -176,10 +209,7 @@ class Requisition(models.Model):
                     'name': line.product_id.name,
                     'product_id': line.product_id.id,
                     'product_uom_qty': line.product_uom_quantity,
-                    # 'location_id': operation_type.default_location_src_id.id,
-                    # 'location_dest_id': operation_type.default_location_dest_id.id
                     'location_id': operation_type.default_location_src_id.id,
-                    # 'location_dest_id': operation_type.default_location_dest_id.id
                     'location_dest_id': rec.location_dest_id
                 })
 
@@ -189,6 +219,7 @@ class Requisition(models.Model):
                 'origin': rec.name,
                 'move_ids_without_package': line_list,
             }
+
             transfer_record = transfer.create(vals)
             rec.req_transfer_id = transfer_record
             action = {
@@ -200,4 +231,4 @@ class Requisition(models.Model):
                 'view_id': rec.env.ref('stock.view_picking_form').id,
             }
 
-        print("Transfer")
+        # print("Transfer")
