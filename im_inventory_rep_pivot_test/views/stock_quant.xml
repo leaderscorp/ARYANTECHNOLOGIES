@@ -41,6 +41,12 @@
                   sequence="450"
                   action="im_inventory_rep_pivot_test.im_stock_quant_pivot_action"/>
 
+        <menuitem name="Inventory Report"
+                  id="im_inventory_rep_pivot_new_dashboard"
+                  parent="spreadsheet_dashboard.spreadsheet_dashboard_menu_root"
+                  sequence="450"
+                  action="im_inventory_rep_pivot_test.im_stock_quant_pivot_action"/>
+
 
     </data>
 </odoo>
