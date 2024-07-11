@@ -33,17 +33,17 @@ class CurrencyReportXlsx(models.AbstractModel):
                 grand_total_balance += (value['balance'])
 
         # Write grand total table at the top with borders and headers
-        sheet.write(1, 3, 'Grand Total (in PKR)', centered_format)
-        sheet.write(2, 2, 'Dr', bold)
-        sheet.write(2, 3, 'Cr', bold)
-        sheet.write(2, 4, 'Balance', bold)
-        sheet.write(3, 1, 'Total', bold)
-        sheet.write(3, 2, grand_total_debit, floating_point)
-        sheet.write(3, 3, grand_total_credit, floating_point)
-        sheet.write(3, 4, grand_total_balance, floating_point)
+        sheet.write(1, 6, 'Grand Total (in PKR)', centered_format)
+        sheet.write(2, 5, 'Dr', bold)
+        sheet.write(2, 6, 'Cr', bold)
+        sheet.write(2, 7, 'Balance', bold)
+        sheet.write(3, 4, 'Total', bold)
+        sheet.write(3, 5, grand_total_debit, floating_point)
+        sheet.write(3, 6, grand_total_credit, floating_point)
+        sheet.write(3, 7, grand_total_balance, floating_point)
 
         # Write data to sheet, separated by currency
-        row = 4  # Start after the grand total table
+        row = 5  # Start after the grand total table
         for currency, values in grouped_data.items():
             # Write currency as a section header
             row += 1
@@ -64,7 +64,8 @@ class CurrencyReportXlsx(models.AbstractModel):
                 sheet.write(row, 1, value['reference'])
                 sheet.write(row, 2, value['partner'])
                 sheet.write(row, 3, value['name'])
-                sheet.write(row, 4, value['currency'])
+                sheet.write(row, 4, value['matching_number'])
+                # sheet.write(row, 4, value['currency'])
                 sheet.write(row, 5, value['debit'] * value['currency_rate'], floating_point)
                 sheet.write(row, 6, value['credit'] * value['currency_rate'], floating_point)
                 sheet.write(row, 7, value['balance'] * value['currency_rate'], floating_point)

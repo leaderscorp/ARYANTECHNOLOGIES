@@ -2,6 +2,7 @@ from odoo import api, fields, models
 import datetime
 import pytz
 
+
 class AtPartnerLedgerCurrRep(models.TransientModel):
     #
     _name = 'at.partner.ledger.currency.report'
@@ -20,34 +21,38 @@ class AtPartnerLedgerCurrRep(models.TransientModel):
         string='Currency',
         required='True')
 
-    partner_account  = fields.Selection(
+    partner_account = fields.Selection(
         string='Partner Account',
-        selection=[('customer', 'Receivable Accounts'),
-                   ('supplier', 'Payable Accounts'),
-                   ('customer_supplier', 'Receivable And Payable Accounts')],
+        selection=[('asset_receivable', 'Receivable Accounts'),
+                   ('liability_payable', 'Payable Accounts'),
+                   ('both', 'Receivable And Payable Accounts')],
         required=False, )
 
     def get_curr_rep_xlsx(self):
-        domain = [
-            #('display_type', 'not in', ('line_section', 'line_note')),
+        selection = ['asset_receivable', 'liability_payable'] if self.partner_account == 'both' else [
+            self.partner_account]
+        print(selection)
+
+        domain_og = [
+            # ('display_type', 'not in', ('line_section', 'line_note')),
             ('currency_id', 'in', self.partner_id_curr.ids),
             ('partner_id', 'in', self.partner_id_name.ids),
-            # ('account_id', 'in', self.partner_account),
             ('create_date', '>=', self.start_date),
             ('create_date', '<=', self.end_date)
         ]
-        # t = self.env['account.move.line'].search([
-        #     ('display_type', 'not in', ('line_section', 'line_note')),
-        #     ('currency_id.name', '=', [x.name for x in self.partner_id_curr]),
-        #     ('partner_id.name', '=', [x.name for x in self.partner_id_name]),
-        #     ('create_date', '>=', self.start_date),
-        #     ('create_date', '<=', self.end_date)
-        # ])
-        dic={}
-        lines = self.env['account.move.line'].search(domain)
+        add_domain = [
+            ('account_id.account_type', 'in', selection),
+            ('account_id.non_trade', '=', False), ]
+        if selection == [False]:
+            domain = domain_og
+        else:
+            domain = domain_og + add_domain
+        dic = {}
+        lines = self.env['account.move.line'].search(domain, order='matching_number')
         for rec in lines:
-            dic[rec.id]={
+            dic[rec.id] = {
                 'currency': rec.currency_id.name,
+                'matching_number': rec.matching_number if rec.matching_number else None,
                 'partner': rec.partner_id.name,
                 'debit': rec.debit,
                 'credit': rec.credit,
@@ -57,14 +62,12 @@ class AtPartnerLedgerCurrRep(models.TransientModel):
                 'currency_rate': rec.currency_rate,
             }
 
-
         data = {'data': dic}
 
-
-        return self.env.ref('at_prtnr_ledg_curr_rep.partner_ledger_currency_report_action').report_action(self, data = data)
+        return self.env.ref('at_prtnr_ledg_curr_rep.partner_ledger_currency_report_action').report_action(self,
+                                                                                                          data=data)
 
         # print([x.credit for x in t])
-
 
     # def get_rep_xlsx(self):
     #     if self.name_sequence == 'New':
@@ -86,27 +89,27 @@ class AtPartnerLedgerCurrRep(models.TransientModel):
     #         account_move_line
     #         where move_id in %s
     #         and product_id is not null
-	# 	    group by product_id""", [tuple(test.mapped('id'))])
-    #
-    #     qdata = self._cr.dictfetchall()
-    #     sum = 0
-    #     for data in qdata:
-    #         packaging = self.env['product.packaging'].search([('product_id', '=', data.get('product_id'))], limit=1).qty
-    #         sum += data['p_quantity']
-    #         inv_data_dict[data.get('product_id')] = {
-    #             'name': self.env['product.product'].browse(data.get('product_id')).name,
-    #             'packaging': None if packaging == False else data['p_quantity']/packaging,
-    #             'qty': data['p_quantity'],
-    #         }
-    #     user_tz = self.env.user.tz
-    #     cur_time = datetime.datetime.now(tz=pytz.timezone(user_tz))
-    #     date_format = '%d/%m/%Y %I:%M:%S %p'
-    #     data = {
-    #         # 'mk_gp_list': inv_data_dict,
-    #         # 'date': cur_time.strftime(date_format),
-    #         # 'inv_count': len(test.mapped('name')),
-    #         # 'inv_name': ', '.join(test.mapped('name')),
-    #         # 'form_d': self.read()[0],
-    #         # 'total': sum
-    #     }
-    #     return self.env.ref('mk_wizard_rep.gate_pass_report_template_action').report_action(self, data=data)
+# 	    group by product_id""", [tuple(test.mapped('id'))])
+#
+#     qdata = self._cr.dictfetchall()
+#     sum = 0
+#     for data in qdata:
+#         packaging = self.env['product.packaging'].search([('product_id', '=', data.get('product_id'))], limit=1).qty
+#         sum += data['p_quantity']
+#         inv_data_dict[data.get('product_id')] = {
+#             'name': self.env['product.product'].browse(data.get('product_id')).name,
+#             'packaging': None if packaging == False else data['p_quantity']/packaging,
+#             'qty': data['p_quantity'],
+#         }
+#     user_tz = self.env.user.tz
+#     cur_time = datetime.datetime.now(tz=pytz.timezone(user_tz))
+#     date_format = '%d/%m/%Y %I:%M:%S %p'
+#     data = {
+#         # 'mk_gp_list': inv_data_dict,
+#         # 'date': cur_time.strftime(date_format),
+#         # 'inv_count': len(test.mapped('name')),
+#         # 'inv_name': ', '.join(test.mapped('name')),
+#         # 'form_d': self.read()[0],
+#         # 'total': sum
+#     }
+#     return self.env.ref('mk_wizard_rep.gate_pass_report_template_action').report_action(self, data=data)
