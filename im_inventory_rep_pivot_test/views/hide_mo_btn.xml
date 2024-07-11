@@ -19,6 +19,13 @@
                 <xpath expr="//header/button[@name='button_mark_done'][3]" position="attributes">
                     <attribute name="attrs">{'invisible': ['|', ('env_user', '=', 10), '|', ('move_raw_ids', '=', []), '&amp;', '|',('state', 'not in', ('confirmed', 'progress')), ('qty_producing', '!=', 0), ('state', '!=', 'to_close')]}</attribute>
                 </xpath>
+
+                <!-- ++++++++++++ -->
+                <!-- Add SO Field  -->
+                <!-- ++++++++++++ -->
+                <xpath expr="//group[@name='group_extra_info']//field[@name='company_id']" position="after">
+                    <field name="so_num"/>
+                </xpath>
             </field>
         </record>
 
