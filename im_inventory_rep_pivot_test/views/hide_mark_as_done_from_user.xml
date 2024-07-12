@@ -18,11 +18,16 @@
 
                 <!-- Hide Action Confirm from prod user if picing_id = 42 -->
                 <xpath expr="//header/button[@name='action_confirm']" position="attributes">
+<!--                    <attribute name="attrs">{'invisible': [-->
+<!--                        '|',('show_mark_as_todo', '=', False),-->
+<!--                        '|',-->
+<!--                        '&amp;', ('env_user', '=', 11),('picking_type_id', '!=', 35 ),-->
+<!--                        '&amp;', ('hide_button', '=', True),('picking_type_id', '=', 42)-->
+<!--                        ]}-->
+<!--                    </attribute>-->
                     <attribute name="attrs">{'invisible': [
-                        '|',('show_mark_as_todo', '=', False),
-                        '|',
-                        '&amp;', ('env_user', '=', 11),('picking_type_id', '!=', 35 ),
-                        '&amp;', ('hide_button', '=', True),('picking_type_id', '=', 42)
+                        '|', ('show_mark_as_todo', '=', False),
+                        '&amp;', ('env_user', '=', 11), ('picking_type_id', '!=', 35 )
                         ]}
                     </attribute>
                 </xpath>
