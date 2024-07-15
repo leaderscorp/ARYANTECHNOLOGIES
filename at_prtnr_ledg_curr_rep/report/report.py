@@ -84,4 +84,4 @@ class CurrencyReportXlsx(models.AbstractModel):
             sheet.write(row, 7, total_balance, floating_point)
 
             # Add an empty row between different currency sections
-            row += 5
+            row += 2
