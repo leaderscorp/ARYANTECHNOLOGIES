@@ -5,34 +5,40 @@ class iman_trans_hide_loc_from_user(models.Model):
 
     _inherit = 'stock.picking'
 
-    @api.onchange('user_id')
-    def onchange_user(self):
-        location_ids = self.env.user.location_ids.mapped('id')
-        picking_type_ids = self.env.user.picking_type_ids.mapped('id')
-        domain = {}
-        if location_ids != [] and picking_type_ids != []:
-            domain.update({
-                'location_id': [('id', 'in', location_ids)],
-                'location_dest_id': [('id', 'in', location_ids)],
-                'picking_type_id': [('id', 'in', picking_type_ids)],
-            })
-        elif location_ids != []:
-            domain.update({
-                'location_id': [('id', 'in', location_ids)],
-                'location_dest_id': [('id', 'in', location_ids)],
-            })
-        elif picking_type_ids != []:
-            domain.update({
-                'picking_type_id': [('id', 'in', picking_type_ids)]
-            })
-
-        else:
-            domain.update({
-                'location_id': [],
-                'location_dest_id': [],
-                'picking_type_id': [],
-            })
-        return {'domain': domain}
+    loc_ids = fields.Many2many(
+        related="user_id.location_ids"
+        )
+    pick_ids = fields.Many2many(
+        related="user_id.picking_type_ids"
+    )
+    # @api.onchange('user_id')
+    # def onchange_user(self):
+    #     location_ids = self.env.user.location_ids.mapped('id')
+    #     picking_type_ids = self.env.user.picking_type_ids.mapped('id')
+    #     domain = {}
+    #     if location_ids != [] and picking_type_ids != []:
+    #         domain.update({
+    #             'location_id': [('id', 'in', location_ids)],
+    #             'location_dest_id': [('id', 'in', location_ids)],
+    #             'picking_type_id': [('id', 'in', picking_type_ids)],
+    #         })
+    #     elif location_ids != []:
+    #         domain.update({
+    #             'location_id': [('id', 'in', location_ids)],
+    #             'location_dest_id': [('id', 'in', location_ids)],
+    #         })
+    #     elif picking_type_ids != []:
+    #         domain.update({
+    #             'picking_type_id': [('id', 'in', picking_type_ids)]
+    #         })
+    #
+    #     else:
+    #         domain.update({
+    #             'location_id': [],
+    #             'location_dest_id': [],
+    #             'picking_type_id': [],
+    #         })
+    #     return {'domain': domain}
 
         # for rec in self:
         #     if rec.user_id.id == 9:
