@@ -8,9 +8,14 @@
                 <xpath expr="//notebook" position="inside">
                     <page string="Rights" groups="base.group_erp_manager">
                         <group>
-                            <group string="Location">
+                            <group string="Source Location">
                                 <field name="location_ids" widget="many2many_tags"/>
                             </group>
+
+                            <group string="Destination Location">
+                                <field name="dest_location_ids" widget="many2many_tags"/>
+                            </group>
+
                             <group string="Operation Types">
                                 <field name="picking_type_ids" widget="many2many_tags"/>
                             </group>
@@ -20,46 +25,5 @@
             </field>
         </record>
 
-        <record id="iman_picking_loc_locations" model="ir.ui.view">
-            <field name="name">iman_picking_loc_locations</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//header" position="inside">
-                    <field name="loc_ids" invisible="1"/>
-                    <field name="pick_ids" invisible="1"/>
-                </xpath>
-                 <xpath expr="//group/group[1]/field[@name='location_id'][2]" position="attributes">
-                    <attribute name="domain">[('id', 'in', loc_ids)]</attribute>
-                 </xpath>
-                <xpath expr="//group/group[1]/field[@name='location_dest_id'][2]" position="attributes">
-                    <attribute name="domain">[('id', 'in', loc_ids)]</attribute>
-                </xpath>
-                <xpath expr="//group/group[1]/field[@name='picking_type_id']" position="attributes">
-                    <attribute name="domain">[('id', 'in', pick_ids)]</attribute>
-                </xpath>
-
-            </field>
-        </record>
-        <record id="iman_repair_loc_locations" model="ir.ui.view">
-            <field name="name">iman_picking_loc_locations</field>
-            <field name="model">repair.order</field>
-            <field name="inherit_id" ref="repair.view_repair_order_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//header" position="inside">
-                    <field name="loc_ids" invisible="1"/>
-                </xpath>
-                 <xpath expr="//group/group[2]/field[@name='location_id']" position="attributes">
-                    <attribute name="domain">[('id', 'in', loc_ids)]</attribute>
-                 </xpath>
-                <xpath expr="//field[@name='operations']/tree/field[@name='location_id']" position="attributes">
-                    <attribute name="domain">[('id', 'in', parent.loc_ids)]</attribute>
-                </xpath>
-                <xpath expr="//field[@name='operations']/tree/field[@name='location_dest_id']" position="attributes">
-                    <attribute name="domain">[('id', 'in', parent.loc_ids)]</attribute>
-                </xpath>
-
-            </field>
-        </record>
     </data>
 </odoo>
