@@ -17,34 +17,40 @@ class iman_trans_hide_loc_from_user(models.Model):
         related="user_id.picking_type_ids"
     )
 
-    @api.constrains('picking_type_id')
-    def _check_valid_loc(self):
-        for rec in self:
-            if rec.picking_type_id is False:
-                pass
-            elif rec.picking_type_id.id in rec.pick_ids.ids:
-                pass
-            else:
-                raise ValidationError(
-                    f"You are trying to use '{rec.picking_type_id.display_name}' operation type, but you are only allowed to use these operation type: \n  {', '.join(rec.pick_ids.mapped('name'))}" )
+    @api.constrains('picking_type_id', 'user_id')
+    def _check_valid_pick(self):
+        if self.user_id: # so that odoobot user is not interrupted
+            for rec in self:
+                if rec.picking_type_id is False:
+                    pass
+                elif rec.picking_type_id.id in rec.pick_ids.ids:
+                    pass
+                else:
+                    raise ValidationError(
+                        f"You are trying to use '{rec.picking_type_id.display_name}' operation type, but you are only allowed to use these operation type: \n  {', '.join(rec.pick_ids.mapped('name'))}" )
 
-    @api.constrains('location_id')
+    @api.constrains('location_id', 'user_id')
     def _check_valid_loc(self):
-        for rec in self:
-            if rec.location_id is False:
-                pass
-            elif rec.location_id.id in rec.loc_ids.ids:
-                pass
-            else:
-                raise ValidationError(
-                    f"You are trying to use '{rec.location_id.display_name}' source location, but uou are only allowed to use these source location: \n {', '.join(rec.loc_ids.mapped('name'))}" )
+        if self.user_id:
+            for rec in self:
+                if rec.location_id is False:
+                    pass
+                elif rec.location_id.id in rec.loc_ids.ids:
+                    pass
+                else:
+                    # print('else')
+                    raise ValidationError(
+                        f"You are trying to use '{rec.location_id.display_name}' source location, but uou are only allowed to use these source location: \n {', '.join(rec.loc_ids.mapped('name'))}" )
 
-    @api.constrains('location_dest_id')
+
+    @api.constrains('location_dest_id', 'user_id')
     def _check_valid_dest_loc(self):
-        for rec in self:
-            if rec.location_dest_id is False:
-                pass
-            elif rec.location_dest_id.id in rec.dest_loc_ids.ids:
-                pass
-            else:
-                raise ValidationError(f"You are trying to use '{rec.location_dest_id.display_name}' destination location, but you are only allowed to use these destination locations: \n  {', '.join(rec.dest_loc_ids.mapped('name'))}" )
+        if self.user_id:
+            for rec in self:
+                if rec.location_dest_id is False:
+                    pass
+                elif rec.location_dest_id.id in rec.dest_loc_ids.ids:
+                    pass
+                else:
+                    raise ValidationError(f"You are trying to use '{rec.location_dest_id.display_name}' destination location, but you are only allowed to use these destination locations: \n  {', '.join(rec.dest_loc_ids.mapped('name'))}" )
+      
