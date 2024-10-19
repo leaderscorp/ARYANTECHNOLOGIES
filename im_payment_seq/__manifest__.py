@@ -20,12 +20,12 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'account', 'custom_ir_seq'],
+    'depends': ['base', 'account', 'custom_ir_seq',],
 
     # always loaded
     'data': [
         'data/sequence.xml',
-        'security/ir.model.access.csv',
+        # 'security/ir.model.access.csv',
         'views/view.xml',
     ],
     # only loaded in demonstration mode

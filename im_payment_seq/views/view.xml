@@ -4,6 +4,7 @@
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
 <odoo>
+    <data>
 <!--  Account Payment - Form - Sequence number field & reduce the original seq number -->
     <record id="im_custom_pay_field_view_form_ap" model="ir.ui.view">
         <field name="name">im_custom_pay_field_view_form_ap</field>
@@ -110,5 +111,5 @@
 <!--            </xpath>-->
 <!--        </field>-->
 <!--    </record>-->
-
+    </data>
 </odoo>
