@@ -11,9 +11,9 @@
                     <field name="pick_ids" invisible="1"/>
                 </xpath>
 
-                 <xpath expr="//group/group[1]/field[@name='location_id'][2]" position="attributes">
-                    <attribute name="domain">[('id', 'in', loc_ids)]</attribute>
-                 </xpath>
+                <xpath expr="//group/group[1]/field[@name='location_id'][2]" position="attributes">
+                   <attribute name="domain">[('id', 'in', loc_ids)]</attribute>
+                </xpath>
 
                 <xpath expr="//group/group[1]/field[@name='location_dest_id'][2]" position="attributes">
                     <attribute name="domain">[('id', 'in', dest_loc_ids)]</attribute>
@@ -24,7 +24,7 @@
                 </xpath>
 
 
-
+                <!--Operations-->
                 <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='picking_type_id']" position="attributes">
                     <attribute name="domain">[('id', 'in', parent.pick_ids)]</attribute>
                 </xpath>
@@ -36,6 +36,16 @@
                 <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='location_dest_id']" position="attributes">
                     <attribute name="domain">[('id', 'in', parent.dest_loc_ids)]</attribute>
                 </xpath>
+
+                <!--Detailed Operation-->
+                <!--<xpath expr="//field[@name='move_line_ids_without_package']/tree/field[@name='location_id']" position="attributes">
+                    <attribute name="domain">[('id', 'in', parent.loc_ids)]</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='move_line_ids_without_package']/tree/field[@name='location_dest_id']" position="attributes">
+                    <attribute name="domain">[('id', 'in', parent.dest_loc_ids)]</attribute>
+                </xpath>-->
+
 
             </field>
         </record>
