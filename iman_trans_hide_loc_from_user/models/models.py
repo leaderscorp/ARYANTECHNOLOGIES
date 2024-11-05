@@ -6,16 +6,28 @@ class iman_trans_hide_loc_from_user(models.Model):
     _inherit = 'stock.picking'
 
     loc_ids = fields.Many2many(
-        related="user_id.location_ids"
+        # related="user_id.location_ids"
+        compute='compute_loc_ids'
     )
+
+    def compute_loc_ids(self):
+        self.loc_ids = self.env.user.location_ids.ids
 
     dest_loc_ids = fields.Many2many(
-        related="user_id.dest_location_ids"
+        # related="user_id.dest_location_ids"
+        compute='compute_dest_loc_ids'
     )
 
+    def compute_dest_loc_ids(self):
+        self.dest_loc_ids = self.env.user.dest_location_ids.ids
+
+
     pick_ids = fields.Many2many(
-        related="user_id.picking_type_ids"
+        # related="user_id.picking_type_ids"
+        compute='compute_pick_ids'
     )
+    def compute_pick_ids(self):
+        self.pick_ids = self.env.user.picking_type_ids.ids
 
     # def rec_to_user(self, check_rec_id, check_user_ids):
     #         if check_rec_id is False:

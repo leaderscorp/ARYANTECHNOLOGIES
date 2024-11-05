@@ -18,5 +18,6 @@ class Inheritsers(models.Model):
 
     picking_type_ids = fields.Many2many(
         comodel_name='stock.picking.type',
+        domain=lambda self: [('company_id.id', '=', self.env.company.id)],
         help='Specify the operation this user can use'
     )
