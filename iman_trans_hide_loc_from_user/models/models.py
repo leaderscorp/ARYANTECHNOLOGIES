@@ -4,30 +4,30 @@ from odoo.exceptions import ValidationError
 
 class iman_trans_hide_loc_from_user(models.Model):
     _inherit = 'stock.picking'
-
-    loc_ids = fields.Many2many(
-        # related="user_id.location_ids"
-        compute='compute_loc_ids'
+    
+    
+    env_user_id = fields.Many2one(
+        comodel_name='res.users',
+        string="User",
+        compute='_compute_env_user_id',
+        default=lambda self: self.env.user,
     )
 
-    def compute_loc_ids(self):
-        self.loc_ids = self.env.user.location_ids.ids
+    @api.depends_context('uid')
+    def _compute_env_user_id(self):
+        for record in self:
+            record.env_user_id = self.env.user
+    
+    loc_ids = fields.Many2many(
+        related="env_user_id.location_ids"
+    )
+
 
     dest_loc_ids = fields.Many2many(
-        # related="user_id.dest_location_ids"
-        compute='compute_dest_loc_ids'
+        related="env_user_id.dest_location_ids"
     )
 
-    def compute_dest_loc_ids(self):
-        self.dest_loc_ids = self.env.user.dest_location_ids.ids
 
-
-    pick_ids = fields.Many2many(
-        # related="user_id.picking_type_ids"
-        compute='compute_pick_ids'
-    )
-    def compute_pick_ids(self):
-        self.pick_ids = self.env.user.picking_type_ids.ids
 
     # def rec_to_user(self, check_rec_id, check_user_ids):
     #         if check_rec_id is False:
@@ -39,17 +39,17 @@ class iman_trans_hide_loc_from_user(models.Model):
     #             raise ValidationError(
     #                 f"You are trying to use '{check_rec_id.display_name}' source location, but uou are only allowed to use these source location: \n {', '.join(check_user_ids.mapped('name'))}")
 
-    @api.constrains('picking_type_id', 'user_id')
-    def _check_valid_pick(self):
-        if self.user_id: # so that odoobot user is not interrupted
-            for rec in self:
-                if rec.picking_type_id is False:
-                    pass
-                elif rec.picking_type_id.id in rec.pick_ids.ids:
-                    pass
-                else:
-                    raise ValidationError(
-                        f"You are trying to use '{rec.picking_type_id.display_name}' operation type, but you are only allowed to use these operation type: \n  {', '.join(rec.pick_ids.mapped('name'))}" )
+    #@api.constrains('picking_type_id', 'user_id')
+    #def _check_valid_pick(self):
+    #    if self.user_id: # so that odoobot user is not interrupted
+    #        for rec in self:
+    #            if rec.picking_type_id is False:
+    #                pass
+    #            elif rec.picking_type_id.id in rec.pick_ids.ids:
+    #                pass
+    #            else:
+    #                raise ValidationError(
+    #                    f"You are trying to use '{rec.picking_type_id.display_name}' operation type, but you are only allowed to use these operation type: \n  {', '.join(rec.pick_ids.mapped('name'))}" )
 
     @api.constrains('location_id', 'user_id')
     def _check_valid_loc(self):
