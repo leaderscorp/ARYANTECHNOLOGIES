@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+at_prtnr_ledg_curr_rep.access_at_partner_ledger_currency_report,access_at_partner_ledger_currency_report,at_prtnr_ledg_curr_rep.model_at_partner_ledger_currency_report,base.group_user,1,1,1,1
