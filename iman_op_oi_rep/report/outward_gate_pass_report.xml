@@ -20,7 +20,11 @@
 <!--                                            <td class="w-50">OGP No:</td>-->
                                         </tr>
                                         <tr>
-                                            <td>Date: <span t-field="o.date" t-options="{'widget': 'date'}"/></td>
+                                            <td>Scheduled Date: <span t-field="o.scheduled_date" t-options="{'widget': 'date'}"/></td>
+<!--                                            <td class="w-50">Date:</td>-->
+                                        </tr>
+                                        <tr>
+                                            <td>Delivery Date: <span t-field="o.date_done" t-options="{'widget': 'date'}"/></td>
 <!--                                            <td class="w-50">Date:</td>-->
                                         </tr>
                                         <tr>
