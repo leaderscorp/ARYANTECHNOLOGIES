@@ -20,8 +20,12 @@
                                 <td><span t-field="o.name"/></td>
                             </tr>
                             <tr>
-                                <th>Date</th>
-                                <td><span t-field="o.date"/></td>
+                                <th>Scheduled Date</th>
+                                <td><span t-field="o.scheduled_date"/></td>
+                            </tr>
+                            <tr>
+                                <th>Delivery Date</th>
+                                <td><span t-field="o.date_done"/></td>
                             </tr>
                             <tr>
                                 <th>location/Site</th>
