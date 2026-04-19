@@ -35,6 +35,21 @@ class ResUsers(models.Model):
     is_show_specific_menu = fields.Boolean(string='Is Show Specific Menu',
                                            compute='_compute_is_show_specific_menu',
                                            help='Field determine to show the hide specific menu')
+    
+    is_admin = fields.Boolean(compute='_get_is_admin', string="Admin")
+    
+    def _get_is_admin(self):
+        """
+        The Hide specific menu tab will be hidden for the Admin user form.
+        Else once the menu is hidden, it will be difficult to re-enable it.
+        """
+        for rec in self:
+            rec.is_admin = False
+            if rec.id == self.env.ref('base.user_admin').id:
+                rec.is_admin = True
+
+    
+    
 
     def write(self, vals):
         # Store old hide_menu_ids per record
