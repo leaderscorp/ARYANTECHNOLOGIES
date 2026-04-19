@@ -9,6 +9,9 @@ class im_inventory_stock_move(models.Model):
     im_product_tag_p = fields.Char(compute='_get_prod_tag_p', store=True)
     im_mrp_state = fields.Char(compute='_get_mrp', store=True)
     im_product_cost = fields.Float(compute='_get_prod_cost', store=True)
+    so_num = fields.Char(
+        string='SO No'
+    )
 
     @api.depends('product_id.standard_price')
     def _get_prod_cost(self):

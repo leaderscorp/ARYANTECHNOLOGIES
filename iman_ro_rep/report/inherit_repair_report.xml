@@ -69,9 +69,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-if="o.operations">
+                            <t t-if="o.move_ids">
                                 <tr class="bg-200 o_line_section"><td colspan="7"><strong>Description</strong></td></tr>
-                                <tr t-foreach="o.operations" t-as="line">
+                                <tr t-foreach="o.move_ids" t-as="line">
                                     <td>
                                         <p t-if="line.type == 'add'"><span t-field="line.name" /></p>
                                         <p t-if="line.type == 'remove'"><span t-field="line.name"/></p>

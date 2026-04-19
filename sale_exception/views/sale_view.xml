@@ -4,14 +4,10 @@
     <record id="action_sale_test_tree" model="ir.actions.act_window">
         <field name="name">Sale Exception Rules</field>
         <field name="res_model">exception.rule</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="base_exception.view_exception_rule_tree" />
-        <field
-            name="domain"
-        >[('model', 'in', ['sale.order', 'sale.order.line'])]</field>
-        <field
-            name="context"
-        >{'active_test': False, 'default_model' : 'sale.order'}</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="base_exception.view_exception_rule_list"/>
+        <field name="domain">[('model','in',['sale.order','sale.order.line'])]</field>
+        <field name="context">{'active_test':False,'default_model':'sale.order'}</field>
     </record>
     <menuitem
         action="action_sale_test_tree"
@@ -30,7 +26,7 @@
                     class="alert alert-danger"
                     role="alert"
                     style="margin-bottom:0px;"
-                    attrs="{'invisible': [('exceptions_summary','=',False)]}"
+                    invisible="not exceptions_summary"
                 >
                     <p>
                         <strong
@@ -48,14 +44,18 @@
                 </div>
             </sheet>
             <xpath expr="//field[@name='date_order']/.." position="inside">
-                <field name="ignore_exception" states="sale" />
+                <field
+                    name="ignore_exception"
+                    invisible="state != 'sale'"
+                    groups="base_exception.group_exception_rule_manager"
+                />
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group[1]" position="before">
                 <div
                     class="alert alert-danger"
                     role="alert"
                     style="margin-bottom:0px;"
-                    attrs="{'invisible': [('exceptions_summary', '=', False)]}"
+                    invisible="not exceptions_summary"
                 >
                     <p>
                         <strong
@@ -64,10 +64,7 @@
                     <field name="exceptions_summary" />
                 </div>
             </xpath>
-            <xpath expr="//field[@name='order_line']/tree" position="inside">
-                <field name="is_exception_danger" invisible="1" />
-            </xpath>
-            <xpath expr="//field[@name='order_line']/tree" position="attributes">
+            <xpath expr="//field[@name='order_line']/list" position="attributes">
                 <attribute name="decoration-danger">is_exception_danger</attribute>
             </xpath>
         </field>

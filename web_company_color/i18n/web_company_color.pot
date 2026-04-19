@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -94,4 +94,9 @@ msgstr ""
 #. module: web_company_color
 #: model:ir.model.fields,field_description:web_company_color.field_res_company__scss_modif_timestamp
 msgid "SCSS Modif. Timestamp"
+msgstr ""
+
+#. module: web_company_color
+#: model:ir.model.fields,field_description:web_company_color.field_res_company__color_submenu_text
+msgid "Submenu Text Color"
 msgstr ""

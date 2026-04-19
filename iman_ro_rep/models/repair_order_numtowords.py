@@ -23,7 +23,7 @@ class AccountRepairOrderNumWords(models.Model):
 
     check_tax = fields.Float(
         string='tax amt',
-        compute='get_tax',
+        # compute='get_tax',
         required=False,
         store=True)
 
@@ -31,7 +31,7 @@ class AccountRepairOrderNumWords(models.Model):
         compute='cal_tax_val'
     )
 
-    total_in_wordss = fields.Char(compute='int_to_words')
+    total_in_wordss = fields.Char()
     # @api.depends('tax_ids')
     def cal_tax_val(self):
         for rec in self:
@@ -40,16 +40,16 @@ class AccountRepairOrderNumWords(models.Model):
 
 
     # dummy = fields.Char(default="Dummy Text",string="dummy")
-    @api.depends('amount_total')
-    def int_to_words(self):
-        for rec in self:
-            two_num = round(rec.amount_total, 2)
-            rec.total_in_wordss = num2words(two_num, lang='en_US')
+    # @api.depends('amount_total')
+    # def int_to_words(self):
+    #     for rec in self:
+    #         two_num = round(rec.amount_total, 2)
+    #         rec.total_in_wordss = num2words(two_num, lang='en_US')
 
 
-    @api.depends('operations.tax_id.amount')
+    @api.depends('move_ids.tax_id.amount')
     def get_tax(self):
-        for parts_tax in self.mapped('operations.tax_id'):
+        for parts_tax in self.mapped('move_ids.tax_id'):
             print(parts_tax.amount)
             # for tax in item.tax_id:
             #     pass

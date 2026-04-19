@@ -4,6 +4,8 @@ from odoo import models, fields, api
 
 class AddSequenceInRepairOrder(models.Model):
     _inherit='repair.order'
+    
+    description = fields.Char(string='Description')
 
     seq_des = fields.Char(
         string='Repairs Reference' , compute='createseqdes')

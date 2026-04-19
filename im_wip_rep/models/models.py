@@ -17,7 +17,12 @@ class im_wip_rep(models.Model):
     product_id = fields.Many2one('product.product')
     im_product_tag_p = fields.Char()
 
-
+    
+    # im_product_tag_p as im_product_tag_p,
+    # im_product_cost as im_product_cost,
+    # (product_uom_qty * im_product_cost) as im_total_cost,
+    # im_mrp_state='confirmed' 
+    # and
     def init(self):
         tools.drop_view_if_exists(self._cr, 'im_wip')
         self._cr.execute(
@@ -28,13 +33,9 @@ class im_wip_rep(models.Model):
             reference as reference, 
             product_uom_qty as product_uom_qty, 
             product_id as product_id, 
-            im_product_tag_p as im_product_tag_p,
-            im_product_cost as im_product_cost,
-            (product_uom_qty * im_product_cost) as im_total_cost,
             COALESCE(production_id, raw_material_production_id) as productions
             from stock_move 
-            where im_mrp_state='confirmed' 
-            and company_id=1 
+            where company_id=1 
             and COALESCE(production_id, raw_material_production_id) is not null
             )
             """
