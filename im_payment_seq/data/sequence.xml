@@ -83,7 +83,7 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-            <field name="company_id">2</field>
+            <!-- <field name="company_id">2</field> -->
         </record>
     </data>
     <!--  Bank  -->
@@ -95,7 +95,7 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-            <field name="company_id">2</field>
+            <!-- <field name="company_id">2</field> -->
         </record>
     </data>
 
@@ -109,7 +109,7 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-            <field name="company_id">2</field>
+            <!-- <field name="company_id">2</field> -->
         </record>
     </data>
 
@@ -122,7 +122,7 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-            <field name="company_id">2</field>
+            <!-- <field name="company_id">2</field> -->
         </record>
     </data>
 
@@ -137,7 +137,7 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-            <field name="company_id">2</field>
+            <!-- <field name="company_id">2</field> -->
         </record>
     </data>
 
@@ -151,7 +151,7 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-            <field name="company_id">4</field>
+            <!-- <field name="company_id">4</field> -->
         </record>
     </data>
     <!--  Bank  -->
@@ -163,7 +163,7 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-            <field name="company_id">4</field>
+            <!-- <field name="company_id">4</field> -->
         </record>
     </data>
 
@@ -177,7 +177,7 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-            <field name="company_id">4</field>
+            <!-- <field name="company_id">4</field> -->
         </record>
     </data>
 
@@ -190,7 +190,7 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-            <field name="company_id">4</field>
+            <!-- <field name="company_id">4</field> -->
         </record>
     </data>
 
@@ -205,7 +205,7 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-            <field name="company_id">4</field>
+            <!-- <field name="company_id">4</field> -->
         </record>
     </data>
 

@@ -23,7 +23,7 @@ class PurchaseTest(models.Model):
     _name = "base.exception.test.purchase"
     _description = "Base Exception Test Model"
 
-    name = fields.Char(required=True)
+    name = fields.Char()
     user_id = fields.Many2one("res.users", string="Responsible")
     state = fields.Selection(
         [
@@ -68,9 +68,6 @@ class PurchaseTest(models.Model):
 
     def button_cancel(self):
         self.write({"state": "cancel"})
-
-    def _reverse_field(self):
-        return "test_purchase_ids"
 
     def exception_method_no_zip(self):
         records_fail = self.env["base.exception.test.purchase"]

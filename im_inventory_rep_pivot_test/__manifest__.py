@@ -17,7 +17,7 @@
     # Check https://github.com/odoo/odoo/blob/16.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '19.0.1.0.0',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'stock', 'mrp', 'spreadsheet_dashboard'],
@@ -26,7 +26,7 @@
     'data': [
         'security/ir.model.access.csv',
         'data/action.xml',
-        'views/pivot.xml',
+        # 'views/pivot.xml',
         'views/menu_item.xml',
         'views/stock_move.xml',
         'views/stock_quant.xml',
