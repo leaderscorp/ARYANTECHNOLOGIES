@@ -44,7 +44,7 @@
                 <div id="custom_seq_name" width="100%">
                     <h1 class="text-start">
                         <field name="custom_name"
-                               invisible="move_type != 'entry'"/>
+                               attrs="{'invisible': [('move_type', '!=', 'entry')]}"/>
                     </h1>
                 </div>
             </xpath>

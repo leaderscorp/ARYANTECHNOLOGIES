@@ -2,7 +2,7 @@
 
 {
     'name': 'Ol Accounting Balance GL',
-    'version': '19.0.1.0.0',
+    'version': '1.0.0',
     'category': 'Cost',
     'author':'Zain',
     'sequence': -100,

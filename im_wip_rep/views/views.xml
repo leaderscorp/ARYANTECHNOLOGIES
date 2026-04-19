@@ -5,7 +5,7 @@
             <field name="name">Imaan WIP Tree</field>
             <field name="model">im.wip</field>
             <field name="arch" type="xml">
-                <list>
+                <tree>
                     <field name="im_product_tag_p"/>
                     <field name="reference"/>
                     <field name="product_id"/>
@@ -13,7 +13,7 @@
                     <field name="product_uom_qty"/>
                     <field name="im_total_cost"/>
 
-                </list>
+                </tree>
             </field>
         </record>
 
@@ -36,7 +36,7 @@
         <record model="ir.actions.act_window" id="im_wip_pivot_report_window_action">
             <field name="name">imaan wip pivot report</field>
             <field name="res_model">im.wip</field>
-            <field name="view_mode">pivot,list</field>
+            <field name="view_mode">pivot,tree</field>
             <field name="domain">[('im_product_tag_p' , '!=', 'Finish Good'), ('im_product_tag_p' , '!=', 'FINISH GOOD')]</field>
         </record>
 

@@ -90,94 +90,94 @@ class IMAccountPayment(models.Model):
 #         return super(IMAccountPayment, self).copy(default=default)
 
 
-    # def action_post(self):
-    #     res = super(IMAccountPayment, self).action_post()
-    #     # Payment sequence for customer
-    #     if self.env.user.company_id.id == 1 and self.env.company.id == 1:
-    #         for rec in self:
-    #             if rec.custom_name == False and rec.move_id.custom_name == False:
-    #                 if rec.is_internal_transfer is False:
-    #                     if rec.journal_id.type == 'cash':
-    #                         if rec.payment_type == 'outbound':  # Send
-    #                             name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('cash.payment.send.sequence') or '/'
-    #                             # print('cash-send')
-    #                         elif self.payment_type == 'inbound':  # Receive
-    #                             name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('cash.payment.receive.sequence') or '/'
-    #                             # print('cash-receive')
+    def action_post(self):
+        res = super(IMAccountPayment, self).action_post()
+        # Payment sequence for customer
+        if self.env.user.company_id.id == 1 and self.env.company.id == 1:
+            for rec in self:
+                if rec.custom_name == False and rec.move_id.custom_name == False:
+                    if rec.is_internal_transfer is False:
+                        if rec.journal_id.type == 'cash':
+                            if rec.payment_type == 'outbound':  # Send
+                                name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('cash.payment.send.sequence') or '/'
+                                # print('cash-send')
+                            elif self.payment_type == 'inbound':  # Receive
+                                name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('cash.payment.receive.sequence') or '/'
+                                # print('cash-receive')
 
-    #                     elif rec.journal_id.type == 'bank':
-    #                         if rec.payment_type == 'outbound':  # Send
-    #                             name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('bank.payment.send.sequence') or '/'
-    #                             # print('bank-send')
+                        elif rec.journal_id.type == 'bank':
+                            if rec.payment_type == 'outbound':  # Send
+                                name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('bank.payment.send.sequence') or '/'
+                                # print('bank-send')
 
-    #                         elif rec.payment_type == 'inbound':  # Receive
-    #                             name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('bank.payment.receive.sequence') or '/'
-    #                             # print('bank-rec')
-    #                 else:
-    #                     name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('internal.payment.sequence') or '/'
+                            elif rec.payment_type == 'inbound':  # Receive
+                                name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('bank.payment.receive.sequence') or '/'
+                                # print('bank-rec')
+                    else:
+                        name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('internal.payment.sequence') or '/'
 
-    #                 # rec.move_id.custom_name = name
-    #                 # rec.custom_name = name
-    #                 if not rec.move_id.custom_name:
-    #                     rec.move_id.custom_name = name
-    #                 if not rec.custom_name:
-    #                     rec.custom_name = name
-    #     if self.env.user.company_id.id == 2 and self.env.company.id == 2:
-    #         for rec in self:
-    #             if rec.custom_name == False and rec.move_id.custom_name == False:
-    #                 if rec.is_internal_transfer is False:
-    #                     if rec.journal_id.type == 'cash':
-    #                         if rec.payment_type == 'outbound':  # Send
-    #                             name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('at.cash.payment.send.sequence') or '/'
-    #                             # print('cash-send')
-    #                         elif self.payment_type == 'inbound':  # Receive
-    #                             name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('at.cash.payment.receive.sequence') or '/'
-    #                             # print('cash-receive')
+                    # rec.move_id.custom_name = name
+                    # rec.custom_name = name
+                    if not rec.move_id.custom_name:
+                        rec.move_id.custom_name = name
+                    if not rec.custom_name:
+                        rec.custom_name = name
+        if self.env.user.company_id.id == 2 and self.env.company.id == 2:
+            for rec in self:
+                if rec.custom_name == False and rec.move_id.custom_name == False:
+                    if rec.is_internal_transfer is False:
+                        if rec.journal_id.type == 'cash':
+                            if rec.payment_type == 'outbound':  # Send
+                                name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('at.cash.payment.send.sequence') or '/'
+                                # print('cash-send')
+                            elif self.payment_type == 'inbound':  # Receive
+                                name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('at.cash.payment.receive.sequence') or '/'
+                                # print('cash-receive')
 
-    #                     elif rec.journal_id.type == 'bank':
-    #                         if rec.payment_type == 'outbound':  # Send
-    #                             name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('at.bank.payment.send.sequence') or '/'
-    #                             # print('bank-send')
+                        elif rec.journal_id.type == 'bank':
+                            if rec.payment_type == 'outbound':  # Send
+                                name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('at.bank.payment.send.sequence') or '/'
+                                # print('bank-send')
 
-    #                         elif rec.payment_type == 'inbound':  # Receive
-    #                             name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('at.bank.payment.receive.sequence') or '/'
-    #                             # print('bank-rec')
-    #                 else:
-    #                     name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('at.internal.payment.sequence') or '/'
+                            elif rec.payment_type == 'inbound':  # Receive
+                                name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('at.bank.payment.receive.sequence') or '/'
+                                # print('bank-rec')
+                    else:
+                        name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('at.internal.payment.sequence') or '/'
 
-    #                 # rec.move_id.custom_name = name
-    #                 # rec.custom_name = name
-    #                 if not rec.move_id.custom_name:
-    #                     rec.move_id.custom_name = name
-    #                 if not rec.custom_name:
-    #                     rec.custom_name = name
-    #     if self.env.company.id == 4:
-    #         for rec in self:
-    #             if rec.custom_name == False and rec.move_id.custom_name == False:
-    #                 if rec.is_internal_transfer is False:
-    #                     if rec.journal_id.type == 'cash':
-    #                         if rec.payment_type == 'outbound':  # Send
-    #                             name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('gc.cash.payment.send.sequence') or '/'
-    #                         elif self.payment_type == 'inbound':  # Receive
-    #                             name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('gc.cash.payment.receive.sequence') or '/'
-    #                     elif rec.journal_id.type == 'bank':
-    #                         if rec.payment_type == 'outbound':  # Send
-    #                             name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('gc.bank.payment.send.sequence') or '/'
-    #                         elif rec.payment_type == 'inbound':  # Receive
-    #                             name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('gc.bank.payment.receive.sequence') or '/'
-    #                 else:
-    #                     name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('gc.internal.payment.sequence') or '/'
+                    # rec.move_id.custom_name = name
+                    # rec.custom_name = name
+                    if not rec.move_id.custom_name:
+                        rec.move_id.custom_name = name
+                    if not rec.custom_name:
+                        rec.custom_name = name
+        if self.env.company.id == 4:
+            for rec in self:
+                if rec.custom_name == False and rec.move_id.custom_name == False:
+                    if rec.is_internal_transfer is False:
+                        if rec.journal_id.type == 'cash':
+                            if rec.payment_type == 'outbound':  # Send
+                                name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('gc.cash.payment.send.sequence') or '/'
+                            elif self.payment_type == 'inbound':  # Receive
+                                name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('gc.cash.payment.receive.sequence') or '/'
+                        elif rec.journal_id.type == 'bank':
+                            if rec.payment_type == 'outbound':  # Send
+                                name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('gc.bank.payment.send.sequence') or '/'
+                            elif rec.payment_type == 'inbound':  # Receive
+                                name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('gc.bank.payment.receive.sequence') or '/'
+                    else:
+                        name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.date).next_by_code('gc.internal.payment.sequence') or '/'
 
-    #                 # rec.move_id.custom_name = name
-    #                 # rec.custom_name = name
-    #                 if not rec.move_id.custom_name:
-    #                     rec.move_id.custom_name = name
-    #                 if not rec.custom_name:
-    #                     rec.custom_name = name
+                    # rec.move_id.custom_name = name
+                    # rec.custom_name = name
+                    if not rec.move_id.custom_name:
+                        rec.move_id.custom_name = name
+                    if not rec.custom_name:
+                        rec.custom_name = name
 
-    #     return res
+        return res
 
-    # @api.returns('self', lambda value: value.id)
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default is None:
             default = {}

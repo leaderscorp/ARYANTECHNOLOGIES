@@ -1,35 +1,28 @@
-.. image:: https://img.shields.io/badge/license-LGPL--3-blue.svg
-    :target: https://www.gnu.org/licenses/lgpl-3.0-standalone.html
-    :alt: License: LGPL-3
-
 Hide Any Menu User Wise
-========================
+=======================
 * Hide Any Menu User Wise
 
 Installation
 ============
-- Install our custom addon
-
-Configuration
-=============
-- Additional configuration not required
+	- www.odoo.com/documentation/16.0/setup/install.html
+	- Install our custom addon
 
 License
 -------
-Lesser General Public License, Version 3 (LGPL v3).
-(https://www.gnu.org/licenses/agpl-3.0-standalone.html)
+General Public License, Version 3 (LGPL v3).
+(https://www.odoo.com/documentation/user/16.0/legal/licenses/licenses.html)
 
 Company
 -------
-* `Cybrosys Techno Solutions <https://cybrosys.com/>`__
+* 'Cybrosys Techno Solutions <https://cybrosys.com/>`__
 
 Credits
 -------
-*  Developer: (V19)Ashwin A,
-(V18)Sreerag PM,
-(V17)Ranjith R ,
+* Developer:
+(v14) Sreerag @ Cybrosys
+(v15) Midilaj @ Cybrosys
+(v16) VISHNU KP @ Cybrosys
 
-    Contact : odoo@cybrosys.com
 
 Contacts
 --------
@@ -41,13 +34,11 @@ Bugs are tracked on GitHub Issues. In case of trouble, please check there if you
 
 Maintainer
 ==========
-.. image:: https://cybrosys.com/images/logo.png
-   :target: https://cybrosys.com
-
 This module is maintained by Cybrosys Technologies.
 
-For support and more information, please visit `Our Website <https://cybrosys.com/>`__
+For support and more information, please visit https://www.cybrosys.com
 
 Further information
 ===================
 HTML Description: `<static/description/index.html>`__
+

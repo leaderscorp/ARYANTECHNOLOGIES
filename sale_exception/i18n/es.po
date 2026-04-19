@@ -9,15 +9,15 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-02 10:22+0000\n"
-"PO-Revision-Date: 2023-11-29 04:58+0000\n"
-"Last-Translator: kikopeiro <francisco.peiro@factorlibre.com>\n"
+"PO-Revision-Date: 2023-03-09 20:22+0000\n"
+"Last-Translator: Javier Diez <jd@adhoc.com.ar>\n"
 "Language-Team: Spanish (https://www.transifex.com/oca/teams/23907/es/)\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #. module: sale_exception
 #: model_terms:ir.ui.view,arch_db:sale_exception.view_order_form
@@ -34,34 +34,32 @@ msgid ""
 "<strong>There are exceptions on this line blocking the confirmation of this "
 "quotation:</strong>"
 msgstr ""
-"<strong>Hay excepciones en esta línea que bloquean la confirmación de este "
-"presupuesto:</strong>"
 
 #. module: sale_exception
 #: model:exception.rule,description:sale_exception.excep_no_dumping
 msgid "A product is sold cheaper than his cost."
-msgstr "Un producto se vende más barato que su coste."
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_exception_rule__model
 msgid "Apply on"
-msgstr "Aplicar sobre"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,description:sale_exception.excep_no_sol
 msgid "At least one order line should be present in the sale"
-msgstr "Al menos una línea de pedido debe estar presente en la venta"
+msgstr ""
 
 #. module: sale_exception
 #: model_terms:ir.ui.view,arch_db:sale_exception.view_sales_order_filter
 msgid "Blocked in draft"
-msgstr "Bloqueado en borrador"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.actions.act_window,name:sale_exception.action_sale_exception_confirm
 #: model_terms:ir.ui.view,arch_db:sale_exception.view_sale_exception_confirm
 msgid "Blocked in draft due to exceptions"
-msgstr "Bloqueado en borrador debido a excepciones"
+msgstr ""
 
 #. module: sale_exception
 #: model_terms:ir.ui.view,arch_db:sale_exception.view_sale_exception_confirm
@@ -76,16 +74,6 @@ msgid ""
 msgstr ""
 "Haga clic aquí para poder confirmar estos Pedidos de Venta a pesar de las "
 "excepciones."
-
-#. module: sale_exception
-#: model:ir.model,name:sale_exception.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: sale_exception
-#: model:ir.model,name:sale_exception.model_res_config_settings
-msgid "Config Settings"
-msgstr ""
 
 #. module: sale_exception
 #: model_terms:ir.ui.view,arch_db:sale_exception.view_sale_exception_confirm
@@ -113,13 +101,6 @@ msgid "Display Name"
 msgstr "Nombre mostrado"
 
 #. module: sale_exception
-#: model_terms:ir.ui.view,arch_db:sale_exception.res_config_settings_view_form_sale_exception
-msgid ""
-"Display popup at confirm or simply rely on the red alert already visible on "
-"top of the order."
-msgstr ""
-
-#. module: sale_exception
 #: model:ir.model,name:sale_exception.model_exception_rule
 msgid "Exception Rule"
 msgstr "Regla de excepción"
@@ -144,7 +125,7 @@ msgstr "Excepciones a resolver"
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__ignore
@@ -157,7 +138,12 @@ msgstr "Ignorar Excepciones"
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_sale_order_line__is_exception_danger
 msgid "Is Exception Danger"
-msgstr "Es Peligro de Excepción"
+msgstr ""
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
 
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__write_uid
@@ -183,12 +169,12 @@ msgstr "No hay Código Postal en el destino"
 #. module: sale_exception
 #: model:exception.rule,name:sale_exception.excep_no_dumping
 msgid "No dumping"
-msgstr "Evitar vender por debajo de coste"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,name:sale_exception.excep_no_free
 msgid "No free order"
-msgstr "Evitar pedidos gratuitos"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,name:sale_exception.excep_no_sol
@@ -210,12 +196,6 @@ msgstr "Advertencia de producto"
 #: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__related_model_id
 msgid "Sale"
 msgstr "Venta"
-
-#. module: sale_exception
-#: model:ir.model.fields,field_description:sale_exception.field_res_company__sale_exception_show_popup
-#: model:ir.model.fields,field_description:sale_exception.field_res_config_settings__sale_exception_show_popup
-msgid "Sale Exception Popup"
-msgstr ""
 
 #. module: sale_exception
 #: model:ir.actions.act_window,name:sale_exception.action_sale_test_tree
@@ -255,23 +235,24 @@ msgstr "Línea de pedidos de venta"
 
 #. module: sale_exception
 #: model:ir.actions.server,name:sale_exception.ir_cron_test_orders_ir_actions_server
+#: model:ir.cron,cron_name:sale_exception.ir_cron_test_orders
 msgid "Test Draft Orders"
-msgstr "Comprobar excepciones en pedidos en presupuesto"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,description:sale_exception.exception_partner_sale_warning
 msgid "The customer has a sale warning in his form"
-msgstr "El cliente tiene un aviso de venta en su formulario"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,description:sale_exception.exception_product_sale_warning
 msgid "The product has a warning in his form"
-msgstr "El producto tiene una advertencia en su formulario"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,description:sale_exception.excep_no_free
 msgid "The total can't be 0"
 msgstr "El Total no puede ser 0"
 
-#~ msgid "Last Modified on"
-#~ msgstr "Última modificación en"
+#~ msgid "Quotation"
+#~ msgstr "Quotation"

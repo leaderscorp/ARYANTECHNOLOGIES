@@ -13,7 +13,7 @@ class repair(models.Model):
         #         raise UserError("Product: %s has low quantity than requested quantity" %(product.product_id.name))
 
         # for rec in self:
-            for comp in self.move_ids:
+            for comp in self.operations:
                 prod_in_comp = self.env['stock.quant'].search([
                     ('on_hand', '=', True),
                     ('product_id', '=', comp.product_id.id),

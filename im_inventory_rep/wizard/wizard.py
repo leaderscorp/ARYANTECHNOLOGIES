@@ -1,48 +1,39 @@
 from odoo import api, fields, models
-from datetime import datetime
 
 
 class InventoryReport(models.TransientModel):
     _name = 'inventory.wizard.report'
     _description = 'inventory.wizard.report'
 
-    date_from = fields.Date(string='Date From')
-    date_to = fields.Date(string='Date To')
+    date_from = fields.Date(
+        string='Date From'
+    )
+    date_to = fields.Date(
+        string='Date To'
+    )
 
     def get_report(self):
-        
-        domain = [('state', '=', 'done')]
-
-        if self.date_from:
-           
-            domain.append(('date', '>=', fields.Datetime.to_datetime(self.date_from)))
-
-        if self.date_to:
-            
-            dt_to = fields.Datetime.to_datetime(self.date_to)
-            domain.append(('date', '<=', dt_to.replace(hour=23, minute=59, second=59, microsecond=999999)))
-
-        inventory = self.env['stock.move'].search(domain)
-
-        fg_val = fg_qty = 0.0
-        ckd_val = ckd_qty = 0.0
-        raw_val = raw_qty = 0.0
-
+        inventory = self.env['stock.valuation.layer'].search([
+            ('create_date', '>=', self.date_from),
+            ('create_date', '<=', self.date_to)
+        ])
+        data_dict = {}
+        fg_val =0
+        fg_qty =0
+        ckd_val =0
+        ckd_qty =0
+        raw_val =0
+        raw_qty =0
         for item in inventory:
-        
-            val = item.value or 0.0
-            qty = item.product_uom_qty or 0.0
-
             if 1 in item.product_id.product_tag_ids.mapped('id'):
-                fg_val += val
-                fg_qty += qty
+                fg_val += item.value
+                fg_qty += item.quantity
             elif 2 in item.product_id.product_tag_ids.mapped('id'):
-                ckd_val += val
-                ckd_qty += qty
-            if 3 in item.product_id.product_tag_ids.mapped('id'):   
-                raw_val += val
-                raw_qty += qty
-
+                ckd_val += item.value
+                ckd_qty += item.quantity
+            if 3 in item.product_id.product_tag_ids.mapped('id'):
+                raw_val += item.value
+                raw_qty += item.quantity
         data_dict = {
             'fg': fg_val,
             'fg_qty': fg_qty,
@@ -51,7 +42,10 @@ class InventoryReport(models.TransientModel):
             'raw': raw_val,
             'raw_qty': raw_qty,
         }
+        # print(data_dict)
 
-        data = {'emp': data_dict}
-
+        data = {
+            'emp': data_dict
+        }
         return self.env.ref('im_inventory_rep.im_inventory_report_xlsx_action').report_action(self, data=data)
+

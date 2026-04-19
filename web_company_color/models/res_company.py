@@ -1,14 +1,11 @@
 # Copyright 2019 Alexandre Díaz <dev@redneboa.es>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 import base64
-import logging
 from colorsys import hls_to_rgb, rgb_to_hls
 
 from odoo import api, fields, models
 
 from ..utils import convert_to_image, image_to_rgb, n_rgb_to_hex
-
-_logger = logging.getLogger(__name__)
 
 URL_BASE = "/web_company_color/static/src/scss/"
 URL_SCSS_GEN_TEMPLATE = URL_BASE + "custom_colors.%d.gen.scss"
@@ -17,30 +14,54 @@ URL_SCSS_GEN_TEMPLATE = URL_BASE + "custom_colors.%d.gen.scss"
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    def _get_scss_template(self):
-        return """
+    SCSS_TEMPLATE = """
         .o_main_navbar {
           background: %(color_navbar_bg)s !important;
           background-color: %(color_navbar_bg)s !important;
           color: %(color_navbar_text)s !important;
-          .show { .dropdown-toggle { background-color: %(color_navbar_bg_hover)s !important; } }
-          > ul > li > a, > ul > li > label {
+
+          > .o_menu_brand {
             color: %(color_navbar_text)s !important;
             &:hover, &:focus, &:active, &:focus:active {
               background-color: %(color_navbar_bg_hover)s !important;
             }
           }
-        }
-        .o_menu_brand {
-          color: %(color_navbar_text)s !important;
-          &:hover, &:focus, &:active, &:focus:active {
-            background-color: %(color_navbar_bg_hover)s !important;
+
+          .show {
+            .dropdown-toggle {
+              background-color: %(color_navbar_bg_hover)s !important;
+            }
+          }
+
+          > ul {
+            > li {
+              > a, > label {
+                color: %(color_navbar_text)s !important;
+
+                &:hover, &:focus, &:active, &:focus:active {
+                  background-color: %(color_navbar_bg_hover)s !important;
+                }
+              }
+            }
           }
         }
-        a[href], a[tabindex], .btn-link, .o_external_button {
-          color: %(color_link_text)s;
+
+          a[href],
+          a[tabindex],
+          .btn-link,
+          .o_external_button {
+            color: %(color_link_text)s;
+            .o_main_navbar {
+            color: none;
+            }
+          }
+        a:hover,
+        .btn-link:hover {
+          color: %(color_link_text_hover)s;
+          .o_main_navbar {
+            color: none;
+          }
         }
-        a:hover, .btn-link:hover { color: %(color_link_text_hover)s; }
         .btn-primary:not(.disabled),
         .ui-autocomplete .ui-menu-item > a.ui-state-active {
           color: %(color_button_text)s !important;
@@ -57,16 +78,19 @@ class ResCompany(models.Model):
           color: %(color_button_text)s !important;
           background-color: %(color_button_bg)s !important;
         }
-        .o_form_view .o_horizontal_separator { color: %(color_link_text)s !important; }
+        .o_form_view .o_horizontal_separator {
+          color: %(color_link_text)s !important;
+        }
         .o_form_view .oe_button_box .oe_stat_button .o_button_icon,
         .o_form_view .oe_button_box .oe_stat_button .o_stat_info .o_stat_value,
         .o_form_view .oe_button_box .oe_stat_button > span .o_stat_value {
           color: %(color_link_text)s !important;
         }
-        .o_form_view .o_form_statusbar > .o_statusbar_status > .o_arrow_button.btn-primary.disabled {
+        .o_form_view .o_form_statusbar > .o_statusbar_status >
+        .o_arrow_button.btn-primary.disabled {
           color: %(color_link_text)s !important;
         }
-        .o_required_modifier {
+        .o_required_modifier{
           :focus-within {
             --o-input-border-color: %(color_button_bg)s !important;
             --o-caret-color: %(color_button_bg)s !important;
@@ -76,30 +100,6 @@ class ResCompany(models.Model):
             --o-caret-color: %(color_button_bg)s !important;
           }
         }
-        .o_menu_sections .o_nav_entry {
-          background: %(color_navbar_bg)s !important;
-          background-color: %(color_navbar_bg)s !important;
-          color: %(color_navbar_text)s !important;
-          &:hover, &:focus, &:active, &:focus:active {
-            background-color: %(color_navbar_bg_hover)s !important;
-          }
-        }
-        .o_menu_sections .dropdown-toggle {
-          background: %(color_navbar_bg)s !important;
-          background-color: %(color_navbar_bg)s !important;
-          color: %(color_navbar_text)s !important;
-          &:hover, &:focus, &:active, &:focus:active {
-            background-color: %(color_navbar_bg_hover)s !important;
-          }
-        }
-        .o_menu_systray button, .o_navbar_breadcrumbs,
-        .o_main_navbar button, .o_menu_toggle {
-          color: %(color_navbar_text)s !important;
-          &:hover, &:focus, &:active, &:focus:active {
-            background-color: %(color_navbar_bg_hover)s !important;
-          }
-        }
-        .dropdown-item { color: %(color_submenu_text)s !important; }
     """
 
     company_colors = fields.Serialized()
@@ -117,7 +117,6 @@ class ResCompany(models.Model):
     color_link_text_hover = fields.Char(
         "Link Text Color Hover", sparse="company_colors"
     )
-    color_submenu_text = fields.Char("Submenu Text Color", sparse="company_colors")
     scss_modif_timestamp = fields.Char("SCSS Modif. Timestamp")
 
     @api.model_create_multi
@@ -160,9 +159,12 @@ class ResCompany(models.Model):
         )
         if self.logo:
             _r, _g, _b = image_to_rgb(convert_to_image(self.logo))
+            # Make color 10% darker
             _h, _l, _s = rgb_to_hls(_r, _g, _b)
             _l = max(0, _l - 0.1)
             _rd, _gd, _bd = hls_to_rgb(_h, _l, _s)
+            # Calc. optimal text color (b/w)
+            # Grayscale human vision perception (Rec. 709 values)
             _a = 1 - (0.2126 * _r + 0.7152 * _g + 0.0722 * _b)
             values.update(
                 {
@@ -175,13 +177,14 @@ class ResCompany(models.Model):
 
     def _scss_get_sanitized_values(self):
         self.ensure_one()
+        # Clone company_color as dictionary to avoid ORM operations
+        # This allow extend company_colors and only sanitize selected fields
+        # or add custom values
         values = dict(self.company_colors or {})
         values.update(
             {
                 "color_navbar_bg": (values.get("color_navbar_bg") or "$o-brand-odoo"),
-                "color_navbar_bg_hover": (
-                    values.get("color_navbar_bg_hover") or "darken($o-brand-odoo, 10%)"
-                ),
+                "color_navbar_bg_hover": (values.get("color_navbar_bg_hover")),
                 "color_navbar_text": (values.get("color_navbar_text") or "#FFF"),
                 "color_button_bg": values.get("color_button_bg") or "#71639e",
                 "color_button_bg_hover": values.get("color_button_bg_hover")
@@ -190,86 +193,39 @@ class ResCompany(models.Model):
                 "color_link_text": values.get("color_link_text") or "#71639e",
                 "color_link_text_hover": values.get("color_link_text_hover")
                 or "darken(#71639e, 10%)",
-                "color_submenu_text": values.get("color_link_text") or "#374151",
             }
         )
         return values
 
     def _scss_generate_content(self):
         self.ensure_one()
+        # ir.attachment need files with content to work
         if not self.company_colors:
             return "// No Web Company Color SCSS Content\n"
-        return self._get_scss_template() % self._scss_get_sanitized_values()
+        return self.SCSS_TEMPLATE % self._scss_get_sanitized_values()
 
     def scss_get_url(self):
         self.ensure_one()
         return URL_SCSS_GEN_TEMPLATE % self.id
 
-    def _compile_scss_to_css(self, scss_source):
-        """
-        Compile SCSS → CSS.
-
-        Odoo 19 dropped the public ScssStylesheetAsset compile helper that
-        was used in v17/v18.  We try several strategies in order:
-          1. Odoo 19 IrAsset._compile_scss (internal, but stable enough)
-          2. Direct libsass / sassc via the 'sass' pip package
-          3. Return raw content with a warning (graceful degradation)
-        """
-        # Strategy 1 – Odoo 19 internal asset compiler
-        try:
-            IrAsset = self.env["ir.asset"]
-            if hasattr(IrAsset, "_compile_scss"):
-                return IrAsset._compile_scss(scss_source)
-        except Exception:
-            pass
-
-        # Strategy 2 – libsass python binding
-        try:
-            import sass  # pip install libsass
-            return sass.compile(string=scss_source)
-        except ImportError:
-            pass
-        except Exception as exc:
-            _logger.warning("web_company_color: sass compile failed: %s", exc)
-
-        # Strategy 3 – legacy Odoo assetsbundle (may still exist)
-        try:
-            from odoo.addons.base.models.assetsbundle import ScssStylesheetAsset
-            asset = ScssStylesheetAsset(
-                "web_company_color.company_color_assets",
-                url=self.scss_get_url(),
-            )
-            return asset.compile(scss_source)
-        except Exception:
-            pass
-
-        _logger.warning(
-            "web_company_color: Could not compile SCSS to CSS. "
-            "Serving raw SCSS – styles will not apply until a SCSS "
-            "compiler is available (install libsass: pip install libsass)."
-        )
-        return scss_source
-
     def scss_create_or_update_attachment(self):
         IrAttachmentObj = self.env["ir.attachment"]
         for record in self:
+            datas = base64.b64encode(record._scss_generate_content().encode("utf-8"))
             custom_url = record.scss_get_url()
-            scss_content = record._scss_generate_content()
-            compiled_css = record._compile_scss_to_css(scss_content)
-            datas = base64.b64encode(compiled_css.encode("utf-8"))
             custom_attachment = IrAttachmentObj.sudo().search(
                 [("url", "=", custom_url), ("company_id", "=", record.id)]
             )
             values = {
                 "datas": datas,
+                "db_datas": datas,
                 "url": custom_url,
                 "name": custom_url,
                 "company_id": record.id,
-                "type": "binary",
-                "mimetype": "text/css",
             }
             if custom_attachment:
                 custom_attachment.sudo().write(values)
             else:
+                values.update({"type": "binary", "mimetype": "text/scss"})
                 IrAttachmentObj.sudo().create(values)
-        self.env.registry.clear_cache()
+        self.env["ir.qweb"].sudo().clear_caches()

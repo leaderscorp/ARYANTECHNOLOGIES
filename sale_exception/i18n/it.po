@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-02 10:22+0000\n"
-"PO-Revision-Date: 2025-09-02 13:42+0000\n"
+"PO-Revision-Date: 2023-03-23 13:22+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (https://www.transifex.com/oca/teams/23907/it/)\n"
 "Language: it\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.4\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #. module: sale_exception
 #: model_terms:ir.ui.view,arch_db:sale_exception.view_order_form
@@ -25,8 +25,6 @@ msgid ""
 "<strong>There are exceptions blocking the confirmation of this Sale Order:</"
 "strong>"
 msgstr ""
-"<strong>C'è un'eccezione che blocca la conferma di questo ordine di vendita:"
-"</strong>"
 
 #. module: sale_exception
 #: model_terms:ir.ui.view,arch_db:sale_exception.view_order_form
@@ -34,39 +32,37 @@ msgid ""
 "<strong>There are exceptions on this line blocking the confirmation of this "
 "quotation:</strong>"
 msgstr ""
-"<strong>C'è un'eccezione in questa riga che blocca la conferma di questo "
-"preventivo:</strong>"
 
 #. module: sale_exception
 #: model:exception.rule,description:sale_exception.excep_no_dumping
 msgid "A product is sold cheaper than his cost."
-msgstr "Un prodotto è venduto ad un prezzo inferiore al costo."
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_exception_rule__model
 msgid "Apply on"
-msgstr "Applica a"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,description:sale_exception.excep_no_sol
 msgid "At least one order line should be present in the sale"
-msgstr "Almeno una riga ordine deve essere presente nella vendita"
+msgstr ""
 
 #. module: sale_exception
 #: model_terms:ir.ui.view,arch_db:sale_exception.view_sales_order_filter
 msgid "Blocked in draft"
-msgstr "Bloccati in bozza"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.actions.act_window,name:sale_exception.action_sale_exception_confirm
 #: model_terms:ir.ui.view,arch_db:sale_exception.view_sale_exception_confirm
 msgid "Blocked in draft due to exceptions"
-msgstr "Bloccati in bozza per eccezioni"
+msgstr ""
 
 #. module: sale_exception
 #: model_terms:ir.ui.view,arch_db:sale_exception.view_sale_exception_confirm
 msgid "Cancel"
-msgstr "Annulla"
+msgstr ""
 
 #. module: sale_exception
 #: model_terms:ir.ui.view,arch_db:sale_exception.view_order_form
@@ -74,23 +70,11 @@ msgid ""
 "Click here to be able to confirm this Sale Orders regardless of the "
 "exceptions."
 msgstr ""
-"Fare clic qui per poter confermare questo ordine di vendita "
-"indipendentemente dalle eccezioni."
-
-#. module: sale_exception
-#: model:ir.model,name:sale_exception.model_res_company
-msgid "Companies"
-msgstr "Aziende"
-
-#. module: sale_exception
-#: model:ir.model,name:sale_exception.model_res_config_settings
-msgid "Config Settings"
-msgstr "Impostazioni configurazione"
 
 #. module: sale_exception
 #: model_terms:ir.ui.view,arch_db:sale_exception.view_sale_exception_confirm
 msgid "Confirm"
-msgstr "Conferma"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__create_uid
@@ -105,7 +89,7 @@ msgstr "Creato il"
 #. module: sale_exception
 #: model:exception.rule,name:sale_exception.exception_partner_sale_warning
 msgid "Customer sale warning"
-msgstr "Avviso vendita cliente"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__display_name
@@ -113,35 +97,26 @@ msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: sale_exception
-#: model_terms:ir.ui.view,arch_db:sale_exception.res_config_settings_view_form_sale_exception
-msgid ""
-"Display popup at confirm or simply rely on the red alert already visible on "
-"top of the order."
-msgstr ""
-"Visualizza popup alla conferma o fa semplicemente riferimento all'avviso già "
-"presente all'inizio dell'ordine."
-
-#. module: sale_exception
 #: model:ir.model,name:sale_exception.model_exception_rule
 msgid "Exception Rule"
-msgstr "Regola eccezione"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_sale_order__exception_ids
 #: model:ir.model.fields,field_description:sale_exception.field_sale_order_line__exception_ids
 msgid "Exceptions"
-msgstr "Eccezioni"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_sale_order__exceptions_summary
 #: model:ir.model.fields,field_description:sale_exception.field_sale_order_line__exceptions_summary
 msgid "Exceptions Summary"
-msgstr "Riepilogo eccezioni"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__exception_ids
 msgid "Exceptions to resolve"
-msgstr "Eccezioni da risolvere"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__id
@@ -154,12 +129,17 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:sale_exception.field_sale_order_line__ignore_exception
 #: model_terms:ir.ui.view,arch_db:sale_exception.view_order_form
 msgid "Ignore Exceptions"
-msgstr "Ignora eccezioni"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_sale_order_line__is_exception_danger
 msgid "Is Exception Danger"
-msgstr "L'eccezione è pericolosa"
+msgstr ""
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm____last_update
+msgid "Last Modified on"
+msgstr "Ultima modifica il"
 
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__write_uid
@@ -174,106 +154,101 @@ msgstr "Ultimo aggiornamento il"
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_sale_order__main_exception_id
 msgid "Main Exception"
-msgstr "Eccezione principale"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,description:sale_exception.excep_no_zip
 #: model:exception.rule,name:sale_exception.excep_no_zip
 msgid "No ZIP code on destination"
-msgstr "Nessun CAP sull'indirizzo di destinazione"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,name:sale_exception.excep_no_dumping
 msgid "No dumping"
-msgstr "Non ribassare"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,name:sale_exception.excep_no_free
 msgid "No free order"
-msgstr "Nessun ordine gratuito"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,name:sale_exception.excep_no_sol
 msgid "No order lines"
-msgstr "Nessuna riga ordine"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,description:sale_exception.excep_no_stock
 #: model:exception.rule,name:sale_exception.excep_no_stock
 msgid "Not Enough Virtual Stock"
-msgstr "Giacenza virtuale non sufficiente"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,name:sale_exception.exception_product_sale_warning
 msgid "Product warning"
-msgstr "Avviso prodotto"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__related_model_id
 msgid "Sale"
-msgstr "Vendita"
-
-#. module: sale_exception
-#: model:ir.model.fields,field_description:sale_exception.field_res_company__sale_exception_show_popup
-#: model:ir.model.fields,field_description:sale_exception.field_res_config_settings__sale_exception_show_popup
-msgid "Sale Exception Popup"
-msgstr "Popup eccezione vendita"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.actions.act_window,name:sale_exception.action_sale_test_tree
 #: model:ir.ui.menu,name:sale_exception.menu_sale_test
 msgid "Sale Exception Rules"
-msgstr "Regole eccezione vendita"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model,name:sale_exception.model_sale_exception_confirm
 msgid "Sale exception confirm wizard"
-msgstr "Procedura guidata conferma eccezione vendita"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model.fields.selection,name:sale_exception.selection__exception_rule__model__sale_order
 msgid "Sale order"
-msgstr "Ordine di vendita"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model.fields.selection,name:sale_exception.selection__exception_rule__model__sale_order_line
 msgid "Sale order line"
-msgstr "Riga ordine di vendita"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model.fields,field_description:sale_exception.field_exception_rule__sale_ids
 msgid "Sales"
-msgstr "Vendite"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model,name:sale_exception.model_sale_order
 msgid "Sales Order"
-msgstr "Ordine di vendita"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.model,name:sale_exception.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Riga ordine di vendita"
+msgstr ""
 
 #. module: sale_exception
 #: model:ir.actions.server,name:sale_exception.ir_cron_test_orders_ir_actions_server
+#: model:ir.cron,cron_name:sale_exception.ir_cron_test_orders
 msgid "Test Draft Orders"
-msgstr "Test ordini bozza"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,description:sale_exception.exception_partner_sale_warning
 msgid "The customer has a sale warning in his form"
-msgstr "Il cliente ha un avviso di vendita nel suo modulo"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,description:sale_exception.exception_product_sale_warning
 msgid "The product has a warning in his form"
-msgstr "Il prodotto ha un avviso nel suo modulo"
+msgstr ""
 
 #. module: sale_exception
 #: model:exception.rule,description:sale_exception.excep_no_free
 msgid "The total can't be 0"
-msgstr "Il totale non può essere zero"
+msgstr ""
 
-#~ msgid "Last Modified on"
-#~ msgstr "Ultima modifica il"
+#~ msgid "Quotation"
+#~ msgstr "Quotation"

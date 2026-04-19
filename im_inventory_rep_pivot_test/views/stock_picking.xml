@@ -13,9 +13,9 @@
                 <!-- ++++++++++++++++++++ -->
                 <xpath expr="//field[@name='owner_id']" position="after">
                     <field name="so_num" string="SO No"
-                           invisible="picking_type_id != 42"/>
+                           attrs="{'invisible': [('picking_type_id', '!=', 42)]}"/>
                     <field name="mo_num" string="Mo No"
-                           invisible="picking_type_id != 42"/>
+                           attrs="{'invisible': [('picking_type_id', '!=', 42)]}"/>
                 </xpath>
             </field>
         </record>
