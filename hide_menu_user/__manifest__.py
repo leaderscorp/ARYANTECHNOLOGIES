@@ -35,7 +35,7 @@
     'website': "https://www.cybrosys.com",
     'depends': ['base'],
     'data': [
-        'views/res_users_views.xml',
+        # 'views/res_users_views.xml',
         'views/ir_ui_menu_views.xml',
     ],
     'license': 'LGPL-3',
