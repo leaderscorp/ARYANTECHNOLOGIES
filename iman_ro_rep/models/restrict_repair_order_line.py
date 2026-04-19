@@ -9,7 +9,7 @@ class IMRepairOrderRestrict(models.Model):
         for order in self:
             products_with_insufficient_quantity = [
                 line.product_id.display_name  # Get the product's display name
-                for line in order.operations
+                for line in order.move_ids
                 if line.product_id.qty_available <= 0
             ]
             if products_with_insufficient_quantity:
