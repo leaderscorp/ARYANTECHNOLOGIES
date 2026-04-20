@@ -7,40 +7,58 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-
                 <xpath expr="//header" position="inside">
-                    <field name="hide_button" invisible="1"/>
                     <field name="env_user" invisible="1"/>
                 </xpath>
+
+                <!-- Hide Action Confirm from prod user -->
+                <xpath expr="//header/button[@name='action_confirm']" position="attributes">
+                    <attribute name="invisible">state != 'draft' or (env_user == 11 and picking_type_id != 35)</attribute>
+                </xpath>
+
+                <!-- Hide Validate button from prod user -->
+                <xpath expr="//header/button[@name='button_validate']" position="attributes">
+                    <attribute name="invisible">(env_user == 11 and picking_type_id != 35)</attribute>
+                </xpath>
+
+                <!-- For Store User — Operations -->
+                <xpath expr="//field[@name='move_ids']" position="attributes">
+                    <attribute name="readonly">(state == 'done' and is_locked) or (env_user == 10 and picking_type_id == 42)</attribute>
+                </xpath>
+
+                <!-- <xpath expr="//header" position="inside">
+                    <field name="hide_button" invisible="1"/>
+                    <field name="env_user" invisible="1"/>
+                </xpath> -->
 
                 <!-- ++++++++++++++++++++ -->
                 <!-- For Production User  -->
                 <!-- ++++++++++++++++++++ -->
 
                 <!-- Hide Action Confirm from prod user -->
-                <xpath expr="//header/button[@name='action_confirm']" position="attributes">
+                <!-- <xpath expr="//header/button[@name='action_confirm']" position="attributes">
                     <attribute name="invisible">
                         not show_mark_as_todo or (env_user == 11 and picking_type_id != 35)
                     </attribute>
-                </xpath>
+                </xpath> -->
 
                 <!-- Hide Action Validate (first button) from prod user -->
-                <xpath expr="//header/button[@name='button_validate'][1]" position="attributes">
+                <!-- <xpath expr="//header/button[@name='button_validate'][1]" position="attributes">
                     <attribute name="invisible">
                         (env_user == 11 and picking_type_id != 35) or
                         state in ('waiting', 'confirmed') or
                         not show_validate
                     </attribute>
-                </xpath>
+                </xpath> -->
 
                 <!-- Hide Action Validate (second button) from prod user -->
-                <xpath expr="//header/button[@name='button_validate'][2]" position="attributes">
+                <!-- <xpath expr="//header/button[@name='button_validate'][2]" position="attributes">
                     <attribute name="invisible">
                         (env_user == 11 and picking_type_id != 35) or
                         state not in ('waiting', 'confirmed') or
                         not show_validate
                     </attribute>
-                </xpath>
+                </xpath> -->
 
                 <!-- ++++++++++++++++++++ -->
                 <!-- For Store User  -->
@@ -56,12 +74,12 @@
                 </xpath> -->
 
                 <!-- Operations (move_ids) -->
-                <xpath expr="//field[@name='move_ids']" position="attributes">
+                <!-- <xpath expr="//field[@name='move_ids']" position="attributes">
                     <attribute name="readonly">
                         (state == 'done' and is_locked) or
                         (env_user == 10 and picking_type_id == 42)
                     </attribute>
-                </xpath>
+                </xpath> -->
 
             </field>
         </record>
