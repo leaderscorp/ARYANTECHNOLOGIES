@@ -108,7 +108,7 @@
                                     </thead>
                                     <tbody>
                                         <t t-set="index" t-value="0"/>
-                                        <t t-foreach="o.move_ids_without_package" t-as="line">
+                                        <t t-foreach="o.move_ids" t-as="line">
                                             <t t-set="index" t-value="index+1"/>
                                             <tr>
                                                 <td align="center" name="index"><span><t t-out="index"/></span></td>

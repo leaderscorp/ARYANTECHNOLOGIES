@@ -33,7 +33,7 @@
                             <div class="col-4">
                                 <p><b>Source Location: </b><span t-field="o.location_id"/> </p>
                                 <p><b>Destination Location: </b><span t-field="o.location_dest_id"/></p>
-                                <p><b>Date &amp; Time: </b><span t-field="o.date"/></p>
+                                <p><b>Date &amp; Time: </b><span t-field="o.create_date"/></p>
                                 <p><b>Sending Date:</b> <span t-field="o.scheduled_date"/></p>
                                 <p><b>Return Date:</b> <span t-field="o.date_done"/></p>
                                 <p><b>From Date: </b></p>
@@ -54,7 +54,7 @@
                             </thead>
                             <tbody>
                                 <t t-set="index" t-value="0"/>
-                                <t t-foreach="o.move_ids_without_package" t-as="line">
+                                <t t-foreach="o.move_ids" t-as="line">
                                     <t t-set="index" t-value="index+1"/>
                                     <tr>
                                         <td style="width:10px"><span name="Index"><t t-out="index"></t></span></td>
