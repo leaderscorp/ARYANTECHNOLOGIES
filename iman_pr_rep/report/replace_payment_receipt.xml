@@ -97,7 +97,7 @@
 <!--                                    <span t-field="o.amount"-->
 <!--                                          t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>-->
                                 </div>
-                                <div class="col-6 text-end" t-if="o.ref">
+                                <div class="col-6 text-end" t-if="o.memo">
 <!--                                    Memo:-->
 <!--                                    <span t-field="o.ref"/> -->
                                    <b> Date:</b>
@@ -198,7 +198,7 @@
 <!--                                        <td class="text-center"></td>-->
                                         <td class="text-end">
 <!--                                            <span class="fw-bold">Narration: </span>-->
-                                            <span class="text-capitalize" t-field="o.ref"/>
+                                            <span class="text-capitalize" t-field="o.memo"/>
                                         </td>
 
 

@@ -55,7 +55,7 @@
                     <attribute name="invisible">not show_reserved</attribute>
                 </xpath> -->
 
-                <!-- Operations (move_ids_without_package) -->
+                <!-- Operations (move_ids) -->
                 <xpath expr="//field[@name='move_ids']" position="attributes">
                     <attribute name="readonly">
                         (state == 'done' and is_locked) or
