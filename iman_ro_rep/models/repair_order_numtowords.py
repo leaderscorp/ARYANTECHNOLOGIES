@@ -16,10 +16,10 @@ class AccountRepairOrderNumWords(models.Model):
         states={'draft': [('readonly', False)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.')
 
-
-    @api.onchange('invoice_method2')
-    def _onchange_invoice_method2(self):
-        self.invoice_method = self.invoice_method2
+    # no field in default
+    # @api.onchange('invoice_method2')
+    # def _onchange_invoice_method2(self):
+    #     self.invoice_method = self.invoice_method2
 
     check_tax = fields.Float(
         string='tax amt',

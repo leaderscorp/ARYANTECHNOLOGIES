@@ -17,11 +17,11 @@ class repair(models.Model):
                 prod_in_comp = self.env['stock.quant'].search([
                     ('on_hand', '=', True),
                     ('product_id', '=', comp.product_id.id),
-                    ('product_id.detailed_type', '=', 'product'),
+                    ('product_id.type', '=', 'consu'),
                     ('location_id', '=', comp.location_id.id)
-                    ])
+                    ],limit=1, order='create_date desc')
 
-                if prod_in_comp and comp.product_id.detailed_type == 'product':
+                if prod_in_comp and comp.product_id.type == 'consu':
                     # print('stock qty', prod_in_comp.quantity, '\n', 'parts qty', comp.product_uom_qty)
                     # print(0 < prod_in_comp.quantity < comp.product_uom_qty, '\n')
                     # print(prod_in_comp.quantity < comp.product_uom_qty)
