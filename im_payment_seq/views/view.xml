@@ -14,7 +14,7 @@
             <xpath expr="//div[hasclass('oe_title')]" position="before">
                 <div id="custom_seq_name">
                     <h1 class="text-start">
-                        <field name="custom_name"/>
+                        <field name="custom_name" readonly="1"/>
                     </h1>
                 </div>
             </xpath>
@@ -29,7 +29,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='journal_id']" position="before">
                 <field name="company_id" optional="hide"/>
-                <field name="custom_name"/>
+                <field name="custom_name" readonly="1"/>
             </xpath>
         </field>
     </record>
@@ -44,7 +44,7 @@
                 <div id="custom_seq_name" width="100%">
                     <h1 class="text-start">
                         <field name="custom_name"
-                               invisible="move_type != 'entry'"/>
+                               invisible="move_type != 'entry'" readonly="1"/>
                     </h1>
                 </div>
             </xpath>
@@ -59,7 +59,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="before">
                 <field name="company_id" optional="hide"/>
-                <field name="custom_name"/>
+                <field name="custom_name" readonly="1"/>
 <!--                <field name="currency_id"/>-->
             </xpath>
         </field>
