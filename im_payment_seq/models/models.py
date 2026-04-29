@@ -198,3 +198,4 @@ class AccountMoveLine(models.Model):
         required=True,
         index=True,
     )
+
