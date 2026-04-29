@@ -3,7 +3,8 @@
 # Copyright 2019 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import api, models
+from odoo import api, models, fields
+from num2words import num2words
 
 
 class SaleOrder(models.Model):
@@ -67,3 +68,16 @@ class SaleOrder(models.Model):
     @api.model
     def _get_popup_action(self):
         return self.env.ref("sale_exception.action_sale_exception_confirm")
+
+
+    amount_in_words = fields.Char(
+        string='Amount in Words',
+        compute='_compute_amount_in_words',
+    )
+
+    @api.depends('amount_total')
+    def _compute_amount_in_words(self):
+        for order in self:
+            order.amount_in_words = num2words(
+                order.amount_total, lang='en'
+            ).title()
