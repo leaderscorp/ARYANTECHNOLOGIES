@@ -33,7 +33,7 @@ class repair(models.Model):
                     #     message = f"Product: {comp.product_id.name} quantity is zero in {comp.location_id.display_name}"
                     #     raise UserError(message)
 
-                elif not prod_in_comp and comp.product_id.detailed_type == 'product':
+                elif not prod_in_comp and comp.product_id.type == 'consu':
                     message = f"The location {comp.location_id.display_name} does not have the product {comp.product_id.name}"
                     raise UserError(message)
                 else:
