@@ -14,8 +14,10 @@
                 </xpath>
                 
                  <xpath expr="/form/sheet/notebook/page[@name='parts']/field[@name='move_ids']/list//field[@name='product_uom']" position="after">
+                    <field name="price_unit" />
                     <field name="location_id" domain="[('id', 'in', parent.loc_ids)]" invisible="1"/>
                     <field name="location_dest_id" domain="[('id', 'in', parent.loc_ids)]" invisible="1"/>
+                    
                 </xpath>
             </field>
         </record>

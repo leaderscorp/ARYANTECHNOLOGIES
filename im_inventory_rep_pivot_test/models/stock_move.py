@@ -30,3 +30,12 @@ class im_inventory_stock_move(models.Model):
                 record.im_mrp_state = record.production_id.state
             elif record.raw_material_production_id:
                 record.im_mrp_state = record.raw_material_production_id.state
+
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        for record in self:
+            if record.product_id and record.repair_id:
+                
+                record.price_unit = record.product_id.lst_price
+               
