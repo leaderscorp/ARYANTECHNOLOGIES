@@ -48,6 +48,10 @@
                     </h1>
                 </div>
             </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']//field[@name='account_id']" position="attributes">
+                <attribute name="domain">[]</attribute>
+                <attribute name="context">{'default_reconcile': True}</attribute>
+            </xpath>
         </field>
     </record>
 

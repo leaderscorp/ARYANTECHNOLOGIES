@@ -186,3 +186,15 @@ class IMAccountPayment(models.Model):
             default['custom_name'] = None
 
         return super(IMAccountPayment, self).copy(default=default)
+    
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    account_id = fields.Many2one(
+        'account.account',
+        string='Account',
+        domain=[],  # Remove all domain restrictions
+        required=True,
+        index=True,
+    )
