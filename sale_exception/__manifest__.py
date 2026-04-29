@@ -17,6 +17,7 @@
         "wizard/sale_exception_confirm_view.xml",
         "views/sale_view.xml",
         "views/res_config_settings.xml",
+        "views/sale_report_template.xml",
     ],
     "demo": ["demo/sale_exception_demo.xml"],
 }

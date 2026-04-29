@@ -1,4 +1,4 @@
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, Command
 from odoo.exceptions import ValidationError
 
 
@@ -110,7 +110,7 @@ class Requisition(models.Model):
         for vals in vals_list:
             vals['name'] = self.env['ir.sequence'].next_by_code('request.sequence') or _('New')
             user_id = self._context['uid']
-            vals['state'] = 'sent'
+            # vals['state'] = 'sent'
         return super(Requisition, self).create(vals_list)
 
     @api.onchange('req_picking_type')
@@ -196,39 +196,39 @@ class Requisition(models.Model):
 
     def action_transfer(self):
         self.transfer_created = True
-
-        transfer = self.env['stock.picking']
-        # domain = [('id', '=', 52)]
-        # operation_type = self.env['stock.picking.type'].search(domain)
         operation_type = self.req_picking_type
 
         for rec in self:
             line_list = []
             for line in rec.req_line_ids:
-                line_list.append({
-                    'name': line.product_id.name,
-                    'product_id': line.product_id.id,
-                    'product_uom_qty': line.product_uom_quantity,
-                    'location_id': operation_type.default_location_src_id.id,
-                    'location_dest_id': rec.location_dest_id
-                })
+                line_list.append(
+                    Command.create({
+                        'description_picking': line.product_id.name,
+                        'product_id': line.product_id.id,
+                        'product_uom_qty': line.product_uom_quantity,
+                        'product_uom': line.product_id.uom_id.id,  # Required in Odoo 19
+                        'location_id': operation_type.default_location_src_id.id,
+                        'location_dest_id': rec.location_dest_id.id,
+                    })
+                )
 
             vals = {
                 'picking_type_id': operation_type.id,
+                'location_id': operation_type.default_location_src_id.id,  # Added
                 'location_dest_id': rec.location_dest_id.id,
                 'origin': rec.name,
-                'move_ids_without_package': line_list,
+                'move_type': 'one',
+                'move_ids': line_list,
             }
 
-            transfer_record = transfer.create(vals)
+            transfer_record = self.env['stock.picking'].create(vals)  # No list wrapper
             rec.req_transfer_id = transfer_record
-            action = {
-                'type': 'ir.actions.act_window',
-                'res_id': transfer_record.id,
-                'res_model': 'stock.picking',
-                'view_mode': 'form',
-                'context': {'stock_picking_id': transfer_record.id},
-                'view_id': rec.env.ref('stock.view_picking_form').id,
-            }
 
-        # print("Transfer")
+        return {
+            'type': 'ir.actions.act_window',
+            'res_id': transfer_record.id,
+            'res_model': 'stock.picking',
+            'view_mode': 'form',
+            'context': {'stock_picking_id': transfer_record.id},
+            'view_id': rec.env.ref('stock.view_picking_form').id,
+        }

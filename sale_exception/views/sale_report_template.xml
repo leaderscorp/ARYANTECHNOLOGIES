@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document_inherit_custom"
+              inherit_id="sale.report_saleorder_document">
+
+        <xpath expr="//div[hasclass('page')]" position="replace">
+            <div class="page" style="font-family: Arial, sans-serif; font-size: 10pt;">
+
+                <!-- ══════════════════════════════════════
+                     HEADER: Logo | Company Address
+                ═══════════════════════════════════════ -->
+                <table width="100%" style="border-collapse:collapse; margin-bottom:18px;">
+                    <tr>
+                        <td style="width:50%; vertical-align:top;">
+                            <t t-if="doc.company_id.logo">
+                                <img t-att-src="image_data_uri(doc.company_id.logo)"
+                                     style="max-height:60px; max-width:180px;"/>
+                            </t>
+                        </td>
+                        <td style="width:50%; text-align:right; vertical-align:top;
+                                   line-height:1.6;">
+                            <span t-field="doc.company_id.name"/><br/>
+                            <span t-field="doc.company_id.street"/><br/>
+                            <t t-if="doc.company_id.street2">
+                                <span t-field="doc.company_id.street2"/><br/>
+                            </t>
+                            <span t-field="doc.company_id.city"/>
+                            <t t-if="doc.company_id.zip">
+                                &#160;<span t-field="doc.company_id.zip"/>
+                            </t><br/>
+                            <span t-field="doc.company_id.country_id"/>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- ══════════════════════════════════════
+                     INFO BLOCK: Supplier | Buyer
+                ═══════════════════════════════════════ -->
+                <table width="100%" style="border-collapse:collapse; margin-bottom:18px;">
+                    <tr>
+                        <!-- LEFT: Supplier / Order Info -->
+                        <td style="width:55%; vertical-align:top; line-height:1.8;
+                                   padding-right:20px;">
+                            <div>
+                                <strong>Date:</strong>&#160;
+                                <span t-field="doc.date_order"
+                                      t-options='{"widget":"date"}'/>
+                            </div>
+                            <div>
+                                <strong>Supplier Name:</strong>&#160;
+                                <span t-field="doc.company_id.name"/>
+                            </div>
+                            <div>
+                                <strong>Invoice No:</strong>&#160;
+                                <span t-field="doc.name"/>
+                            </div>
+                            <div>
+                                <strong>Address:</strong>&#160;
+                                <span t-field="doc.company_id.street"/>
+                                <t t-if="doc.company_id.street2">
+                                    ,&#160;<span t-field="doc.company_id.street2"/>
+                                </t>
+                            </div>
+                            <div>
+                                <strong>Telephone:</strong>&#160;
+                                <span t-field="doc.company_id.phone"/>
+                            </div>
+                            <div>
+                                <strong>NTN:</strong>&#160;
+                                <span t-field="doc.company_id.vat"/>
+                            </div>
+                            <div>
+                                <strong>Payment Reference:</strong>&#160;
+                                <span t-field="doc.name"/>
+                                <t t-if="doc.payment_term_id">
+                                    &#160;<span t-field="doc.payment_term_id.name"/>
+                                </t>
+                            </div>
+                            <t t-if="doc.note">
+                                <div><span t-field="doc.note"/></div>
+                            </t>
+                        </td>
+
+                        <!-- RIGHT: Buyer Info -->
+                        <td style="width:45%; vertical-align:top; line-height:1.8;">
+                            <div>
+                                <strong>Buyer's Name:</strong>&#160;
+                                <span t-field="doc.partner_id.name"/>
+                            </div>
+                            <div>
+                                <strong>Buyer's Address:</strong>&#160;
+                                <span t-field="doc.partner_id.street"/>
+                                <t t-if="doc.partner_id.street2">
+                                    ,&#160;<span t-field="doc.partner_id.street2"/>
+                                </t>
+                            </div>
+                            <div>
+                                <strong>Buyer's NTN:</strong>&#160;
+                                <span t-field="doc.partner_id.vat"/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- ══════════════════════════════════════
+                     TITLE
+                ═══════════════════════════════════════ -->
+                <h2 style="text-align:center; font-weight:bold; font-size:18pt;
+                           letter-spacing:1px; margin:20px 0 16px 0;">
+                    QUOTATION
+                </h2>
+
+                <!-- ══════════════════════════════════════
+                     LINES TABLE
+                ═══════════════════════════════════════ -->
+                <table width="100%" style="border-collapse:collapse; border:1px solid #000;">
+                    <thead>
+                        <tr style="background-color:#D9D9D9;">
+                            <th style="border:1px solid #000; padding:6px 8px;
+                                       font-weight:bold; text-align:left; width:21%;">
+                                PRODUCTS
+                            </th>
+                            <th style="border:1px solid #000; padding:6px 8px;
+                                       font-weight:bold; text-align:center; width:12%;">
+                                QUANTITY
+                            </th>
+                            <th style="border:1px solid #000; padding:6px 8px;
+                                       font-weight:bold; text-align:center; width:12%;">
+                                RATE PER<br/>UNIT
+                            </th>
+                            <th style="border:1px solid #000; padding:6px 8px;
+                                       font-weight:bold; text-align:center; width:14%;">
+                                TOTAL<br/>WITHOUT GST
+                            </th>
+                            <th style="border:1px solid #000; padding:6px 8px;
+                                       font-weight:bold; text-align:center; width:10%;">
+                                GST RATE
+                            </th>
+                            <th style="border:1px solid #000; padding:6px 8px;
+                                       font-weight:bold; text-align:center; width:13%;">
+                                GST AMOUNT
+                            </th>
+                            <th style="border:1px solid #000; padding:6px 8px;
+                                       font-weight:bold; text-align:center; width:18%;">
+                                AMOUNT INC GST
+                            </th>
+                        </tr>
+                        <!-- Spacer below header -->
+                        <tr>
+                            <td colspan="7" style="border-left:1px solid #000;
+                                border-right:1px solid #000; padding:2px 0;"/>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <t t-foreach="doc.order_line" t-as="line">
+
+                            <!-- SECTION ROW -->
+                            <t t-if="line.display_type == 'line_section'">
+                                <tr style="background-color:#F2F2F2;">
+                                    <td colspan="7"
+                                        style="border:1px solid #000;
+                                               padding:6px 8px;
+                                               font-weight:bold;">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7"
+                                        style="border-left:1px solid #000;
+                                               border-right:1px solid #000;
+                                               padding:2px 0;"/>
+                                </tr>
+                            </t>
+
+                            <!-- NOTE ROW -->
+                            <t t-elif="line.display_type == 'line_note'">
+                                <tr>
+                                    <td colspan="7"
+                                        style="border:1px solid #000;
+                                               padding:6px 8px;
+                                               font-style:italic; color:#555;">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                </tr>
+                            </t>
+
+                            <!-- PRODUCT LINE ROW -->
+                            <t t-else="">
+                                <t t-set="tax_rec"
+                                   t-value="line.tax_ids and line.tax_ids[0] or False"/>
+                                <t t-set="gst_rate"
+                                   t-value="tax_rec and tax_rec.amount or 0.0"/>
+                                <t t-set="gst_amount"
+                                   t-value="line.price_total - line.price_subtotal"/>
+
+                                <tr>
+                                    <!-- Product Name -->
+                                    <td style="border:1px solid #000; padding:8px;
+                                               vertical-align:top;">
+                                        <strong>
+                                            <span t-field="line.product_id.name"/>
+                                        </strong>
+                                        <t t-if="line.name and
+                                                 line.name != line.product_id.name">
+                                            <br/>
+                                            <small style="color:#666; font-size:9pt;">
+                                                <span t-field="line.name"/>
+                                            </small>
+                                        </t>
+                                    </td>
+
+                                    <!-- Quantity + UoM (Odoo 19: product_uom_id) -->
+                                    <td style="border:1px solid #000; padding:8px 6px;
+                                               text-align:center; vertical-align:top;">
+                                        <span t-field="line.product_uom_qty"
+                                              t-options='{"widget":"float",
+                                                          "precision":3}'/>
+                                        <t t-if="line.product_uom_id">
+                                            &#160;<span t-field="line.product_uom_id.name"/>
+                                        </t>
+                                    </td>
+
+                                    <!-- Rate Per Unit -->
+                                    <td style="border:1px solid #000; padding:8px 6px;
+                                               text-align:right; vertical-align:top;">
+                                        <span t-field="line.price_unit"
+                                              t-options='{"widget":"float",
+                                                          "precision":2}'/>
+                                    </td>
+
+                                    <!-- Total Without GST -->
+                                    <td style="border:1px solid #000; padding:8px 6px;
+                                               text-align:right; vertical-align:top;">
+                                        <span t-field="line.price_subtotal"
+                                              t-options='{"widget":"float",
+                                                          "precision":1}'/>
+                                    </td>
+
+                                    <!-- GST Rate % -->
+                                    <td style="border:1px solid #000; padding:8px 6px;
+                                               text-align:center; vertical-align:top;">
+                                        <t t-if="tax_rec">
+                                            <span t-esc="'%g%%' % gst_rate"/>
+                                        </t>
+                                        <t t-else="">—</t>
+                                    </td>
+
+                                    <!-- GST Amount -->
+                                    <td style="border:1px solid #000; padding:8px 6px;
+                                               text-align:right; vertical-align:top;">
+                                        <span t-esc="'%.1f' % gst_amount"/>
+                                    </td>
+
+                                    <!-- Amount Inc GST -->
+                                    <td style="border:1px solid #000; padding:8px 6px;
+                                               text-align:right; vertical-align:top;">
+                                        <span t-esc="'%.2f' % line.price_total"/>
+                                        &#160;Rs.
+                                    </td>
+                                </tr>
+
+                                <!-- Spacer between product rows -->
+                                <tr>
+                                    <td colspan="7"
+                                        style="border-left:1px solid #000;
+                                               border-right:1px solid #000;
+                                               padding:2px 0;"/>
+                                </tr>
+                            </t>
+
+                        </t><!-- end t-foreach -->
+
+                        <!-- TOTAL ROW -->
+                        <tr style="background-color:#F2F2F2;">
+                            <td colspan="3"
+                                style="border:1px solid #000; padding:8px;
+                                       font-weight:bold; text-align:center;">
+                                Total
+                            </td>
+                            <td style="border:1px solid #000; padding:8px 6px;
+                                       font-weight:bold; text-align:right;">
+                                <span t-field="doc.amount_untaxed"
+                                      t-options='{"widget":"float","precision":1}'/>
+                            </td>
+                            <td style="border:1px solid #000; padding:8px;"/>
+                            <td style="border:1px solid #000; padding:8px 6px;
+                                       font-weight:bold; text-align:right;">
+                                <span t-field="doc.amount_tax"
+                                      t-options='{"widget":"float","precision":1}'/>
+                            </td>
+                            <td style="border:1px solid #000; padding:8px 6px;
+                                       font-weight:bold; text-align:right;">
+                                <span t-field="doc.amount_total"
+                                      t-options='{"widget":"float","precision":1}'/>
+                            </td>
+                        </tr>
+
+                        <!-- AMOUNT IN WORDS ROW -->
+                        <!--
+                            Use getattr() instead of hasattr() — QWeb sandbox
+                            blocks hasattr but allows getattr with a default.
+                            If you have a custom amount_in_words computed field
+                            on sale.order, it will be used automatically.
+                            Otherwise falls back to numeric total.
+                        -->
+                        <t t-set="amount_words"
+                           t-value="getattr(doc, 'amount_in_words', False)"/>
+                        <tr>
+                            <td colspan="7"
+                                style="border:1px solid #000; padding:10px;
+                                       font-weight:bold; text-align:center;
+                                       font-size:10.5pt; letter-spacing:0.4px;">
+                                <t t-if="amount_words">
+                                    <span t-esc="amount_words.upper()"/>&#160;Only
+                                </t>
+                                <t t-else="">
+                                    TOTAL AMOUNT:&#160;
+                                    <span t-field="doc.amount_total"/>&#160;Rs. Only
+                                </t>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <!-- ══════════════════════════════════════
+                     TERMS AND CONDITIONS
+                ═══════════════════════════════════════ -->
+                <h3 style="font-size:14pt; font-weight:normal; margin:24px 0 6px 0;">
+                    Terms And Condition
+                </h3>
+                <t t-if="doc.note">
+                    <div style="font-size:10pt;" t-field="doc.note"/>
+                </t>
+
+                <!-- ══════════════════════════════════════
+                     FOOTER BAR
+                ═══════════════════════════════════════ -->
+                <table width="100%"
+                       style="border-collapse:collapse; margin-top:16px;
+                              border-top:1px solid #000; font-size:9.5pt;">
+                    <tr>
+                        <td style="width:30%; vertical-align:top;
+                                   padding:8px 12px 0 0;">
+                            <t t-if="doc.company_id.fax">
+                                Fax:&#160;<span t-field="doc.company_id.fax"/>
+                            </t>
+                        </td>
+                        <td style="width:60%; vertical-align:top;
+                                   padding:8px 0 0 0; line-height:1.6;">
+                            <span t-field="doc.company_id.street"/><br/>
+                            <t t-if="doc.company_id.street2">
+                                <span t-field="doc.company_id.street2"/><br/>
+                            </t>
+                            <span t-field="doc.company_id.city"/>
+                            <t t-if="doc.company_id.zip">
+                                &#160;<span t-field="doc.company_id.zip"/>
+                            </t><br/>
+                            <span t-field="doc.company_id.country_id"/>
+                        </td>
+                        <td style="width:10%; vertical-align:middle;
+                                   text-align:center;">
+                            <div style="border:1px solid #000; padding:6px 10px;
+                                        font-weight:bold; font-size:11pt;
+                                        background:#000; color:#fff;
+                                        display:inline-block;">
+                                <span class="page"/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </xpath>
+
+    </template>
+</odoo>
