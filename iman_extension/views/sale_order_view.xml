@@ -1,0 +1,30 @@
+<odoo>
+    <record id="sale_order_form_inherit_repair_number" model="ir.ui.view">
+        <field name="name">sale.order.form.repair.number</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="/form//field[@name='payment_term_id']" position="after">
+                <field name="repair_number"/>
+                <field name="description_text"/>
+                <field name="site_location"/>
+
+            </xpath>
+
+        </field>
+    </record>
+    
+    <record id="sale_order_search_inherit_desc" model="ir.ui.view">
+        <field name="name">sale.order.search.desc</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//search" position="inside">
+                <field name="site_location"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

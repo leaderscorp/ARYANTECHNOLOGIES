@@ -1,0 +1,17 @@
+<odoo>
+    <template id="report_invoice_document_inherit_repair_number"
+              inherit_id="account.report_invoice_document">
+
+        <xpath expr="//div[@id='informations']//div[@name='reference']" position="after">
+            <div class="col" t-if="o.repair_number" name="repair_number">
+                <strong>Repair Number</strong>
+                <div t-field="o.repair_number"/>
+            </div>
+            <div class="col" t-if="o.site_location" name="site_location">
+                <strong>Site Location</strong>
+                <div t-field="o.site_location"/>
+            </div>
+        </xpath>
+
+    </template>
+</odoo>

@@ -1,0 +1,16 @@
+<odoo>
+    <record id="repair_order_form_inherit_custom_field" model="ir.ui.view">
+        <field name="name">repair.order.form.inherit.custom.field</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id" ref="repair.view_repair_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="/form//field[@name='under_warranty']" position="after">
+                <field name="description_text"/>
+                <field name="site_location"/>
+
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
