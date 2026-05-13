@@ -11,6 +11,11 @@
 
             </xpath>
 
+             <xpath expr="/form/sheet/notebook/page[@name='parts']/field[@name='move_ids']/list//field[@name='product_id']" position="attributes">
+                <attribute name="domain">[("type", "in", ["consu", "service"])]</attribute>
+            </xpath>
+
+
         </field>
     </record>
     
