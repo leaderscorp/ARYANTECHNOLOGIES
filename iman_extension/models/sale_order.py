@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
                 ('sale_order_id', '=', order.id)
             ], limit=1)
 
-            order.repair_number = repair.seq_desc if repair else False
+            order.repair_number = repair.seq_des if repair else False
 
     def _create_invoices(self, grouped=False, final=False, date=None):
         invoices = super()._create_invoices(grouped, final, date)

@@ -27,4 +27,4 @@ class AccountMove(models.Model):
                 ('sale_order_id', '=', sale.id)
             ], limit=1) if sale else False
 
-            move.repair_number = repair.seq_desc if repair else False
+            move.repair_number = repair.seq_des if repair else False

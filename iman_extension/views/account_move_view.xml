@@ -16,4 +16,17 @@
 
         </field>
     </record>
+    
+    <record id="account_move_search_inherit_desc" model="ir.ui.view">
+        <field name="name">account.move.search.desc</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//search" position="inside">
+                <field name="site_location"/>
+            </xpath>
+
+        </field>
+    </record>
 </odoo>

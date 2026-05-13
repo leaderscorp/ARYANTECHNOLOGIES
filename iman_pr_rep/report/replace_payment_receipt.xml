@@ -106,7 +106,7 @@
                             </div>
                         </div>
 
-                        <t t-set="partials" t-value="o.move_id._get_reconciled_invoices_partials()[0]"/>
+                       <t t-set="partials" t-value="o.move_id and o.move_id[:1]._get_reconciled_invoices_partials()[0] or []"/>
                         <t t-set="invoices" t-value="{partial[2].move_id for partial in partials}"/>
                         <!-- Check if invoices include different currencies -->
                         <t t-foreach="invoices" t-as="inv">

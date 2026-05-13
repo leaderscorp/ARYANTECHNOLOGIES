@@ -35,7 +35,8 @@ class Requisition(models.Model):
 
     req_to = fields.Many2one(
         comodel_name='res.users',
-        string='Request To'
+        string='Request To',
+        domain=lambda self: [('id', '=', 10)] if self.env.user.id == 9 else []
     )
 
     req_picking_type = fields.Many2one(

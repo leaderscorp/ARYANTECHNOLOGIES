@@ -13,4 +13,17 @@
 
         </field>
     </record>
+    
+    <record id="repair_order_search_inherit_desc" model="ir.ui.view">
+        <field name="name">repair.order.search.desc</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id" ref="repair.view_repair_order_form_filter"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//search" position="inside">
+                <field name="site_location"/>
+            </xpath>
+
+        </field>
+    </record>
 </odoo>
