@@ -198,6 +198,8 @@ class Requisition(models.Model):
     def action_transfer(self):
         self.transfer_created = True
         operation_type = self.req_picking_type
+        if not operation_type:
+            raise ValidationError(_("Please select a warehouse before creating the transfer."))
 
         for rec in self:
             line_list = []
