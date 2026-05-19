@@ -8,11 +8,18 @@ class AccountPaymentsNumWords(models.Model):
     
     invoice_id = fields.Many2one('account.move')
 
-    inv_name = fields.Char(string="Invoice Name", related='invoice_id.name')
-    inv_date = fields.Date(string='Invoice Date' , related='invoice_id.invoice_date')
+    inv_name = fields.Char(string="Invoice Name", copy=False)
+    inv_date = fields.Date(string='Invoice Date', copy=False)
 
 
     quotation_notes = fields.Html('Quotation Notes')
+
+    @api.onchange('invoice_id')
+    def _onchange_invoice_id(self):
+        for repair in self:
+            if repair.invoice_id:
+                repair.inv_name = repair.invoice_id.name
+                repair.inv_date = repair.invoice_id.invoice_date
     # fees_lines = fields.One2many(
     #     'repair.fee', 'repair_id', 'Operations',
     #     copy=True, readonly=False)
@@ -64,6 +71,5 @@ class AccountPaymentsNumWords(models.Model):
     #     for order in self:
     #         currency = order.pricelist_id.currency_id or self.env.company.currency_id
     #         order.amount_total = currency.round(order.amount_untaxed + order.amount_tax)
-
 
 
