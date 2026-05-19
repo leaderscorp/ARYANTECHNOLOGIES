@@ -42,8 +42,9 @@
                         <group>
                             <field name="req_from" readonly="1"/>
                             <field name="req_to"
+                                   required="id == False"
                                    readonly="id != False"
-                                   domain="[('id','!=',uid)]"/>
+                                   domain="[('id', '=', 10)] if uid == 9 else [('id','!=',uid)]"/>
 
                             <field name="req_picking_type" readonly="id != False"/>
                         </group>

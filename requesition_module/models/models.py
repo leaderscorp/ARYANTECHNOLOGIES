@@ -2,9 +2,29 @@ from odoo import models, fields, api, _, Command
 from odoo.exceptions import ValidationError
 
 
+AFTER_SALES_USER_ID = 9
+STORE_USER_ID = 10
+
+
 class Requisition(models.Model):
     _name = 'request.model'
     _description = 'Requisition Module'
+
+    def _is_after_sales_user(self):
+        return self.env.uid == AFTER_SALES_USER_ID
+
+    def _get_store_user(self):
+        return self.env['res.users'].browse(STORE_USER_ID).exists()
+
+    def _default_req_to(self):
+        if self._is_after_sales_user():
+            return self._get_store_user()
+        return False
+
+    def _get_req_to_domain(self):
+        if self._is_after_sales_user():
+            return [('id', '=', STORE_USER_ID)]
+        return []
 
     name = fields.Char(
         string="Requisition Number",
@@ -35,7 +55,9 @@ class Requisition(models.Model):
 
     req_to = fields.Many2one(
         comodel_name='res.users',
-        string='Request To'
+        string='Request To',
+        default=lambda self: self._default_req_to(),
+        domain=lambda self: self._get_req_to_domain()
     )
 
     req_picking_type = fields.Many2one(
@@ -107,9 +129,16 @@ class Requisition(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        store_user = self._get_store_user()
         for vals in vals_list:
-            vals['name'] = self.env['ir.sequence'].next_by_code('request.sequence') or _('New')
-            user_id = self._context['uid']
+            if not vals.get('name') or vals.get('name') == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('request.sequence') or _('New')
+
+            if self._is_after_sales_user() and not vals.get('req_to') and store_user:
+                vals['req_to'] = store_user.id
+
+            if not vals.get('req_to'):
+                raise ValidationError(_("Please select Request To before creating a requisition."))
             # vals['state'] = 'sent'
         return super(Requisition, self).create(vals_list)
 
