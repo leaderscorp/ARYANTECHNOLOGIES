@@ -11,6 +11,7 @@
     'depends': [
         'base',
         'sale_management',
+        'sale',
         'account',
         'repair'
     ],
