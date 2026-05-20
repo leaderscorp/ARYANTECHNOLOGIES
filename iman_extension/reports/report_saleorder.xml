@@ -2,7 +2,7 @@
     <template id="report_saleorder_document_inherit_repair"
               inherit_id="sale.report_saleorder_document">
 
-        <xpath expr="//div[@id='informations']" position="inside">
+        <xpath expr="//div[contains(@class, 'row') and contains(@id, 'informations')]" position="inside">
             <div class="col" t-if="doc.repair_number" name="informations_repair">
                 <strong>Repair Number</strong>
                 <div t-field="doc.repair_number"/>
