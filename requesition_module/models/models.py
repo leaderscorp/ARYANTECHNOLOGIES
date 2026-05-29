@@ -13,6 +13,12 @@ class Requisition(models.Model):
     def _is_after_sales_user(self):
         return self.env.uid == AFTER_SALES_USER_ID
 
+    @api.depends_context('uid')
+    def _compute_is_after_sales_user(self):
+        is_after_sales_user = self._is_after_sales_user()
+        for record in self:
+            record.is_after_sales_user = is_after_sales_user
+
     def _get_store_user(self):
         return self.env['res.users'].browse(STORE_USER_ID).exists()
 
@@ -84,6 +90,11 @@ class Requisition(models.Model):
     )
 
     transfer_created = fields.Boolean(default=False)
+
+    is_after_sales_user = fields.Boolean(
+        compute='_compute_is_after_sales_user',
+        string='Is After Sales User',
+    )
 
     # Computed field to display the name of the requestor
     requestor_name = fields.Char(
@@ -165,6 +176,8 @@ class Requisition(models.Model):
     #         line.location_dest_id = operation_type.default_location_dest_id.id
 
     def action_approve(self):
+        if self._is_after_sales_user():
+            raise ValidationError(_("After Sales users cannot approve requisitions."))
         self.write({'state': 'approved'})
         # Additional logic for approval (e.g., send notification)
         return {'type': 'ir.actions.act_window_close'}

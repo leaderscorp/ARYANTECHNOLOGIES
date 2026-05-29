@@ -12,10 +12,9 @@ class im_mo_mrp(models.Model):
     )
 
     so_num = fields.Char(
-        string='SO Num'
+        string='SO No'
     )
 
     def _onchange_user(self):
         for rec in self:
             rec.env_user = rec.env.user.id
-
