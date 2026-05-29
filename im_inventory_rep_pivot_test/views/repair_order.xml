@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="repair_order_form_parts_price_unit" model="ir.ui.view">
+            <field name="name">repair.order.form.parts.price.unit</field>
+            <field name="model">repair.order</field>
+            <field name="inherit_id" ref="repair.view_repair_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page[@name='parts']/field[@name='move_ids']/list//field[@name='product_uom']" position="after">
+                    <field name="price_unit"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
