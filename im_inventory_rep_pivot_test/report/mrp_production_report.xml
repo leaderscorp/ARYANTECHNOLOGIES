@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_mrporder_so_num" inherit_id="mrp.report_mrporder">
+        <xpath expr="//div[span[@t-field='o.origin']]" position="after">
+            <div class="col-3" t-if="o.so_num">
+                <strong>SO No:</strong><br/>
+                <span t-field="o.so_num"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

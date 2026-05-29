@@ -33,6 +33,7 @@
         'views/stock_picking.xml',
         'views/repair_order.xml',
         'views/hide_mo_btn.xml',
+        'report/mrp_production_report.xml',
         'views/hide_mark_as_done_from_user.xml'
     ],
     # only loaded in demonstration mode

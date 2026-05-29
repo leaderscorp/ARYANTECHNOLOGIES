@@ -25,6 +25,7 @@
             <field name="arch" type="xml">
                 <form create="false">
                     <header>
+                        <field name="is_after_sales_user" invisible="1"/>
                         <button name="action_sent"
                                 string="Sent"
                                 type="object"
@@ -34,7 +35,7 @@
                                 string="Approve"
                                 type="object"
                                 class="btn-primary"
-                                invisible="state in ('draft','approved')"/>
+                                invisible="state in ('draft','approved') or is_after_sales_user"/>
 
                         <button name="action_transfer"
                                 string="Create Transfer"
