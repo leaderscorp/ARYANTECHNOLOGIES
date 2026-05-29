@@ -15,8 +15,8 @@ class MrpProduction(models.Model):
         for record in self:
             for move in record.move_raw_ids:
                 if move.forecast_availability > 0:
-                    move.remaining_quantity = move.forecast_availability - move.quantity_done
+                    move.remaining_quantity = move.forecast_availability - move.quantity
                 # elif move.product_uom_quantity > 0:
-                #     move.remaining_quantity = move.product_uom_quantity - move.quantity_done
+                #     move.remaining_quantity = move.product_uom_quantity - move.quantity
                 else:
                     move.remaining_quantity = 0.0
