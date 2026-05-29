@@ -20,7 +20,7 @@
     'version': '19.0.1.0.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'repair' , 'account', 'sale','stock'],
+    'depends': ['base', 'repair' , 'account', 'sale','stock', 'iman_repair_add_inv_field'],
 
     # always loaded
     'data': [

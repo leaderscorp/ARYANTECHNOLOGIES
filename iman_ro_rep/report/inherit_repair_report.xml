@@ -54,6 +54,11 @@
 
                     </h2>
 
+                    <div t-if="o.description" class="mb-3">
+                        <strong>Description:</strong>
+                        <span t-field="o.description"/>
+                    </div>
+
                     <table class="table table-sm o_main_table">
                         <thead>
                             <tr>
