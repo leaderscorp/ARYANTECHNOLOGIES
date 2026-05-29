@@ -78,8 +78,7 @@
                                 <tr class="bg-200 o_line_section"><td colspan="7"><strong>Description</strong></td></tr>
                                 <tr t-foreach="o.move_ids" t-as="line">
                                     <td>
-                                        <p t-if="line.type == 'add'"><span t-field="line.name" /></p>
-                                        <p t-if="line.type == 'remove'"><span t-field="line.name"/></p>
+                                        <span t-field="line.name"/>
                                     </td>
                                     <td class="text-center">
                                         <span t-field="line.product_uom_qty"/>
