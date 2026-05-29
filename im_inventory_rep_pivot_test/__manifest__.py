@@ -20,7 +20,7 @@
     'version': '19.0.1.0.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'stock', 'mrp', 'spreadsheet_dashboard'],
+    'depends': ['base', 'stock', 'mrp', 'spreadsheet_dashboard', 'repair'],
 
     # always loaded
     'data': [
@@ -31,6 +31,7 @@
         'views/stock_move.xml',
         'views/stock_quant.xml',
         'views/stock_picking.xml',
+        'views/repair_order.xml',
         'views/hide_mo_btn.xml',
         'views/hide_mark_as_done_from_user.xml'
     ],
