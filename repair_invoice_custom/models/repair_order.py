@@ -1,0 +1,143 @@
+# -*- coding: utf-8 -*-
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
+
+
+class RepairOrder(models.Model):
+    _inherit = 'repair.order'
+
+    # ── Relational field linking invoices to this repair order ─────────────
+    invoice_ids = fields.Many2many(
+        comodel_name='account.move',
+        relation='repair_order_account_move_rel',
+        column1='repair_id',
+        column2='move_id',
+        string='Invoices',
+        copy=False,
+    )
+
+    invoice_count = fields.Integer(
+        string='Invoice Count',
+        compute='_compute_invoice_count',
+        store=True,
+    )
+
+    # ── Compute ────────────────────────────────────────────────────────────
+    @api.depends('invoice_ids')
+    def _compute_invoice_count(self):
+        for record in self:
+            record.invoice_count = len(record.invoice_ids)
+
+    # ── Action: Create Invoice ─────────────────────────────────────────────
+    def action_create_repair_invoice(self):
+        """
+        Create a customer invoice directly from the repair order.
+
+        In Odoo 17+ the old 'operations' and 'fees_lines' One2many fields
+        were removed. Parts are now tracked through stock.move records on
+        move_ids. We build invoice lines from those moves; if none exist we
+        fall back to a single line for the repair service itself.
+        """
+        self.ensure_one()
+
+        if not self.partner_id:
+            raise UserError(
+                _('Please set a customer on the repair order before creating an invoice.')
+            )
+
+        # ── Build invoice lines from stock moves (Parts tab in Odoo 17-19) ─
+        invoice_line_vals = []
+
+        # move_ids holds all stock moves tied to this repair order.
+        # We skip cancelled/draft/scrapped moves — only confirmed/done parts.
+        for move in self.move_ids.filtered(
+            lambda m: m.state not in ('cancel', 'draft')
+            and not m.scrap_id
+
+        ):
+            if not move.product_id:
+                continue
+
+            # Resolve income account via product template
+            account = (
+                move.product_id.product_tmpl_id
+                .get_product_accounts()
+                .get('income')
+            )
+
+            line = {
+                'product_id': move.product_id.id,
+                'name': move.product_id.display_name,
+                # 'quantity' field name changed in Odoo 17 (was product_uom_qty on moves)
+                'quantity': move.quantity if hasattr(move, 'quantity') else move.product_uom_qty,
+                'product_uom_id': move.product_uom.id,
+                'price_unit': move.product_id.lst_price,
+            }
+
+            if account:
+                line['account_id'] = account.id
+
+            # Pull taxes from the product, filtered to current company
+            taxes = move.product_id.taxes_id.filtered(
+                lambda t: t.company_id == self.company_id
+            )
+            if taxes:
+                line['tax_ids'] = [(6, 0, taxes.ids)]
+
+            invoice_line_vals.append((0, 0, line))
+
+        # ── Fallback: one service line for the whole repair ────────────────
+        if not invoice_line_vals:
+            invoice_line_vals.append((0, 0, {
+                'name': _('Repair Service: %s') % (self.name or ''),
+                'quantity': 1.0,
+                'price_unit': self.amount_total if hasattr(self, 'amount_total') else 0.0,
+            }))
+
+        # ── Create the invoice ─────────────────────────────────────────────
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_id.id,
+            'invoice_origin': self.name,
+            'ref': self.name,
+            'invoice_line_ids': invoice_line_vals,
+            'narration': _('Invoice generated from Repair Order: %s') % self.name,
+        })
+
+        # ── Link invoice back to repair order ──────────────────────────────
+        self.invoice_ids = [(4, invoice.id)]
+
+        # ── Open the newly created invoice form ────────────────────────────
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Invoice'),
+            'res_model': 'account.move',
+            'res_id': invoice.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    # ── Action: Smart button → open all linked invoices ───────────────────
+    def action_view_invoices(self):
+        """Open all invoices linked to this repair order."""
+        self.ensure_one()
+        invoice_ids = self.invoice_ids.ids
+
+        if len(invoice_ids) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Invoice'),
+                'res_model': 'account.move',
+                'res_id': invoice_ids[0],
+                'view_mode': 'form',
+                'target': 'current',
+            }
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Invoices'),
+            'res_model': 'account.move',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', invoice_ids)],
+            'target': 'current',
+        }
