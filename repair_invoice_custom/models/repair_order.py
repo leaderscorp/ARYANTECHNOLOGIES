@@ -50,7 +50,6 @@ class RepairOrder(models.Model):
         column1='repair_id',
         column2='move_id',
         string='Invoices',
-        copy=False,
     )
 
     invoice_count = fields.Integer(
@@ -194,3 +193,13 @@ class RepairOrder(models.Model):
             'domain': [('id', 'in', invoice_ids)],
             'target': 'current',
         }
+
+    def copy(self, default=None):
+        new_order = super().copy(default)
+
+        for old_move, new_move in zip(self.move_ids, new_order.move_ids):
+            new_move.write({
+                'price_unit': old_move.price_unit,
+            })
+
+        return new_order

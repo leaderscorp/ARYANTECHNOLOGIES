@@ -17,8 +17,14 @@
                             <b>Supplier Name:</b>
                             <span t-field="company.name"/>
                             <br/>
+                            <b>Job Completion Date:</b>
+                            <span t-field="o.job_completion_date"/>
+                            <br/>
                             <b>Invoice No:</b>
                             <span t-field="o.name"/>
+                            <br/>
+                            <b>Invoice Date:</b>
+                            <span t-field="o.inv_date"/>
                             <br/>
                             <b>Address:</b>
                             <span t-field="company.street"/>
@@ -29,6 +35,13 @@
                             <b>NTN:</b>
                             <span t-field="company.vat"/>
                             <br/>
+                            <b>Site Location:</b>
+                            <span t-field="o.site_location"/>
+                            <br/>
+                            <b>Description:</b>
+                            <span t-field="o.description_text"/>
+                            <br/>
+
                         </div>
                         <div class="col-6">
                             <b>Buyer's Name:</b>
@@ -71,10 +84,10 @@
                                     <span t-if="line.repair_line_type == 'add'">(Add) </span>
                                     <span t-if="line.repair_line_type == 'remove'">(Remove) </span>
                                     <span t-if="line.repair_line_type == 'recycle'">(Recycle) </span>
-                                    <span t-field="line.product_id"/>
-                                    <div t-if="line.description_picking" class="text-muted">
-                                        <span t-field="line.description_picking"/>
-                                    </div>
+                                    <span t-field="line.description_picking"/>
+<!--                                    <div t-if="line.description_picking" class="text-muted">-->
+<!--                                        <span t-field="line.description_picking"/>-->
+<!--                                    </div>-->
                                 </td>
                                 <td class="text-center">
                                     <span t-field="line.product_uom_qty"/>
