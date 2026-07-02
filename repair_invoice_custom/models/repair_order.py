@@ -3,6 +3,43 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
+class StockMove(models.Model):
+    _inherit = 'stock.move'
+
+    tax_ids = fields.Many2many(
+        'account.tax',
+        string='Taxes',
+        check_company=True,
+        context={'active_test': False}
+    )
+    # Currency field required for Monetary calculations
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id', store=True)
+
+    price_subtotal = fields.Monetary(compute='_compute_repair_totals', string='Subtotal', store=True)
+    price_tax = fields.Float(compute='_compute_repair_totals', string='Tax Amount', store=True)
+    price_total = fields.Monetary(compute='_compute_repair_totals', string='Total', store=True)
+
+    @api.depends('product_uom_qty', 'price_unit', 'tax_ids')
+    def _compute_repair_totals(self):
+        for move in self:
+            if move.repair_id:
+                # Utilizing standard Odoo tax compute logic
+                taxes = move.tax_ids.compute_all(
+                    move.price_unit,
+                    move.currency_id,
+                    move.product_uom_qty,
+                    move.product_id,
+                    move.repair_id.partner_id
+                )
+                move.price_subtotal = taxes['total_excluded']
+                move.price_tax = taxes['total_included'] - taxes['total_excluded']
+                move.price_total = taxes['total_included']
+            else:
+                move.price_subtotal = 0.0
+                move.price_tax = 0.0
+                move.price_total = 0.0
+
+
 class RepairOrder(models.Model):
     _inherit = 'repair.order'
 
@@ -21,6 +58,20 @@ class RepairOrder(models.Model):
         compute='_compute_invoice_count',
         store=True,
     )
+
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id', store=True)
+    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, compute='_compute_amounts')
+    amount_tax = fields.Monetary(string='Taxes', store=True, compute='_compute_amounts')
+    amount_total = fields.Monetary(string='Grand Total', store=True, compute='_compute_amounts')
+
+    @api.depends('move_ids.price_subtotal', 'move_ids.price_tax', 'move_ids.price_total')
+    def _compute_amounts(self):
+        for order in self:
+            order.amount_untaxed = sum(order.move_ids.mapped('price_subtotal'))
+            order.amount_tax = sum(order.move_ids.mapped('price_tax'))
+            order.amount_total = sum(order.move_ids.mapped('price_total'))
+
+
 
     # ── Compute ────────────────────────────────────────────────────────────
     @api.depends('invoice_ids')
@@ -71,7 +122,8 @@ class RepairOrder(models.Model):
                 # 'quantity' field name changed in Odoo 17 (was product_uom_qty on moves)
                 'quantity': move.quantity if hasattr(move, 'quantity') else move.product_uom_qty,
                 'product_uom_id': move.product_uom.id,
-                'price_unit': move.product_id.lst_price,
+                'price_unit': move.price_unit,
+                'tax_ids': move.tax_ids,
             }
 
             if account:
@@ -101,6 +153,7 @@ class RepairOrder(models.Model):
             'invoice_origin': self.name,
             'ref': self.name,
             'invoice_line_ids': invoice_line_vals,
+            'invoice_date': self.job_completion_date,
             'narration': _('Invoice generated from Repair Order: %s') % self.name,
         })
 

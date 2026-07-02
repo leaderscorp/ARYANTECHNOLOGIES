@@ -47,6 +47,24 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
 
+            <xpath expr="//field[@name='move_ids']//field[@name='price_unit']" position="after">
+<!--                <field name="price_unit" string="Unit Price"/>-->
+                <field name="tax_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                <field name="price_subtotal" widget="monetary"/>
+            </xpath>
+
+            <xpath expr="//sheet" position="inside">
+                <group class="oe_subtotal_footer oe_right" colspan="2" name="repair_total">
+                    <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <div class="oe_subtotal_footer_separator oe_inline">
+                        <label for="amount_total"/>
+                    </div>
+                    <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                </group>
+                <div class="oe_clear"/>
+            </xpath>
+
         </field>
     </record>
 

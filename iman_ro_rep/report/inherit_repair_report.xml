@@ -60,7 +60,9 @@
                                 <th class="text-center">Products</th>
                                 <th class="text-center">Quantity</th>
                                 <th class="text-center">Rate Per Unit</th>
-                                <th class="text-center">Total</th>
+                                <th class="text-center">Taxes</th>
+                                <th class="text-center">Subtotal</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -82,21 +84,52 @@
                                     <span t-esc="line.price_unit" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                 </td>
                                 <td class="text-center">
-                                    <span t-esc="line.price_unit * line.product_uom_qty" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    <t t-if="line.tax_ids">
+                                        <span t-esc="', '.join(line.tax_ids.mapped('name'))"/>
+                                    </t>
+                                </td>
+
+                                <td class="text-end">
+                                    <span t-field="line.price_subtotal"
+                                          t-options='{"widget": "monetary", "display_currency": currency}'/>
                                 </td>
                             </tr>
                         </tbody>
-                        <tbody style="border: 1px solid #000;">
-                            <tr class="border-black">
-                                <td class="pull-right text-center fw-bold" colspan="3">Total</td>
-                                <td class="pull-right fw-bold">
-                                    <span t-esc="parts_total" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="text-end fw-bold">
+                                    Untaxed Amount
+                                </td>
+                                <td class="text-end">
+                                    <span t-field="o.amount_untaxed"
+                                          t-options='{"widget": "monetary", "display_currency": currency}'/>
                                 </td>
                             </tr>
+
+                            <tr>
+                                <td colspan="4" class="text-end fw-bold">
+                                    Taxes
+                                </td>
+                                <td class="text-end">
+                                    <span t-field="o.amount_tax"
+                                          t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                </td>
+                            </tr>
+
+                            <tr class="border-top border-dark">
+                                <td colspan="4" class="text-end fw-bold">
+                                    Grand Total
+                                </td>
+                                <td class="text-end fw-bold">
+                                    <span t-field="o.amount_total"
+                                          t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                </td>
+                            </tr>
+
                             <tr t-if="o.total_in_wordss">
-                                <td colspan="4" class="text-uppercase text-center fw-bold border-top border-dark">
+                                <td colspan="5" class="text-uppercase text-center fw-bold border-top border-dark">
                                     <span t-field="o.total_in_wordss"/>
-                                    <span class="text-capitalize" style="margin-left:0.5em;">Only</span>
+                                    <span style="margin-left:5px;">Only</span>
                                 </td>
                             </tr>
                         </tbody>
