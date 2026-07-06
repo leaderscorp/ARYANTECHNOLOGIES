@@ -149,6 +149,8 @@ class RepairOrder(models.Model):
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_id.id,
+            'repair_id': self.id,
+            'job_completion_date': self.job_completion_date,
             'invoice_origin': self.name,
             'ref': self.name,
             'invoice_line_ids': invoice_line_vals,
