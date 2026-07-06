@@ -31,11 +31,11 @@
                                         <b>Date:</b>
                                         <span t-field="o.invoice_date"/>
                                         <br/>
-                                        <t t-if="o.repair_ids">
-                                            <b>Job Completion Date:</b>
-                                            <span t-field="o.repair_ids.job_completion_date"/>
-                                            <br/>
-                                        </t>
+<!--                                        <t t-if="o.repair_ids">-->
+<!--                                            <b>Job Completion Date:</b>-->
+<!--                                            <span t-field="o.repair_ids.job_completion_date"/>-->
+<!--                                            <br/>-->
+<!--                                        </t>-->
                                         <b>Supplierr Name:</b>
                                         <span t-field="company.name"/>
                                         <br/>
