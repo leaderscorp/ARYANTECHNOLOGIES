@@ -155,6 +155,8 @@ class RepairOrder(models.Model):
             'ref': self.name,
             'invoice_line_ids': invoice_line_vals,
             'invoice_date': self.job_completion_date,
+            'description_text': self.description_text,
+            'site_location': self.site_location,
             'narration': _('Invoice generated from Repair Order: %s') % self.name,
         })
 
