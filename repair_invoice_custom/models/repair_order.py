@@ -40,6 +40,12 @@ class StockMove(models.Model):
                 move.price_total = 0.0
 
 
+class AccountMoveLines(models.Model):
+    _inherit = 'account.move.line'
+
+    product_desc = fields.Char(string="Description")
+
+
 class RepairOrder(models.Model):
     _inherit = 'repair.order'
 
@@ -118,6 +124,7 @@ class RepairOrder(models.Model):
             line = {
                 'product_id': move.product_id.id,
                 'name': move.product_id.display_name,
+                'product_desc': move.description_picking,
                 # 'quantity' field name changed in Odoo 17 (was product_uom_qty on moves)
                 'quantity': move.quantity if hasattr(move, 'quantity') else move.product_uom_qty,
                 'product_uom_id': move.product_uom.id,

@@ -29,7 +29,14 @@
                                 <t t-if="o and 'company_id' in o">
                                     <t t-set="company" t-value="o.company_id"/>
                                     <b>Date:</b>
-                                    <span t-field="o.invoice_date"/>
+
+                                    <t t-if="o.repair_id.inv_date">
+                                        <span t-field="o.repair_id.inv_date"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/>
+                                    </t>
+
                                     <br/>
                                     <t t-if="o.job_completion_date">
                                         <b>Job Completion Date:</b>
@@ -128,7 +135,7 @@
                                     <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                         <t t-if="line.display_type == 'product'" name="account_invoice_line_accountable">
                                             <td align="center" name="index"><span><t t-out="index"/></span></td>
-                                            <td name="account_invoice_line_name"><span t-field="line.name" t-options="{'widget': 'text'}"/></td>
+                                            <td name="account_invoice_line_name"><span t-field="line.product_desc" /></td>
                                             <td class="text-end">
                                                 <span t-field="line.quantity"/>
                                                 <span t-field="line.product_uom_id"  groups="uom.group_uom"/>
@@ -390,7 +397,14 @@
                                 <t t-if="o and 'company_id' in o">
                                     <t t-set="company" t-value="o.company_id"/>
                                     <b>Date:</b>
-                                    <span t-field="o.invoice_date"/>
+
+                                    <t t-if="o.repair_id.inv_date">
+                                        <span t-field="o.repair_id.inv_date"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/>
+                                    </t>
+
                                     <br/>
                                     <t t-if="o.job_completion_date">
                                         <b>Job Completion Date:</b>
@@ -489,7 +503,7 @@
                                     <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                         <t t-if="line.display_type == 'product'" name="account_invoice_line_accountable">
                                             <td align="center" name="index"><span><t t-out="index"/></span></td>
-                                            <td name="account_invoice_line_name"><span t-field="line.name" t-options="{'widget': 'text'}"/></td>
+                                            <td name="account_invoice_line_name"><span t-field="line.product_desc" /></td>
                                             <td class="text-end">
                                                 <span t-field="line.quantity"/>
                                                 <span t-field="line.product_uom_id"  groups="uom.group_uom"/>

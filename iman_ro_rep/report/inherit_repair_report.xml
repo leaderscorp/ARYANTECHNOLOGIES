@@ -70,6 +70,7 @@
                     <table class="table table-sm o_main_table">
                         <thead>
                             <tr>
+                                <th class="text-center">Sr. #</th>
                                 <th class="text-center">Products</th>
                                 <th class="text-center">Quantity</th>
                                 <th class="text-center">Rate Per Unit</th>
@@ -79,30 +80,55 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!--                            <tr t-foreach="o.move_ids" t-as="line">-->
+                            <!--                                <td>-->
+                            <!--&lt;!&ndash;                                    <span t-if="line.repair_line_type == 'add'">(Add) </span>&ndash;&gt;-->
+                            <!--&lt;!&ndash;                                    <span t-if="line.repair_line_type == 'remove'">(Remove) </span>&ndash;&gt;-->
+                            <!--&lt;!&ndash;                                    <span t-if="line.repair_line_type == 'recycle'">(Recycle) </span>&ndash;&gt;-->
+                            <!--                                    <span t-field="line.description_picking"/>-->
+                            <!--&lt;!&ndash;                                    <div t-if="line.description_picking" class="text-muted">&ndash;&gt;-->
+                            <!--&lt;!&ndash;                                        <span t-field="line.description_picking"/>&ndash;&gt;-->
+                            <!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+                            <!--                                </td>-->
+                            <!--                                <td class="text-center">-->
+                            <!--                                    <span t-field="line.product_uom_qty"/>-->
+                            <!--                                    <span groups="uom.group_uom" t-field="line.product_uom.name"/>-->
+                            <!--                                </td>-->
+                            <!--                                <td class="text-center">-->
+                            <!--                                    <span t-esc="line.price_unit" t-options='{"widget": "monetary", "display_currency": currency}'/>-->
+                            <!--                                </td>-->
+                            <!--                                <td class="text-center">-->
+                            <!--                                    <t t-if="line.tax_ids">-->
+                            <!--                                        <span t-esc="', '.join(line.tax_ids.mapped('name'))"/>-->
+                            <!--                                    </t>-->
+                            <!--                                </td>-->
+
+                            <!--                                <td class="text-end">-->
+                            <!--                                    <span t-field="line.price_subtotal"-->
+                            <!--                                          t-options='{"widget": "monetary", "display_currency": currency}'/>-->
+                            <!--                                </td>-->
+                            <!--                            </tr>-->
                             <tr t-foreach="o.move_ids" t-as="line">
-                                <td>
-                                    <span t-if="line.repair_line_type == 'add'">(Add) </span>
-                                    <span t-if="line.repair_line_type == 'remove'">(Remove) </span>
-                                    <span t-if="line.repair_line_type == 'recycle'">(Recycle) </span>
-                                    <span t-field="line.description_picking"/>
-<!--                                    <div t-if="line.description_picking" class="text-muted">-->
-<!--                                        <span t-field="line.description_picking"/>-->
-<!--                                    </div>-->
+                                <td style="padding:2px 4px; line-height:1.9;">
+                                    <span t-esc="line_index + 1"/>
                                 </td>
-                                <td class="text-center">
+                                <td style="padding:2px 4px; line-height:1.9;">
+                                    <span t-field="line.description_picking"/>
+                                </td>
+                                <td class="text-center" style="padding:2px 4px; line-height:1.9;">
                                     <span t-field="line.product_uom_qty"/>
                                     <span groups="uom.group_uom" t-field="line.product_uom.name"/>
                                 </td>
-                                <td class="text-center">
-                                    <span t-esc="line.price_unit" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                <td class="text-center" style="padding:2px 4px; line-height:1.9;">
+                                    <span t-esc="line.price_unit"
+                                          t-options='{"widget": "monetary", "display_currency": currency}'/>
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center" style="padding:2px 4px; line-height:1.9;">
                                     <t t-if="line.tax_ids">
                                         <span t-esc="', '.join(line.tax_ids.mapped('name'))"/>
                                     </t>
                                 </td>
-
-                                <td class="text-end">
+                                <td class="text-end" style="padding:2px 4px; line-height:1.9;">
                                     <span t-field="line.price_subtotal"
                                           t-options='{"widget": "monetary", "display_currency": currency}'/>
                                 </td>
@@ -110,7 +136,7 @@
                         </tbody>
                         <tbody>
                             <tr>
-                                <td colspan="4" class="text-end fw-bold">
+                                <td colspan="5" class="text-end fw-bold">
                                     Untaxed Amount
                                 </td>
                                 <td class="text-end">
@@ -120,7 +146,7 @@
                             </tr>
 
                             <tr>
-                                <td colspan="4" class="text-end fw-bold">
+                                <td colspan="5" class="text-end fw-bold">
                                     Taxes
                                 </td>
                                 <td class="text-end">
@@ -130,7 +156,7 @@
                             </tr>
 
                             <tr class="border-top border-dark">
-                                <td colspan="4" class="text-end fw-bold">
+                                <td colspan="5" class="text-end fw-bold">
                                     Grand Total
                                 </td>
                                 <td class="text-end fw-bold">
@@ -140,7 +166,7 @@
                             </tr>
 
                             <tr t-if="o.total_in_wordss">
-                                <td colspan="5" class="text-uppercase text-center fw-bold border-top border-dark">
+                                <td colspan="6" class="text-uppercase text-center fw-bold border-top border-dark">
                                     <span t-field="o.total_in_wordss"/>
                                     <span style="margin-left:5px;">Only</span>
                                 </td>
