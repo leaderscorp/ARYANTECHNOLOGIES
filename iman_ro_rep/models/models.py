@@ -45,3 +45,11 @@ class AccountMoveNumWords(models.Model):
             rec.total_in_words = num2words(rec.amount_total, lang='en_US')
         #     # print(rec.total_in_words)
 
+    repair_id = fields.Many2one(
+        'repair.order',
+        string='Repair Order'
+    )
+
+    job_completion_date = fields.Date(
+        string='Job Completion Date'
+    )

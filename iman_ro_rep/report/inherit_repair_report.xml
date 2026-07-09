@@ -17,8 +17,14 @@
                             <b>Supplier Name:</b>
                             <span t-field="company.name"/>
                             <br/>
+                            <b>Job Completion Date:</b>
+                            <span t-field="o.job_completion_date"/>
+                            <br/>
                             <b>Invoice No:</b>
                             <span t-field="o.name"/>
+                            <br/>
+                            <b>Invoice Date:</b>
+                            <span t-field="o.inv_date"/>
                             <br/>
                             <b>Address:</b>
                             <span t-field="company.street"/>
@@ -29,6 +35,13 @@
                             <b>NTN:</b>
                             <span t-field="company.vat"/>
                             <br/>
+                            <b>Site Location:</b>
+                            <span t-field="o.site_location"/>
+                            <br/>
+                            <b>Description:</b>
+                            <span t-field="o.description_text"/>
+                            <br/>
+
                         </div>
                         <div class="col-6">
                             <b>Buyer's Name:</b>
@@ -57,46 +70,105 @@
                     <table class="table table-sm o_main_table">
                         <thead>
                             <tr>
+                                <th class="text-center">Sr. #</th>
                                 <th class="text-center">Products</th>
                                 <th class="text-center">Quantity</th>
                                 <th class="text-center">Rate Per Unit</th>
-                                <th class="text-center">Total</th>
+                                <th class="text-center">Taxes</th>
+                                <th class="text-center">Subtotal</th>
+
                             </tr>
                         </thead>
                         <tbody>
+                            <!--                            <tr t-foreach="o.move_ids" t-as="line">-->
+                            <!--                                <td>-->
+                            <!--&lt;!&ndash;                                    <span t-if="line.repair_line_type == 'add'">(Add) </span>&ndash;&gt;-->
+                            <!--&lt;!&ndash;                                    <span t-if="line.repair_line_type == 'remove'">(Remove) </span>&ndash;&gt;-->
+                            <!--&lt;!&ndash;                                    <span t-if="line.repair_line_type == 'recycle'">(Recycle) </span>&ndash;&gt;-->
+                            <!--                                    <span t-field="line.description_picking"/>-->
+                            <!--&lt;!&ndash;                                    <div t-if="line.description_picking" class="text-muted">&ndash;&gt;-->
+                            <!--&lt;!&ndash;                                        <span t-field="line.description_picking"/>&ndash;&gt;-->
+                            <!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+                            <!--                                </td>-->
+                            <!--                                <td class="text-center">-->
+                            <!--                                    <span t-field="line.product_uom_qty"/>-->
+                            <!--                                    <span groups="uom.group_uom" t-field="line.product_uom.name"/>-->
+                            <!--                                </td>-->
+                            <!--                                <td class="text-center">-->
+                            <!--                                    <span t-esc="line.price_unit" t-options='{"widget": "monetary", "display_currency": currency}'/>-->
+                            <!--                                </td>-->
+                            <!--                                <td class="text-center">-->
+                            <!--                                    <t t-if="line.tax_ids">-->
+                            <!--                                        <span t-esc="', '.join(line.tax_ids.mapped('name'))"/>-->
+                            <!--                                    </t>-->
+                            <!--                                </td>-->
+
+                            <!--                                <td class="text-end">-->
+                            <!--                                    <span t-field="line.price_subtotal"-->
+                            <!--                                          t-options='{"widget": "monetary", "display_currency": currency}'/>-->
+                            <!--                                </td>-->
+                            <!--                            </tr>-->
                             <tr t-foreach="o.move_ids" t-as="line">
-                                <td>
-                                    <span t-if="line.repair_line_type == 'add'">(Add) </span>
-                                    <span t-if="line.repair_line_type == 'remove'">(Remove) </span>
-                                    <span t-if="line.repair_line_type == 'recycle'">(Recycle) </span>
-                                    <span t-field="line.product_id"/>
-                                    <div t-if="line.description_picking" class="text-muted">
-                                        <span t-field="line.description_picking"/>
-                                    </div>
+                                <td style="padding:2px 4px; line-height:1.9;">
+                                    <span t-esc="line_index + 1"/>
                                 </td>
-                                <td class="text-center">
+                                <td style="padding:2px 4px; line-height:1.9;">
+                                    <span t-field="line.description_picking"/>
+                                </td>
+                                <td class="text-center" style="padding:2px 4px; line-height:1.9;">
                                     <span t-field="line.product_uom_qty"/>
                                     <span groups="uom.group_uom" t-field="line.product_uom.name"/>
                                 </td>
-                                <td class="text-center">
-                                    <span t-esc="line.price_unit" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                <td class="text-center" style="padding:2px 4px; line-height:1.9;">
+                                    <span t-esc="line.price_unit"
+                                          t-options='{"widget": "monetary", "display_currency": currency}'/>
                                 </td>
-                                <td class="text-center">
-                                    <span t-esc="line.price_unit * line.product_uom_qty" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                <td class="text-center" style="padding:2px 4px; line-height:1.9;">
+                                    <t t-if="line.tax_ids">
+                                        <span t-esc="', '.join(line.tax_ids.mapped('name'))"/>
+                                    </t>
+                                </td>
+                                <td class="text-end" style="padding:2px 4px; line-height:1.9;">
+                                    <span t-field="line.price_subtotal"
+                                          t-options='{"widget": "monetary", "display_currency": currency}'/>
                                 </td>
                             </tr>
                         </tbody>
-                        <tbody style="border: 1px solid #000;">
-                            <tr class="border-black">
-                                <td class="pull-right text-center fw-bold" colspan="3">Total</td>
-                                <td class="pull-right fw-bold">
-                                    <span t-esc="parts_total" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        <tbody>
+                            <tr>
+                                <td colspan="5" class="text-end fw-bold">
+                                    Untaxed Amount
+                                </td>
+                                <td class="text-end">
+                                    <span t-field="o.amount_untaxed"
+                                          t-options='{"widget": "monetary", "display_currency": currency}'/>
                                 </td>
                             </tr>
+
+                            <tr>
+                                <td colspan="5" class="text-end fw-bold">
+                                    Taxes
+                                </td>
+                                <td class="text-end">
+                                    <span t-field="o.amount_tax"
+                                          t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                </td>
+                            </tr>
+
+                            <tr class="border-top border-dark">
+                                <td colspan="5" class="text-end fw-bold">
+                                    Grand Total
+                                </td>
+                                <td class="text-end fw-bold">
+                                    <span t-field="o.amount_total"
+                                          t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                </td>
+                            </tr>
+
                             <tr t-if="o.total_in_wordss">
-                                <td colspan="4" class="text-uppercase text-center fw-bold border-top border-dark">
+                                <td colspan="6" class="text-uppercase text-center fw-bold border-top border-dark">
                                     <span t-field="o.total_in_wordss"/>
-                                    <span class="text-capitalize" style="margin-left:0.5em;">Only</span>
+                                    <span style="margin-left:5px;">Only</span>
                                 </td>
                             </tr>
                         </tbody>
