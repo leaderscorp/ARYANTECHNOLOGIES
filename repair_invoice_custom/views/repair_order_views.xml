@@ -33,7 +33,7 @@
                         string="Create Invoice"
                         type="object"
                         class="btn-primary"
-                        invisible="state not in ('done', 'under_repair', '2binvoiced')"
+                        invisible="state not in ('done', 'under_repair', '2binvoiced') or invoice_count != 0"
                         help="Generate a customer invoice from this repair order"/>
             </xpath>
 
