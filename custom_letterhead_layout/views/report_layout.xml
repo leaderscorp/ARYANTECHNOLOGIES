@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Customer-facing reports (Invoice, Quotation, SO, PO) -->
+    <!-- Company's Layout is "Light" -> resolves to external_layout_standard -->
+    <!-- Note: header/footer divs here use t-attf-class (dynamic), not plain class -->
+    <template id="external_layout_standard_letterhead" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[contains(@t-attf-class, 'header')]/*[1]" position="before">
+            <img src="/custom_letterhead_layout/static/src/img/letter_top.png"
+                 style="width:100%; display:block; margin-bottom:8px;"/>
+        </xpath>
+        <xpath expr="//div[contains(@t-attf-class, 'footer')]" position="inside">
+            <img src="/custom_letterhead_layout/static/src/img/letter_bottom.png"
+                 style="width:100%; display:block; margin-top:2px; max-height:16mm; object-fit:contain;"/>
+        </xpath>
+    </template>
+
+    <!-- Internal/technical reports (Pricelist, Stock, etc.) -->
+    <!-- internal_layout uses plain class="header" / class="article", and has no footer div -->
+    <template id="internal_layout_letterhead" inherit_id="web.internal_layout">
+        <xpath expr="//div[hasclass('header')]/*[1]" position="before">
+            <img src="/custom_letterhead_layout/static/src/img/letter_top.png"
+                 style="width:100%; display:block; margin-bottom:8px;"/>
+        </xpath>
+        <xpath expr="//div[hasclass('article')]" position="after">
+            <div class="footer">
+                <img src="/custom_letterhead_layout/static/src/img/letter_bottom.png"
+                     style="width:100%; display:block; margin-top:2px; max-height:16mm; object-fit:contain;"/>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
