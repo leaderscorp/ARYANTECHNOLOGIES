@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_vision_tax_invoice" model="ir.actions.report">
+        <field name="name">Vision Tax Invoice</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_tax_invoice.report_vision_tax_invoice_template</field>
+        <field name="report_file">custom_tax_invoice.report_vision_tax_invoice_template</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <!-- Sirf Company ID 5 ke records par ye report drop-down me dikhe gi -->
+        <field name="domain">[('company_id', '=', 5)]</field>
+    </record>
+
+</odoo>
