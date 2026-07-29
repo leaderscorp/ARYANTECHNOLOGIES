@@ -104,6 +104,14 @@ class RepairOrder(models.Model):
         # ── Build invoice lines from stock moves (Parts tab in Odoo 17-19) ─
         invoice_line_vals = []
 
+        # Find analytic distribution from sale order lines
+        sale_analytic_dist = False
+        if 'sale_order_id' in self._fields and self.sale_order_id:
+            for sol in self.sale_order_id.order_line:
+                if sol.analytic_distribution:
+                    sale_analytic_dist = sol.analytic_distribution
+                    break
+
         # move_ids holds all stock moves tied to this repair order.
         # We skip cancelled/draft/scrapped moves — only confirmed/done parts.
         for move in self.move_ids.filtered(
@@ -142,15 +150,21 @@ class RepairOrder(models.Model):
             if taxes:
                 line['tax_ids'] = [(6, 0, taxes.ids)]
 
+            if sale_analytic_dist:
+                line['analytic_distribution'] = sale_analytic_dist
+
             invoice_line_vals.append((0, 0, line))
 
         # ── Fallback: one service line for the whole repair ────────────────
         if not invoice_line_vals:
-            invoice_line_vals.append((0, 0, {
+            fallback_line = {
                 'name': _('Repair Service: %s') % (self.name or ''),
                 'quantity': 1.0,
                 'price_unit': self.amount_total if hasattr(self, 'amount_total') else 0.0,
-            }))
+            }
+            if sale_analytic_dist:
+                fallback_line['analytic_distribution'] = sale_analytic_dist
+            invoice_line_vals.append((0, 0, fallback_line))
 
         # ── Create the invoice ─────────────────────────────────────────────
         invoice = self.env['account.move'].create({

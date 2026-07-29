@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Enforce Sale Taxes on Sale Order Lines -->
+    <record id="view_order_form_inherit_tax_domain" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.tax.domain</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree//field[@name='tax_id']" position="attributes">
+                <attribute name="domain">[('type_tax_use', '=', 'sale'), ('company_id', '=', parent.company_id)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form//field[@name='tax_id']" position="attributes">
+                <attribute name="domain">[('type_tax_use', '=', 'sale'), ('company_id', '=', parent.company_id)]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Enforce Purchase Taxes on Purchase Order Lines -->
+    <record id="purchase_order_form_inherit_tax_domain" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.tax.domain</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree//field[@name='taxes_id']" position="attributes">
+                <attribute name="domain">[('type_tax_use', '=', 'purchase'), ('company_id', '=', parent.company_id)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form//field[@name='taxes_id']" position="attributes">
+                <attribute name="domain">[('type_tax_use', '=', 'purchase'), ('company_id', '=', parent.company_id)]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Enforce Tax Domains on Product Form -->
+    <record id="product_template_form_view_inherit_tax_domain" model="ir.ui.view">
+        <field name="name">product.template.common.form.inherit.tax.domain</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="account.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='taxes_id']" position="attributes">
+                <attribute name="domain">[('type_tax_use', '=', 'sale'), ('company_id', 'in', [company_id, False])]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='supplier_taxes_id']" position="attributes">
+                <attribute name="domain">[('type_tax_use', '=', 'purchase'), ('company_id', 'in', [company_id, False])]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
