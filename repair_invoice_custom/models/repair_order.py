@@ -10,6 +10,7 @@ class StockMove(models.Model):
         'account.tax',
         string='Taxes',
         check_company=True,
+        domain=[('type_tax_use', '=', 'sale')],
         context={'active_test': False}
     )
     # Currency field required for Monetary calculations
@@ -169,8 +170,38 @@ class RepairOrder(models.Model):
                 fallback_line['analytic_distribution'] = sale_analytic_dist
             invoice_line_vals.append((0, 0, fallback_line))
 
+        # ── Determine Journal based on tax presence ────────────────────────
+        # If any move has tax_ids → use "After Sales Tax Invoice" journal
+        # If no taxes → use default "Sales Invoices" journal
+        has_taxes = any(
+            move.tax_ids
+            for move in self.move_ids.filtered(
+                lambda m: m.state not in ('cancel', 'draft') and not m.scrap_id
+            )
+        )
+
+        if has_taxes:
+            journal = self.env['account.journal'].search([
+                ('name', '=', 'After Sales Tax Invoice'),
+                ('type', '=', 'sale'),
+                ('company_id', '=', self.company_id.id),
+            ], limit=1)
+        else:
+            journal = self.env['account.journal'].search([
+                ('name', '=', 'Sales Invoices'),
+                ('type', '=', 'sale'),
+                ('company_id', '=', self.company_id.id),
+            ], limit=1)
+
+        # Fallback: if journal not found, let Odoo pick the default sale journal
+        if not journal:
+            journal = self.env['account.journal'].search([
+                ('type', '=', 'sale'),
+                ('company_id', '=', self.company_id.id),
+            ], limit=1)
+
         # ── Create the invoice ─────────────────────────────────────────────
-        invoice = self.env['account.move'].create({
+        invoice_vals = {
             'move_type': 'out_invoice',
             'partner_id': self.partner_id.id,
             'repair_id': self.id,
@@ -182,7 +213,11 @@ class RepairOrder(models.Model):
             'description_text': self.description_text,
             'site_location': self.site_location,
             'narration': _('Invoice generated from Repair Order: %s') % self.name,
-        })
+        }
+        if journal:
+            invoice_vals['journal_id'] = journal.id
+
+        invoice = self.env['account.move'].create(invoice_vals)
 
         # ── Link invoice back to repair order ──────────────────────────────
         self.invoice_ids = [(4, invoice.id)]
