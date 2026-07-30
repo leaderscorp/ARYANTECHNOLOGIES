@@ -42,6 +42,11 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
 
+            <!-- Add analytic distribution to the form view -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting" options="{'force_applicability': 'optional'}"/>
+            </xpath>
+
             <!--            &lt;!&ndash; Hide Sales Order smart button &ndash;&gt;-->
             <xpath expr="//div[hasclass('oe_button_box')]/button[@name='action_view_sale_order']" position="attributes">
                 <attribute name="invisible">1</attribute>

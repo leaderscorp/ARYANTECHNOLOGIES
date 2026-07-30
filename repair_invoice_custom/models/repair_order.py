@@ -47,7 +47,8 @@ class AccountMoveLines(models.Model):
 
 
 class RepairOrder(models.Model):
-    _inherit = 'repair.order'
+    _name = 'repair.order'
+    _inherit = ['repair.order', 'analytic.mixin']
 
     # ── Relational field linking invoices to this repair order ─────────────
     invoice_ids = fields.Many2many(
@@ -104,9 +105,11 @@ class RepairOrder(models.Model):
         # ── Build invoice lines from stock moves (Parts tab in Odoo 17-19) ─
         invoice_line_vals = []
 
-        # Find analytic distribution from sale order lines
+        # Find analytic distribution from repair order or sale order lines
         sale_analytic_dist = False
-        if 'sale_order_id' in self._fields and self.sale_order_id:
+        if hasattr(self, 'analytic_distribution') and self.analytic_distribution:
+            sale_analytic_dist = self.analytic_distribution
+        elif 'sale_order_id' in self._fields and self.sale_order_id:
             for sol in self.sale_order_id.order_line:
                 if sol.analytic_distribution:
                     sale_analytic_dist = sol.analytic_distribution
