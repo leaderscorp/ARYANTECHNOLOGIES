@@ -12,5 +12,5 @@ class ResUsers(models.Model):
     def write(self, vals):
         res = super(ResUsers, self).write(vals)
         if 'hide_physical_inventory' in vals:
-            self.env['ir.ui.menu'].clear_caches()
+            self.env.registry.clear_cache()
         return res
