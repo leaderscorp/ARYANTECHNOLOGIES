@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_inherit_hide_physical_inventory" model="ir.ui.view">
+        <field name="name">res.users.form.inherit.hide.physical.inventory</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='access_rights']" position="inside">
+                <group string="Inventory Menu Restrictions">
+                    <field name="hide_physical_inventory"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
