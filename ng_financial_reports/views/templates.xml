@@ -1,0 +1,236 @@
+<odoo>
+    <data>
+        <template id="report_pdc_pdf">
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                    <style>
+                        .ledger-table th, .ledger-table td {
+                            border: 0.5px solid #000000 !important;
+                            padding: 3px 5px !important;
+                            font-size: 10px !important;
+                            vertical-align: middle !important;
+                            color: black !important;
+                            font-family: 'Times New Roman', Times, Georgia, serif !important;
+                        }
+                        .ledger-table th {
+                            font-weight: bold !important;
+                            background-color: #ffffff !important;
+                            text-align: center !important;
+                        }
+                        .ledger-title {
+                            text-align: center !important;
+                            font-size: 18px !important;
+                            font-weight: bold !important;
+                            text-decoration: underline !important;
+                            margin-top: 5px !important;
+                            margin-bottom: 2px !important;
+                            font-family: 'Times New Roman', Times, Georgia, serif !important;
+                            text-transform: uppercase !important;
+                            color: black !important;
+                        }
+                        .ledger-dates {
+                            text-align: center !important;
+                            font-size: 11px !important;
+                            font-weight: bold !important;
+                            margin-bottom: 15px !important;
+                            font-family: 'Times New Roman', Times, Georgia, serif !important;
+                            color: black !important;
+                        }
+                        .footer-container {
+                            border-top: 1px solid black !important;
+                            width: 100% !important;
+                            font-family: 'Times New Roman', Times, Georgia, serif !important;
+                            font-size: 10px !important;
+                            padding-top: 5px !important;
+                            margin-top: 20px !important;
+                            color: black !important;
+                        }
+                    </style>
+
+                    <div class="page" style="font-family: 'Times New Roman', Times, Georgia, serif !important; color: black !important;">
+                        <!-- Header Title -->
+                        <div class="ledger-title">
+                            <span t-esc="report_title"/>
+                        </div>
+                        <div class="ledger-dates">
+                            From <span t-esc="date_from"/> To <span t-esc="date_to"/>
+                        </div>
+
+                        <!-- Main Table -->
+                        <table class="table table-sm ledger-table" style="width: 100%; border-collapse: collapse !important; margin-bottom: 0px !important; border: 1.5px solid black !important; color: black !important; font-family: 'Times New Roman', Times, Georgia, serif !important; table-layout: fixed;">
+                            <colgroup>
+                                <col style="width: 5%;"/>
+                                <col style="width: 9%;"/>
+                                <col style="width: 12%;"/>
+                                <col style="width: 8%;"/>
+                                <col style="width: 12%;"/>
+                                <col style="width: 30%;"/>
+                                <col style="width: 8%;"/>
+                                <col style="width: 8%;"/>
+                                <col style="width: 8%;"/>
+                            </colgroup>
+                            <thead>
+                                <tr style="border-bottom: 1.5px solid black !important;">
+                                    <th>SNo</th>
+                                    <th>Date</th>
+                                    <th>Voucher No</th>
+                                    <th>Payment</th>
+                                    <th>Document No</th>
+                                    <th>Description</th>
+                                    <th>Debit</th>
+                                    <th>Credit</th>
+                                    <th>Balance</th>
+                                </tr>
+                                <tr style="border-bottom: 1px solid black !important;">
+                                    <td colspan="5" style="font-weight: bold !important; text-align: left !important;">Currency Name</td>
+                                    <td style="font-weight: bold !important; text-align: left !important;"><span t-esc="currency_name"/></td>
+                                    <td style="border: 0.5px solid black !important;"></td>
+                                    <td style="border: 0.5px solid black !important;"></td>
+                                    <td style="border: 0.5px solid black !important;"></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid black !important;">
+                                    <td colspan="5" style="font-weight: bold !important; text-align: left !important;">Account Title</td>
+                                    <td style="font-weight: bold !important; text-align: left !important;"><span t-esc="partner_name"/></td>
+                                    <td style="border: 0.5px solid black !important;"></td>
+                                    <td style="border: 0.5px solid black !important;"></td>
+                                    <td style="border: 0.5px solid black !important;"></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid black !important;">
+                                    <td colspan="5" style="font-weight: bold !important; text-align: left !important;">A/C Code</td>
+                                    <td style="font-weight: bold !important; text-align: left !important;"><span t-esc="account_code"/></td>
+                                    <td style="font-weight: bold !important; text-align: right !important;"><span t-esc="init_debit"/></td>
+                                    <td style="font-weight: bold !important; text-align: right !important;"><span t-esc="init_credit"/></td>
+                                    <td style="border: 0.5px solid black !important;"></td>
+                                </tr>
+                                <tr style="border-bottom: 1.5px solid black !important;">
+                                    <td colspan="5" style="font-weight: bold !important; text-align: left !important;">Post:</td>
+                                    <td style="font-weight: bold !important; text-align: left !important;"><span t-esc="post_status"/></td>
+                                    <td style="border: 0.5px solid black !important;"></td>
+                                    <td style="border: 0.5px solid black !important;"></td>
+                                    <td style="border: 0.5px solid black !important;"></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="aml_rows" t-as="row">
+                                    <tr style="border-bottom: 1px solid black !important;">
+                                        <td style="text-align: center !important;"><span t-esc="row['sno']"/></td>
+                                        <td style="text-align: center !important;"><span t-esc="row['date']"/></td>
+                                        <td style="text-align: center !important;"><span t-esc="row['voucher_no']"/></td>
+                                        <td style="text-align: center !important;"><span t-esc="row['payment']"/></td>
+                                        <td style="text-align: center !important;"><span t-esc="row['document_no']"/></td>
+                                        <td style="text-align: left !important;"><span t-esc="row['description']"/></td>
+                                        <td style="text-align: right !important;"><span t-esc="row['debit']"/></td>
+                                        <td style="text-align: right !important;"><span t-esc="row['credit']"/></td>
+                                        <td style="text-align: right !important; font-weight: bold !important;"><span t-esc="row['balance']"/></td>
+                                    </tr>
+                                </t>
+                                <tr style="border-top: 1.5px solid black !important; border-bottom: 1px solid black !important; font-weight: bold !important;">
+                                    <td colspan="6" style="text-align: left !important;">sub total <span t-esc="post_status"/></td>
+                                    <td style="text-align: right !important;"><span t-esc="sub_total_debit"/></td>
+                                    <td style="text-align: right !important;"><span t-esc="sub_total_credit"/></td>
+                                    <td style="text-align: right !important;"><span t-esc="sub_total_balance"/></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid black !important; font-weight: bold !important;">
+                                    <td colspan="6" style="text-align: left !important;">Account Wise Total:</td>
+                                    <td style="text-align: right !important;"><span t-esc="account_wise_debit"/></td>
+                                    <td style="text-align: right !important;"><span t-esc="account_wise_credit"/></td>
+                                    <td style="text-align: right !important;"><span t-esc="account_wise_balance"/></td>
+                                </tr>
+                                <tr style="border-bottom: 1.5px solid black !important; font-weight: bold !important;">
+                                    <td colspan="6" style="text-align: left !important;">Net Receivable Grand Total:</td>
+                                    <td style="text-align: right !important;"><span t-esc="grand_total_debit"/></td>
+                                    <td style="text-align: right !important;"><span t-esc="grand_total_credit"/></td>
+                                    <td style="text-align: right !important;"><span t-esc="grand_total_balance"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- PDC Section -->
+                        <t t-if="pdc_rows">
+                            <div style="font-size: 13px; font-weight: bold; text-decoration: underline; margin-top: 25px; margin-bottom: 5px; font-family: 'Times New Roman', Times, Georgia, serif !important; color: black !important;">
+                                UN-CLEARED CHEQUE
+                            </div>
+                            <table class="table table-sm ledger-table" style="width: 100%; border-collapse: collapse !important; border: 1.5px solid black !important; color: black !important; font-family: 'Times New Roman', Times, Georgia, serif !important; table-layout: fixed;">
+                                <colgroup>
+                                    <col style="width: 5%;"/>
+                                    <col style="width: 9%;"/>
+                                    <col style="width: 12%;"/>
+                                    <col style="width: 8%;"/>
+                                    <col style="width: 12%;"/>
+                                    <col style="width: 30%;"/>
+                                    <col style="width: 8%;"/>
+                                    <col style="width: 8%;"/>
+                                    <col style="width: 8%;"/>
+                                </colgroup>
+                                <thead>
+                                    <tr style="border-bottom: 1.5px solid black !important;">
+                                        <th>SNo</th>
+                                        <th>Date</th>
+                                        <th>Voucher No</th>
+                                        <th>Payment</th>
+                                        <th>Document No</th>
+                                        <th>Description</th>
+                                        <th>Debit</th>
+                                        <th>Credit</th>
+                                        <th>Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="pdc_rows" t-as="row">
+                                        <tr style="border-bottom: 1px solid black !important;">
+                                            <td style="text-align: center !important;"><span t-esc="row['sno']"/></td>
+                                            <td style="text-align: center !important;"><span t-esc="row['date']"/></td>
+                                            <td style="text-align: center !important;"><span t-esc="row['voucher_no']"/></td>
+                                            <td style="text-align: center !important;"><span t-esc="row['payment']"/></td>
+                                            <td style="text-align: center !important;"><span t-esc="row['document_no']"/></td>
+                                            <td style="text-align: left !important;"><span t-esc="row['description']"/></td>
+                                            <td style="text-align: right !important;"><span t-esc="row['debit']"/></td>
+                                            <td style="text-align: right !important;"><span t-esc="row['credit']"/></td>
+                                            <td style="text-align: right !important;"><span t-esc="row['balance']"/></td>
+                                        </tr>
+                                    </t>
+                                    <tr style="border-top: 1.5px solid black !important; border-bottom: 1px solid black !important; font-weight: bold !important;">
+                                        <td colspan="6" style="text-align: left !important;">Un-Cleared Cheque Total:</td>
+                                        <td style="text-align: right !important;"><span t-esc="pdc_sub_total_debit"/></td>
+                                        <td style="text-align: right !important;"><span t-esc="pdc_sub_total_credit"/></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1.5px solid black !important; font-weight: bold !important;">
+                                        <td colspan="6" style="text-align: left !important;">Net After PDC/Uncleared Chq:</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td style="text-align: right !important;"><span t-esc="net_after_pdc_balance"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <!-- Footer -->
+                        <div class="footer" style="width: 100% !important; color: black !important; font-family: 'Times New Roman', Times, Georgia, serif !important;">
+                            <div class="footer-container">
+                                <table style="width: 100% !important; border: none !important; font-family: 'Times New Roman', Times, Georgia, serif !important;">
+                                    <tr>
+                                        <td style="text-align: left !important; border: none !important; width: 33% !important; padding: 0 !important; font-weight: bold !important; font-family: 'Times New Roman', Times, Georgia, serif !important; font-size: 10px !important;">NG</td>
+                                        <td style="text-align: center !important; border: none !important; width: 33% !important; padding: 0 !important; font-family: 'Times New Roman', Times, Georgia, serif !important; font-size: 10px !important;">Page <span class="page"/> of <span class="topage"/></td>
+                                        <td style="text-align: right !important; border: none !important; width: 33% !important; padding: 0 !important; font-family: 'Times New Roman', Times, Georgia, serif !important; font-size: 10px !important;">Printed on: <span t-esc="printed_on"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <record id="action_report_pdc_pdf" model="ir.actions.report">
+            <field name="name">Print PDC Report</field>
+            <field name="model">postdate.cheque.line</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">ng_financial_reports.report_pdc_pdf</field>
+            <field name="print_report_name">'PL with PDC Report'</field>
+            <field name="binding_model_id" ref="account.model_account_move"/> <!-- or remove this if not needed -->
+        </record>
+
+    </data>
+</odoo>

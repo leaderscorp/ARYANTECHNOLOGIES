@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Blank out company information (Name, Address, Tax ID) in Enterprise Account Reports PDF export (Partner Ledger) -->
+        <template id="company_information_override" inherit_id="account_reports.company_information">
+            <xpath expr="." position="replace">
+                <t/>
+            </xpath>
+        </template>
+
+        <!-- Override subst script in web.minimal_layout for Page 01 of 05 formatting -->
+        <template id="minimal_layout_page_format_override" inherit_id="web.minimal_layout">
+            <xpath expr="//script[@t-if='subst']" position="replace">
+                <script t-if="subst">
+                    function subst() {
+                        var vars = {};
+                        var x = document.location.search.substring(1).split('&amp;');
+                        for (var i in x) {
+                            var z = x[i].split('=', 2);
+                            vars[z[0]] = unescape(z[1]);
+                        }
+                        var x = ['sitepage', 'sitepages', 'section', 'subsection', 'subsubsection'];
+                        var z = {'sitepage': 'page', 'sitepages': 'topage'};
+                        for (var i in x) {
+                            var y = document.getElementsByClassName(z[x[i]] || x[i]);
+                            for (var j=0; j&lt;y.length; ++j) {
+                                var val = vars[x[i]];
+                                if (val !== undefined &amp;&amp; val !== null &amp;&amp; !isNaN(val) &amp;&amp; ('' + val).trim().length === 1) {
+                                    val = '0' + ('' + val).trim();
+                                }
+                                y[j].textContent = val;
+                            }
+                        }
+
+                        var index = vars['webpage'].split('.', 4)[3];
+                        var header = document.getElementById('minimal_layout_report_headers');
+                        if(header){
+                            var companyHeader = header.children[index];
+                            header.textContent = '';
+                            header.appendChild(companyHeader);
+                        }
+                        var footer = document.getElementById('minimal_layout_report_footers');
+                        if(footer){
+                            var companyFooter = footer.children[index];
+                            footer.textContent = '';
+                            footer.appendChild(companyFooter);
+                        }
+                    }
+                </script>
+            </xpath>
+        </template>
+
+        <!-- Format page footer in web.internal_layout (used by Enterprise Account Reports PDF) to "Page 01 of 05" -->
+        <template id="internal_layout_footer_override" inherit_id="web.internal_layout">
+            <xpath expr="//ul[hasclass('list-inline')]" position="replace">
+                <ul class="list-inline">
+                    <li class="list-inline-item">Page <span class="page"/> of <span class="topage"/></li>
+                </ul>
+            </xpath>
+        </template>
+
+        <!-- Format page footer in web.external_layout_standard to "Page 01 of 05" -->
+        <template id="external_layout_standard_footer_override" inherit_id="web.external_layout_standard">
+            <xpath expr="//span[hasclass('page')]/parent::div" position="replace">
+                <div t-if="report_type == 'pdf'" class="text-muted">
+                    Page <span class="page"/> of <span class="topage"/>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="external_layout_boxed_footer_override" inherit_id="web.external_layout_boxed">
+            <xpath expr="//span[hasclass('page')]/parent::div" position="replace">
+                <div t-if="report_type == 'pdf'" class="text-muted">
+                    Page <span class="page"/> of <span class="topage"/>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>
