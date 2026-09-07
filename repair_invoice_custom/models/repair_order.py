@@ -80,6 +80,39 @@ class RepairOrder(models.Model):
 
 
 
+    @api.model
+    def _get_after_sales_analytic_distribution(self):
+        """Find Analytic Account for 'After Sales' and return analytic distribution dict."""
+        account = self.env['account.analytic.account'].search([
+            ('name', 'ilike', 'After Sales')
+        ], limit=1)
+        if not account:
+            account = self.env['account.analytic.account'].search([
+                ('name', 'ilike', 'After Sale')
+            ], limit=1)
+        if account:
+            return {str(account.id): 100.0}
+        return False
+
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if 'analytic_distribution' in fields_list or not fields_list:
+            if not res.get('analytic_distribution'):
+                dist = self._get_after_sales_analytic_distribution()
+                if dist:
+                    res['analytic_distribution'] = dist
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'analytic_distribution' not in vals or not vals.get('analytic_distribution'):
+                dist = self._get_after_sales_analytic_distribution()
+                if dist:
+                    vals['analytic_distribution'] = dist
+        return super().create(vals_list)
+
     # ── Compute ────────────────────────────────────────────────────────────
     @api.depends('invoice_ids')
     def _compute_invoice_count(self):
