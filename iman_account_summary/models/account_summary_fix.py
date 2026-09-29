@@ -187,13 +187,13 @@ class ImanAccountSummaryFix(models.AbstractModel):
                     if existing:
                         # Update existing child
                         existing.sudo().write({
-                            'parent_id': parent_line.id,
+                            'parent_id': False,  # Remove parent to prevent 'Total Total...' row
                             'sequence': child_seq,
                         })
                         child_line = existing
                         _logger.info(
-                            'iman_account_summary: Updated child "%s" under "%s".',
-                            child_def['name'], parent_line.name
+                            'iman_account_summary: Updated child "%s" as independent line.',
+                            child_def['name']
                         )
                     else:
                         # Create new child line
@@ -201,14 +201,14 @@ class ImanAccountSummaryFix(models.AbstractModel):
                             'report_id': report.id,
                             'name': child_def['name'],
                             'code': child_def['code'],
-                            'parent_id': parent_line.id,
+                            'parent_id': False,  # No parent
                             'sequence': child_seq,
                             'foldable': child_def['foldable'],
                             'hide_if_zero': child_def['hide_if_zero'],
                         })
                         _logger.info(
-                            'iman_account_summary: Created child "%s" (id=%s) under "%s".',
-                            child_def['name'], child_line.id, parent_line.name
+                            'iman_account_summary: Created child "%s" as independent line.',
+                            child_def['name']
                         )
 
                     # ── Create/update the expression for child line ────────
