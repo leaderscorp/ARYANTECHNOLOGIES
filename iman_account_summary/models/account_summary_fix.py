@@ -164,11 +164,13 @@ class ImanAccountSummaryFix(models.AbstractModel):
 
                 parent_seq = parent_line.sequence
 
-                # ── Make parent foldable (bold, expandable triangle) ───────
-                if not parent_line.foldable:
-                    parent_line.sudo().write({'foldable': True})
+                # ── Make parent NOT foldable (acts as permanent header) ──────
+                # Odoo automatically adds a "Total [Parent Name]" line at the bottom
+                # when a parent is foldable. Setting foldable=False removes that extra total line.
+                if parent_line.foldable:
+                    parent_line.sudo().write({'foldable': False})
                     _logger.info(
-                        'iman_account_summary: Set foldable=True on "%s".',
+                        'iman_account_summary: Set foldable=False on "%s".',
                         parent_line.name
                     )
 
@@ -234,6 +236,20 @@ class ImanAccountSummaryFix(models.AbstractModel):
                         _logger.info(
                             'iman_account_summary: Created expression for "%s".',
                             child_def['name']
+                        )
+
+                # ── Move 'Total' (tot_sales) to LAST position ─────────────
+                # User wants grand total at the very end, after this section
+                tot_line = self._find_line(report, 'tot_sales')
+                if tot_line:
+                    # tot_sales must come AFTER all children of parent_line
+                    last_child_seq = parent_seq + len(CHILD_LINES)
+                    if tot_line.sequence <= last_child_seq:
+                        tot_line.sudo().write({'sequence': last_child_seq + 10})
+                        _logger.info(
+                            'iman_account_summary: Moved "Total" (tot_sales) to '
+                            'last position (seq=%s) in "%s".',
+                            last_child_seq + 10, report.name
                         )
 
         except Exception as e:
