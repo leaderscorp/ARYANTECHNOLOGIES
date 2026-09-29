@@ -4,27 +4,57 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-# Lines to fix: {line_code: (formula, subformula)}
-# Formula and subformula match the Balance Sheet for each account
+# ── Formula fixes for top-level lines ──────────────────────────────────────
+# {line_code: (formula, subformula)}
 FORMULA_FIXES = {
     # ACCOUNT RECEIVABLES → full account 110000 (same as Balance Sheet)
-    # subformula 'sum' = debit - credit (negative when credit-heavy)
     'acc_rec': ("[('account_id.code', '=', 110000)]", 'sum'),
 
     # ACCOUNT PAYABLES → full account 610000 (same as Balance Sheet)
-    # Balance Sheet uses '-sum' for payables: -(debit-credit) = credit-debit
-    # This makes payable show as negative (matching Balance Sheet -665M)
+    # '-sum' flips sign to match Balance Sheet negative display
     'acc_pay': ("[('account_id.code', '=', 610000)]", '-sum'),
 }
+
+# ── Child lines to create under 'Total Receivable/Payable' ─────────────────
+# Same formulas as Balance Sheet 'Total Receivables' and 'Total Payables'
+CHILD_LINES = [
+    {
+        'name': 'Total Receivables',
+        'code': 'tot_rec_sub',
+        'sequence_offset': 1,      # parent_seq + 1
+        'foldable': False,
+        'hide_if_zero': False,
+        'formula': "[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]",
+        'subformula': 'sum',       # same as Balance Sheet Total Receivables
+    },
+    {
+        'name': 'Total Payables',
+        'code': 'tot_pay_sub',
+        'sequence_offset': 2,      # parent_seq + 2
+        'foldable': False,
+        'hide_if_zero': False,
+        'formula': "[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]",
+        'subformula': '-sum',      # same as Balance Sheet Total Payables
+    },
+]
 
 
 class ImanAccountSummaryFix(models.AbstractModel):
     """
-    This model uses _register_hook to:
-    1. Fix ACCOUNT RECEIVABLES formula → full account 110000 (matches Balance Sheet)
-    2. Fix ACCOUNT PAYABLES formula → full account 610000 (matches Balance Sheet)
-    3. Make 'Total Receivable/Payable' line foldable (bold parent)
-       → When clicked, shows ACCOUNT RECEIVABLES and ACCOUNT PAYABLES inside it
+    Runs on every module install/upgrade to fix Account Summary report:
+
+    1. FORMULA FIX:
+       - ACCOUNT RECEIVABLES (acc_rec): full account 110000 balance
+       - ACCOUNT PAYABLES (acc_pay): full account 610000 balance with sign fix
+
+    2. REVERT: Restore acc_rec and acc_pay to top-level (no parent_id)
+       (undoes a previous mistaken hierarchy change)
+
+    3. TOTAL Receivable/Payable CHILDREN:
+       - Make 'Total Receivable/Payable' foldable (bold, expandable)
+       - Add 'Total Receivables' child  → same as Balance Sheet Total Receivables
+       - Add 'Total Payables' child     → same as Balance Sheet Total Payables
+       When user expands 'Total Receivable/Payable', they see both totals.
     """
     _name = 'iman.account.summary.fix'
     _description = 'Iman Account Summary Formula Fix'
@@ -32,99 +62,21 @@ class ImanAccountSummaryFix(models.AbstractModel):
     def _register_hook(self):
         super()._register_hook()
         self._fix_account_summary_formulas()
-        self._revert_hierarchy_fix()   # restore acc_rec & acc_pay to top-level
+        self._revert_hierarchy_fix()
+        self._setup_total_rec_pay_children()
 
-    # ─────────────────────────────────────────────────────────
-    # Revert: Restore acc_rec and acc_pay to original positions
-    # ─────────────────────────────────────────────────────────
-    def _revert_hierarchy_fix(self):
-        """
-        Restore ACCOUNT RECEIVABLES and ACCOUNT PAYABLES to their original
-        top-level positions (no parent_id). Previous hierarchy change had
-        moved them as children of 'Total Receivable/Payable' which removed
-        them from the top of the report. This reverts that change.
-        """
-        try:
-            reports = self.env['account.report'].search([
-                ('name', 'like', 'Account Summary')
-            ])
-            if not reports:
-                return
-
-            for report in reports:
-                # ── Restore acc_rec to top-level (sequence=1, no parent) ──
-                rec_line = self.env['account.report.line'].search([
-                    ('report_id', '=', report.id),
-                    ('code', '=', 'acc_rec'),
-                ], limit=1)
-                if rec_line and rec_line.parent_id:
-                    rec_line.sudo().write({
-                        'parent_id': False,
-                        'sequence': 1,
-                    })
-                    _logger.info(
-                        'iman_account_summary: Restored acc_rec to top-level '
-                        '(seq=1, no parent) in report "%s".', report.name
-                    )
-
-                # ── Restore acc_pay to top-level (sequence=7, no parent) ──
-                pay_line = self.env['account.report.line'].search([
-                    ('report_id', '=', report.id),
-                    ('code', '=', 'acc_pay'),
-                ], limit=1)
-                if pay_line and pay_line.parent_id:
-                    pay_line.sudo().write({
-                        'parent_id': False,
-                        'sequence': 7,
-                    })
-                    _logger.info(
-                        'iman_account_summary: Restored acc_pay to top-level '
-                        '(seq=7, no parent) in report "%s".', report.name
-                    )
-
-                # ── Restore tot_sales sequence back to 10 ──
-                total_line = self.env['account.report.line'].search([
-                    ('report_id', '=', report.id),
-                    ('code', '=', 'tot_sales'),
-                ], limit=1)
-                if total_line and total_line.sequence > 15:
-                    total_line.sudo().write({'sequence': 10})
-                    _logger.info(
-                        'iman_account_summary: Restored tot_sales sequence to 10 '
-                        'in report "%s".', report.name
-                    )
-
-        except Exception as e:
-            _logger.error(
-                'iman_account_summary: Error in _revert_hierarchy_fix: %s', e
-            )
-
-    # ─────────────────────────────────────────────────────────
+    # ────────────────────────────────────────────────────────────────────────
     # Fix 1: Update formula + subformula for acc_rec & acc_pay
-    # ─────────────────────────────────────────────────────────
+    # ────────────────────────────────────────────────────────────────────────
     def _fix_account_summary_formulas(self):
-        """
-        Update ACCOUNT RECEIVABLES and ACCOUNT PAYABLES expressions in all
-        Account Summary reports to match Balance Sheet values.
-        """
+        """Update ACCOUNT RECEIVABLES and ACCOUNT PAYABLES to match Balance Sheet."""
         try:
-            reports = self.env['account.report'].search([
-                ('name', 'like', 'Account Summary')
-            ])
-
-            if not reports:
-                _logger.warning('iman_account_summary: No "Account Summary" report found.')
-                return
-
+            reports = self._get_account_summary_reports()
             total_updated = 0
 
             for report in reports:
-                for line_code, (target_formula, target_subformula) in FORMULA_FIXES.items():
-
-                    line = self.env['account.report.line'].search([
-                        ('report_id', '=', report.id),
-                        ('code', '=', line_code),
-                    ], limit=1)
+                for code, (formula, subformula) in FORMULA_FIXES.items():
+                    line = self._find_line(report, code)
                     if not line:
                         continue
 
@@ -135,51 +87,67 @@ class ImanAccountSummaryFix(models.AbstractModel):
                     if not expr:
                         continue
 
-                    needs_update = (
-                        expr.formula != target_formula or
-                        expr.subformula != target_subformula
-                    )
-                    if needs_update:
-                        expr.sudo().write({
-                            'formula': target_formula,
-                            'subformula': target_subformula,
-                        })
+                    if expr.formula != formula or expr.subformula != subformula:
+                        expr.sudo().write({'formula': formula, 'subformula': subformula})
                         total_updated += 1
                         _logger.info(
-                            'iman_account_summary: Updated expression for line "%s" '
-                            '(code=%s) in report "%s".',
-                            line.name, line_code, report.name
+                            'iman_account_summary: Updated expression for "%s" in "%s".',
+                            code, report.name
                         )
 
-            _logger.info(
-                'iman_account_summary: Formula fix done. %s expression(s) updated.',
-                total_updated
-            )
+            _logger.info('iman_account_summary: Formula fix done (%s updated).', total_updated)
 
         except Exception as e:
             _logger.error('iman_account_summary: Error in _fix_account_summary_formulas: %s', e)
 
-    # ─────────────────────────────────────────────────────────
-    # Fix 2: Make 'Total Receivable/Payable' a bold foldable parent
-    #         ACCOUNT RECEIVABLES and ACCOUNT PAYABLES = children
-    # ─────────────────────────────────────────────────────────
-    def _fix_total_rec_pay_hierarchy(self):
+    # ────────────────────────────────────────────────────────────────────────
+    # Fix 2: Restore acc_rec and acc_pay to top-level (no parent)
+    # ────────────────────────────────────────────────────────────────────────
+    def _revert_hierarchy_fix(self):
         """
-        Find the 'Total Receivable/Payable' line in each Account Summary report.
-        - Make it foldable (acts as bold parent section)
-        - Set ACCOUNT RECEIVABLES (acc_rec) and ACCOUNT PAYABLES (acc_pay)
-          as child lines under it, with sequences AFTER the parent
-        - Child sequence MUST be > parent sequence (Odoo requirement)
+        Restore ACCOUNT RECEIVABLES and ACCOUNT PAYABLES to top-level.
+        A previous version of this module mistakenly moved them as children
+        which hid them from the top of the report.
         """
         try:
-            reports = self.env['account.report'].search([
-                ('name', 'like', 'Account Summary')
-            ])
-            if not reports:
-                return
+            reports = self._get_account_summary_reports()
 
             for report in reports:
-                # ── Find 'Total Receivable/Payable' parent line ──
+                for code, seq in [('acc_rec', 1), ('acc_pay', 7)]:
+                    line = self._find_line(report, code)
+                    if line and line.parent_id:
+                        line.sudo().write({'parent_id': False, 'sequence': seq})
+                        _logger.info(
+                            'iman_account_summary: Restored "%s" to top-level '
+                            '(seq=%s) in "%s".', code, seq, report.name
+                        )
+
+                # Restore tot_sales sequence if it was pushed
+                tot = self._find_line(report, 'tot_sales')
+                if tot and tot.sequence > 15:
+                    tot.sudo().write({'sequence': 10})
+
+        except Exception as e:
+            _logger.error('iman_account_summary: Error in _revert_hierarchy_fix: %s', e)
+
+    # ────────────────────────────────────────────────────────────────────────
+    # Fix 3: Setup 'Total Receivable/Payable' as bold foldable parent
+    #         with 'Total Receivables' and 'Total Payables' as children
+    # ────────────────────────────────────────────────────────────────────────
+    def _setup_total_rec_pay_children(self):
+        """
+        Find 'Total Receivable/Payable' line, make it foldable (bold),
+        and create/update two child lines underneath it:
+          - Total Receivables  → Balance Sheet formula (all receivable accounts)
+          - Total Payables     → Balance Sheet formula (all payable accounts)
+
+        The top-level ACCOUNT RECEIVABLES and ACCOUNT PAYABLES are untouched.
+        """
+        try:
+            reports = self._get_account_summary_reports()
+
+            for report in reports:
+                # ── Find 'Total Receivable/Payable' parent line ────────────
                 parent_line = self.env['account.report.line'].search([
                     ('report_id', '=', report.id),
                     '|',
@@ -190,65 +158,97 @@ class ImanAccountSummaryFix(models.AbstractModel):
                 if not parent_line:
                     _logger.warning(
                         'iman_account_summary: "Total Receivable/Payable" not found '
-                        'in report "%s". Skipping hierarchy fix.', report.name
+                        'in report "%s". Skipping child setup.', report.name
                     )
                     continue
 
-                parent_seq = parent_line.sequence  # e.g. 10
+                parent_seq = parent_line.sequence
 
-                # ── Make parent foldable (bold, expandable) ──
-                parent_line.sudo().write({'foldable': True})
-
-                # ── Find acc_rec and acc_pay lines ──
-                rec_line = self.env['account.report.line'].search([
-                    ('report_id', '=', report.id),
-                    ('code', '=', 'acc_rec'),
-                ], limit=1)
-
-                pay_line = self.env['account.report.line'].search([
-                    ('report_id', '=', report.id),
-                    ('code', '=', 'acc_pay'),
-                ], limit=1)
-
-                # ── Set acc_rec as child with sequence AFTER parent ──
-                # Odoo requires: child.sequence > parent.sequence
-                if rec_line:
-                    rec_line.sudo().write({
-                        'parent_id': parent_line.id,
-                        'sequence': parent_seq + 1,   # e.g. 11
-                        'foldable': True,
-                    })
+                # ── Make parent foldable (bold, expandable triangle) ───────
+                if not parent_line.foldable:
+                    parent_line.sudo().write({'foldable': True})
                     _logger.info(
-                        'iman_account_summary: "%s" → child of "%s" (seq=%s) in "%s".',
-                        rec_line.name, parent_line.name, parent_seq + 1, report.name
+                        'iman_account_summary: Set foldable=True on "%s".',
+                        parent_line.name
                     )
 
-                # ── Set acc_pay as child with sequence AFTER acc_rec ──
-                if pay_line:
-                    pay_line.sudo().write({
-                        'parent_id': parent_line.id,
-                        'sequence': parent_seq + 2,   # e.g. 12
-                        'foldable': True,
-                    })
-                    _logger.info(
-                        'iman_account_summary: "%s" → child of "%s" (seq=%s) in "%s".',
-                        pay_line.name, parent_line.name, parent_seq + 2, report.name
-                    )
+                # ── Create/update child lines ──────────────────────────────
+                for child_def in CHILD_LINES:
+                    child_seq = parent_seq + child_def['sequence_offset']
 
-                # ── Push 'Total' (tot_sales) sequence after children ──
-                total_line = self.env['account.report.line'].search([
-                    ('report_id', '=', report.id),
-                    ('code', '=', 'tot_sales'),
-                ], limit=1)
-                if total_line and total_line.sequence <= parent_seq + 2:
-                    total_line.sudo().write({'sequence': parent_seq + 10})
-                    _logger.info(
-                        'iman_account_summary: Moved "Total" (tot_sales) to seq=%s.',
-                        parent_seq + 10
-                    )
+                    # Check if child already exists (by code)
+                    existing = self.env['account.report.line'].search([
+                        ('report_id', '=', report.id),
+                        ('code', '=', child_def['code']),
+                    ], limit=1)
+
+                    if existing:
+                        # Update existing child
+                        existing.sudo().write({
+                            'parent_id': parent_line.id,
+                            'sequence': child_seq,
+                        })
+                        child_line = existing
+                        _logger.info(
+                            'iman_account_summary: Updated child "%s" under "%s".',
+                            child_def['name'], parent_line.name
+                        )
+                    else:
+                        # Create new child line
+                        child_line = self.env['account.report.line'].sudo().create({
+                            'report_id': report.id,
+                            'name': child_def['name'],
+                            'code': child_def['code'],
+                            'parent_id': parent_line.id,
+                            'sequence': child_seq,
+                            'foldable': child_def['foldable'],
+                            'hide_if_zero': child_def['hide_if_zero'],
+                        })
+                        _logger.info(
+                            'iman_account_summary: Created child "%s" (id=%s) under "%s".',
+                            child_def['name'], child_line.id, parent_line.name
+                        )
+
+                    # ── Create/update the expression for child line ────────
+                    expr = self.env['account.report.expression'].search([
+                        ('report_line_id', '=', child_line.id),
+                        ('label', '=', 'balance'),
+                    ], limit=1)
+
+                    if expr:
+                        if (expr.formula != child_def['formula'] or
+                                expr.subformula != child_def['subformula']):
+                            expr.sudo().write({
+                                'formula': child_def['formula'],
+                                'subformula': child_def['subformula'],
+                            })
+                    else:
+                        self.env['account.report.expression'].sudo().create({
+                            'report_line_id': child_line.id,
+                            'label': 'balance',
+                            'engine': 'domain',
+                            'formula': child_def['formula'],
+                            'subformula': child_def['subformula'],
+                            'date_scope': 'strict_range',
+                        })
+                        _logger.info(
+                            'iman_account_summary: Created expression for "%s".',
+                            child_def['name']
+                        )
 
         except Exception as e:
             _logger.error(
-                'iman_account_summary: Error in _fix_total_rec_pay_hierarchy: %s', e
+                'iman_account_summary: Error in _setup_total_rec_pay_children: %s', e
             )
 
+    # ────────────────────────────────────────────────────────────────────────
+    # Helpers
+    # ────────────────────────────────────────────────────────────────────────
+    def _get_account_summary_reports(self):
+        return self.env['account.report'].search([('name', 'like', 'Account Summary')])
+
+    def _find_line(self, report, code):
+        return self.env['account.report.line'].search([
+            ('report_id', '=', report.id),
+            ('code', '=', code),
+        ], limit=1)
