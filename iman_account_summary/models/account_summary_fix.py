@@ -174,6 +174,14 @@ class ImanAccountSummaryFix(models.AbstractModel):
                         parent_line.name
                     )
 
+                # ── Rename parent to fix 'Total Total...' issue ─────────────
+                # Odoo automatically adds 'Total ' to the parent name when expanded.
+                # Renaming it to 'Receivables / Payables' makes the bottom line
+                # 'Total Receivables / Payables' which looks correct.
+                if 'Total' in parent_line.name:
+                    parent_line.sudo().write({'name': 'Receivables / Payables'})
+                    _logger.info('iman_account_summary: Renamed parent to "Receivables / Payables".')
+
                 # ── Create/update child lines ──────────────────────────────
                 for child_def in CHILD_LINES:
                     child_seq = parent_seq + child_def['sequence_offset']
@@ -187,13 +195,13 @@ class ImanAccountSummaryFix(models.AbstractModel):
                     if existing:
                         # Update existing child
                         existing.sudo().write({
-                            'parent_id': False,  # Remove parent to prevent 'Total Total...' row
+                            'parent_id': parent_line.id,  # RESTORE parent_id
                             'sequence': child_seq,
                         })
                         child_line = existing
                         _logger.info(
-                            'iman_account_summary: Updated child "%s" as independent line.',
-                            child_def['name']
+                            'iman_account_summary: Updated child "%s" under "%s".',
+                            child_def['name'], parent_line.name
                         )
                     else:
                         # Create new child line
@@ -201,14 +209,14 @@ class ImanAccountSummaryFix(models.AbstractModel):
                             'report_id': report.id,
                             'name': child_def['name'],
                             'code': child_def['code'],
-                            'parent_id': False,  # No parent
+                            'parent_id': parent_line.id,  # RESTORE parent_id
                             'sequence': child_seq,
                             'foldable': child_def['foldable'],
                             'hide_if_zero': child_def['hide_if_zero'],
                         })
                         _logger.info(
-                            'iman_account_summary: Created child "%s" as independent line.',
-                            child_def['name']
+                            'iman_account_summary: Created child "%s" under "%s".',
+                            child_def['name'], parent_line.name
                         )
 
                     # ── Create/update the expression for child line ────────
