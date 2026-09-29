@@ -4,14 +4,17 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-# Lines to fix: {line_code: new_formula}
-# Formula matches the Balance Sheet value for each account
+# Lines to fix: {line_code: (formula, subformula)}
+# Formula and subformula match the Balance Sheet for each account
 FORMULA_FIXES = {
     # ACCOUNT RECEIVABLES → full account 110000 (same as Balance Sheet)
-    'acc_rec': "[('account_id.code', '=', 110000)]",
+    # subformula 'sum' = debit - credit (negative when credit-heavy)
+    'acc_rec': ("[('account_id.code', '=', 110000)]", 'sum'),
 
     # ACCOUNT PAYABLES → full account 610000 (same as Balance Sheet)
-    'acc_pay': "[('account_id.code', '=', 610000)]",
+    # Balance Sheet uses '-sum' for payables: -(debit-credit) = credit-debit
+    # This makes payable show as negative (matching Balance Sheet -665M)
+    'acc_pay': ("[('account_id.code', '=', 610000)]", '-sum'),
 }
 
 
@@ -53,7 +56,7 @@ class ImanAccountSummaryFix(models.AbstractModel):
             total_updated = 0
 
             for report in reports:
-                for line_code, target_formula in FORMULA_FIXES.items():
+                for line_code, (target_formula, target_subformula) in FORMULA_FIXES.items():
 
                     # Find the line by code
                     line = self.env['account.report.line'].search([
@@ -73,15 +76,26 @@ class ImanAccountSummaryFix(models.AbstractModel):
                     if not expr:
                         continue
 
-                    if expr.formula != target_formula:
+                    needs_update = (
+                        expr.formula != target_formula or
+                        expr.subformula != target_subformula
+                    )
+                    if needs_update:
                         old_formula = expr.formula
-                        expr.sudo().write({'formula': target_formula})
+                        old_subformula = expr.subformula
+                        expr.sudo().write({
+                            'formula': target_formula,
+                            'subformula': target_subformula,
+                        })
                         total_updated += 1
                         _logger.info(
                             'iman_account_summary: Updated line "%s" (code=%s) '
-                            'in report "%s" (id=%s).\n  Old: %s\n  New: %s',
+                            'in report "%s" (id=%s).'
+                            '\n  Old formula: %s | subformula: %s'
+                            '\n  New formula: %s | subformula: %s',
                             line.name, line_code, report.name, report.id,
-                            old_formula, target_formula
+                            old_formula, old_subformula,
+                            target_formula, target_subformula
                         )
 
             if total_updated:
