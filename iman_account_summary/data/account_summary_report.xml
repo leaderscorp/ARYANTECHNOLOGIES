@@ -140,7 +140,7 @@
             <field name="report_line_id" ref="account_summary_line_investment"/>
             <field name="label">balance</field>
             <field name="engine">domain</field>
-            <field name="formula">[('account_id.code', '&gt;=', 101710), ('account_id.code', '&lt;=', 101720)]</field>
+            <field name="formula">[('account_id.code', 'in', [101710, 101711])]</field>
             <field name="subformula">sum</field>
             <field name="date_scope">strict_range</field>
         </record>
