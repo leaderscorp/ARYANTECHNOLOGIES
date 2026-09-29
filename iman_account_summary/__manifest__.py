@@ -1,20 +1,13 @@
 {
-    'name': 'Iman Account Summary Report',
-    'version': '19.0.1.0.0',
-    'summary': 'Account Summary Report for Iman Company',
+    'name': 'Iman Account Summary Report Fix',
+    'version': '19.0.1.0.1',
+    'summary': 'Fixes ACCOUNT RECEIVABLES formula in Account Summary to match Balance Sheet',
     'description': """
-        Defines the Account Summary report for Iman company.
-        - BANK AND CASH BALANCE
-        - ACCOUNT RECEIVABLES (same formula as Balance Sheet)
-        - EARNEST MONEY
-        - PERFORMANCE BOND
-        - ADVANCES TO EMPLOYEES
-        - PREPAYMENT
-        - INVESTMENT
-        - ACCOUNT PAYABLES
-        - STOCK VALUATION
-        - Due to related party
-        - Total
+        This module updates the ACCOUNT RECEIVABLES line in the Account Summary report
+        to show the same value as the Balance Sheet's Account Receivable (account 110000).
+
+        Fix: Removes EMPLOYEE and RELATED PARTY exclusion filters so the full
+        account 110000 balance is shown (matching the Balance Sheet).
     """,
     'author': 'Saif',
     'category': 'Accounting',
@@ -22,9 +15,7 @@
         'account',
         'account_reports',
     ],
-    'data': [
-        'data/account_summary_report.xml',
-    ],
+    'data': [],
     'installable': True,
     'application': False,
     'auto_install': False,
