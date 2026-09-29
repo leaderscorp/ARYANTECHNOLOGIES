@@ -150,6 +150,7 @@ class ImanAccountSummaryFix(models.AbstractModel):
                 # ── Find 'Total Receivable/Payable' parent line ────────────
                 parent_line = self.env['account.report.line'].search([
                     ('report_id', '=', report.id),
+                    ('code', 'not in', ['tot_rec_sub', 'tot_pay_sub']), # Prevent matching our own children
                     '|',
                     ('name', 'ilike', 'Total Receivable'),
                     ('name', 'ilike', 'Receivable/Payable'),
