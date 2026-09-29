@@ -185,18 +185,25 @@ class ImanAccountSummaryFix(models.AbstractModel):
 
                 # ── Create/update child lines ──────────────────────────────
                 for child_def in CHILD_LINES:
-                    child_seq = parent_seq + child_def['sequence_offset']
+                    # Give children a significantly higher sequence to avoid any <= parent errors
+                    child_seq = parent_seq + 10 + child_def['sequence_offset']
 
-                    # Check if child already exists (by code)
                     existing = self.env['account.report.line'].search([
                         ('report_id', '=', report.id),
                         ('code', '=', child_def['code']),
                     ], limit=1)
 
                     if existing:
-                        # Update existing child
+                        if existing.id == parent_line.id:
+                            # Extreme edge case: parent line accidentally got the child code.
+                            # Remove the code from parent so it isn't treated as a child.
+                            existing.sudo().write({'code': False})
+                            continue
+
+                        # Update existing child, forcefully reset its name just in case it got corrupted
                         existing.sudo().write({
-                            'parent_id': parent_line.id,  # RESTORE parent_id
+                            'name': child_def['name'],
+                            'parent_id': parent_line.id,
                             'sequence': child_seq,
                         })
                         child_line = existing
@@ -205,12 +212,11 @@ class ImanAccountSummaryFix(models.AbstractModel):
                             child_def['name'], parent_line.name
                         )
                     else:
-                        # Create new child line
                         child_line = self.env['account.report.line'].sudo().create({
                             'report_id': report.id,
                             'name': child_def['name'],
                             'code': child_def['code'],
-                            'parent_id': parent_line.id,  # RESTORE parent_id
+                            'parent_id': parent_line.id,
                             'sequence': child_seq,
                             'foldable': child_def['foldable'],
                             'hide_if_zero': child_def['hide_if_zero'],
