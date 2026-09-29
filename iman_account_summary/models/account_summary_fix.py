@@ -103,8 +103,8 @@ class ImanAccountSummaryFix(models.AbstractModel):
         Find the 'Total Receivable/Payable' line in each Account Summary report.
         - Make it foldable (acts as bold parent section)
         - Set ACCOUNT RECEIVABLES (acc_rec) and ACCOUNT PAYABLES (acc_pay)
-          as child lines under it
-        - When user clicks the parent, acc_rec and acc_pay expand inside it
+          as child lines under it, with sequences AFTER the parent
+        - Child sequence MUST be > parent sequence (Odoo requirement)
         """
         try:
             reports = self.env['account.report'].search([
@@ -115,7 +115,6 @@ class ImanAccountSummaryFix(models.AbstractModel):
 
             for report in reports:
                 # ── Find 'Total Receivable/Payable' parent line ──
-                # Search by name (covers server variants of the name)
                 parent_line = self.env['account.report.line'].search([
                     ('report_id', '=', report.id),
                     '|',
@@ -125,18 +124,15 @@ class ImanAccountSummaryFix(models.AbstractModel):
 
                 if not parent_line:
                     _logger.warning(
-                        'iman_account_summary: Could not find "Total Receivable/Payable" '
-                        'line in report "%s". Skipping hierarchy fix.', report.name
+                        'iman_account_summary: "Total Receivable/Payable" not found '
+                        'in report "%s". Skipping hierarchy fix.', report.name
                     )
                     continue
 
-                # ── Make parent foldable (shows as bold, expandable) ──
-                if not parent_line.foldable:
-                    parent_line.sudo().write({'foldable': True})
-                    _logger.info(
-                        'iman_account_summary: Set foldable=True on "%s" in report "%s".',
-                        parent_line.name, report.name
-                    )
+                parent_seq = parent_line.sequence  # e.g. 10
+
+                # ── Make parent foldable (bold, expandable) ──
+                parent_line.sudo().write({'foldable': True})
 
                 # ── Find acc_rec and acc_pay lines ──
                 rec_line = self.env['account.report.line'].search([
@@ -149,31 +145,45 @@ class ImanAccountSummaryFix(models.AbstractModel):
                     ('code', '=', 'acc_pay'),
                 ], limit=1)
 
-                # ── Set acc_rec as child of parent ──
-                if rec_line and rec_line.parent_id != parent_line:
+                # ── Set acc_rec as child with sequence AFTER parent ──
+                # Odoo requires: child.sequence > parent.sequence
+                if rec_line:
                     rec_line.sudo().write({
                         'parent_id': parent_line.id,
-                        'sequence': 0,
-                        'foldable': True,   # still expandable for partner drill-down
+                        'sequence': parent_seq + 1,   # e.g. 11
+                        'foldable': True,
                     })
                     _logger.info(
-                        'iman_account_summary: Set "%s" as child of "%s" in report "%s".',
-                        rec_line.name, parent_line.name, report.name
+                        'iman_account_summary: "%s" → child of "%s" (seq=%s) in "%s".',
+                        rec_line.name, parent_line.name, parent_seq + 1, report.name
                     )
 
-                # ── Set acc_pay as child of parent ──
-                if pay_line and pay_line.parent_id != parent_line:
+                # ── Set acc_pay as child with sequence AFTER acc_rec ──
+                if pay_line:
                     pay_line.sudo().write({
                         'parent_id': parent_line.id,
-                        'sequence': 1,
-                        'foldable': True,   # still expandable for partner drill-down
+                        'sequence': parent_seq + 2,   # e.g. 12
+                        'foldable': True,
                     })
                     _logger.info(
-                        'iman_account_summary: Set "%s" as child of "%s" in report "%s".',
-                        pay_line.name, parent_line.name, report.name
+                        'iman_account_summary: "%s" → child of "%s" (seq=%s) in "%s".',
+                        pay_line.name, parent_line.name, parent_seq + 2, report.name
+                    )
+
+                # ── Push 'Total' (tot_sales) sequence after children ──
+                total_line = self.env['account.report.line'].search([
+                    ('report_id', '=', report.id),
+                    ('code', '=', 'tot_sales'),
+                ], limit=1)
+                if total_line and total_line.sequence <= parent_seq + 2:
+                    total_line.sudo().write({'sequence': parent_seq + 10})
+                    _logger.info(
+                        'iman_account_summary: Moved "Total" (tot_sales) to seq=%s.',
+                        parent_seq + 10
                     )
 
         except Exception as e:
             _logger.error(
                 'iman_account_summary: Error in _fix_total_rec_pay_hierarchy: %s', e
             )
+
