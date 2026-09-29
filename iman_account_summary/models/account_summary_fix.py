@@ -32,7 +32,72 @@ class ImanAccountSummaryFix(models.AbstractModel):
     def _register_hook(self):
         super()._register_hook()
         self._fix_account_summary_formulas()
-        self._fix_total_rec_pay_hierarchy()
+        self._revert_hierarchy_fix()   # restore acc_rec & acc_pay to top-level
+
+    # ─────────────────────────────────────────────────────────
+    # Revert: Restore acc_rec and acc_pay to original positions
+    # ─────────────────────────────────────────────────────────
+    def _revert_hierarchy_fix(self):
+        """
+        Restore ACCOUNT RECEIVABLES and ACCOUNT PAYABLES to their original
+        top-level positions (no parent_id). Previous hierarchy change had
+        moved them as children of 'Total Receivable/Payable' which removed
+        them from the top of the report. This reverts that change.
+        """
+        try:
+            reports = self.env['account.report'].search([
+                ('name', 'like', 'Account Summary')
+            ])
+            if not reports:
+                return
+
+            for report in reports:
+                # ── Restore acc_rec to top-level (sequence=1, no parent) ──
+                rec_line = self.env['account.report.line'].search([
+                    ('report_id', '=', report.id),
+                    ('code', '=', 'acc_rec'),
+                ], limit=1)
+                if rec_line and rec_line.parent_id:
+                    rec_line.sudo().write({
+                        'parent_id': False,
+                        'sequence': 1,
+                    })
+                    _logger.info(
+                        'iman_account_summary: Restored acc_rec to top-level '
+                        '(seq=1, no parent) in report "%s".', report.name
+                    )
+
+                # ── Restore acc_pay to top-level (sequence=7, no parent) ──
+                pay_line = self.env['account.report.line'].search([
+                    ('report_id', '=', report.id),
+                    ('code', '=', 'acc_pay'),
+                ], limit=1)
+                if pay_line and pay_line.parent_id:
+                    pay_line.sudo().write({
+                        'parent_id': False,
+                        'sequence': 7,
+                    })
+                    _logger.info(
+                        'iman_account_summary: Restored acc_pay to top-level '
+                        '(seq=7, no parent) in report "%s".', report.name
+                    )
+
+                # ── Restore tot_sales sequence back to 10 ──
+                total_line = self.env['account.report.line'].search([
+                    ('report_id', '=', report.id),
+                    ('code', '=', 'tot_sales'),
+                ], limit=1)
+                if total_line and total_line.sequence > 15:
+                    total_line.sudo().write({'sequence': 10})
+                    _logger.info(
+                        'iman_account_summary: Restored tot_sales sequence to 10 '
+                        'in report "%s".', report.name
+                    )
+
+        except Exception as e:
+            _logger.error(
+                'iman_account_summary: Error in _revert_hierarchy_fix: %s', e
+            )
 
     # ─────────────────────────────────────────────────────────
     # Fix 1: Update formula + subformula for acc_rec & acc_pay
