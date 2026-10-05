@@ -1,16 +1,13 @@
 {
     'name': 'Iman Account Summary Report Fix',
-    'version': '19.0.1.0.2',
-    'summary': 'Account Summary: Receivable (positive) & Payable (negative) from Partner Ledger',
+    'version': '19.0.1.0.1',
+    'summary': 'Fixes ACCOUNT RECEIVABLES formula in Account Summary to match Balance Sheet',
     'description': """
-        This module updates ACCOUNT RECEIVABLES and ACCOUNT PAYABLES lines
-        in the Account Summary report to match Partner Ledger values:
+        This module updates the ACCOUNT RECEIVABLES line in the Account Summary report
+        to show the same value as the Balance Sheet's Account Receivable (account 110000).
 
-        - ACCOUNT RECEIVABLE: asset_receivable accounts with 'sum'
-          Shows POSITIVE values (same as Partner Ledger)
-
-        - ACCOUNT PAYABLE: liability_payable accounts with '-sum'
-          Shows NEGATIVE values (same as Partner Ledger)
+        Fix: Removes EMPLOYEE and RELATED PARTY exclusion filters so the full
+        account 110000 balance is shown (matching the Balance Sheet).
     """,
     'author': 'Saif',
     'category': 'Accounting',

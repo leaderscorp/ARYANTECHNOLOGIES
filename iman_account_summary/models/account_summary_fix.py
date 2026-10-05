@@ -6,18 +6,20 @@ _logger = logging.getLogger(__name__)
 
 # ── Formula fixes for top-level lines ──────────────────────────────────────
 # {line_code: (formula, subformula)}
+# Partner Ledger approach:
+#   asset_receivable accounts → natural debit balance → positive (customer owes us)
+#   liability_payable accounts → natural credit balance → negative (we owe vendor)
+#   Both use plain 'sum' (debit - credit) to mirror Partner Ledger exactly.
 FORMULA_FIXES = {
-    # ACCOUNT RECEIVABLES → Partner Ledger style (asset_receivable accounts)
-    # 'sum' gives positive values (Debit - Credit) matching Partner Ledger
+    # ACCOUNT RECEIVABLES → Partner Ledger: asset_receivable type, plus values
     'acc_rec': ("[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]", 'sum'),
 
-    # ACCOUNT PAYABLES → Partner Ledger style (liability_payable accounts)
-    # '-sum' flips sign to show negative values matching Partner Ledger
-    'acc_pay': ("[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]", '-sum'),
+    # ACCOUNT PAYABLES → Partner Ledger: liability_payable type, minus values
+    'acc_pay': ("[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]", 'sum'),
 }
 
 # ── Child lines to create under 'Total Receivable/Payable' ─────────────────
-# Same formulas as Partner Ledger - Total Receivables & Total Payables
+# Same formulas as Balance Sheet 'Total Receivables' and 'Total Payables'
 CHILD_LINES = [
     {
         'name': 'Total Receivables',
@@ -26,7 +28,7 @@ CHILD_LINES = [
         'foldable': False,
         'hide_if_zero': False,
         'formula': "[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]",
-        'subformula': 'sum',       # Partner Ledger style: positive (Debit - Credit)
+        'subformula': 'sum',       # same as Balance Sheet Total Receivables
     },
     {
         'name': 'Total Payables',
@@ -35,7 +37,7 @@ CHILD_LINES = [
         'foldable': False,
         'hide_if_zero': False,
         'formula': "[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]",
-        'subformula': '-sum',      # Partner Ledger style: negative (Credit - Debit)
+        'subformula': '-sum',      # same as Balance Sheet Total Payables
     },
 ]
 
@@ -44,19 +46,19 @@ class ImanAccountSummaryFix(models.AbstractModel):
     """
     Runs on every module install/upgrade to fix Account Summary report:
 
-    1. FORMULA FIX (Partner Ledger style):
-       - ACCOUNT RECEIVABLES (acc_rec): asset_receivable accounts, 'sum'
-         → Shows POSITIVE values (same as Partner Ledger)
-       - ACCOUNT PAYABLES (acc_pay): liability_payable accounts, '-sum'
-         → Shows NEGATIVE values (same as Partner Ledger)
+    1. FORMULA FIX (Partner Ledger approach):
+       - ACCOUNT RECEIVABLES (acc_rec): asset_receivable account_type → sum
+         → Shows POSITIVE values (customer owes us), matching Partner Ledger
+       - ACCOUNT PAYABLES (acc_pay): liability_payable account_type → sum
+         → Shows NEGATIVE values (we owe vendor), matching Partner Ledger
 
     2. REVERT: Restore acc_rec and acc_pay to top-level (no parent_id)
        (undoes a previous mistaken hierarchy change)
 
     3. TOTAL Receivable/Payable CHILDREN:
        - Make 'Total Receivable/Payable' foldable (bold, expandable)
-       - Add 'Total Receivables' child  → Partner Ledger Total Receivables (positive)
-       - Add 'Total Payables' child     → Partner Ledger Total Payables (negative)
+       - Add 'Total Receivables' child  → asset_receivable type (positive)
+       - Add 'Total Payables' child     → liability_payable type (negative)
        When user expands 'Total Receivable/Payable', they see both totals.
     """
     _name = 'iman.account.summary.fix'
@@ -73,9 +75,8 @@ class ImanAccountSummaryFix(models.AbstractModel):
     # ────────────────────────────────────────────────────────────────────────
     def _fix_account_summary_formulas(self):
         """Update ACCOUNT RECEIVABLES and ACCOUNT PAYABLES to match Partner Ledger.
-
-        Account Receivable: asset_receivable accounts with 'sum' → positive values
-        Account Payable: liability_payable accounts with '-sum' → negative values
+        acc_rec → asset_receivable type → sum → POSITIVE (Partner Ledger style)
+        acc_pay → liability_payable type → sum → NEGATIVE (Partner Ledger style)
         """
         try:
             reports = self._get_account_summary_reports()
