@@ -66,9 +66,22 @@ class ImanAccountSummaryFix(models.AbstractModel):
 
     def _register_hook(self):
         super()._register_hook()
-        self._fix_account_summary_formulas()
-        self._revert_hierarchy_fix()
-        self._setup_total_rec_pay_children()
+        # Each method is wrapped in its own savepoint so that if one fails,
+        # the PostgreSQL transaction is NOT left in an aborted state and
+        # subsequent methods (and Odoo's check_null_constraints) still work.
+        for method in [
+            self._fix_account_summary_formulas,
+            self._revert_hierarchy_fix,
+            self._setup_total_rec_pay_children,
+        ]:
+            try:
+                with self.env.cr.savepoint():
+                    method()
+            except Exception as e:
+                _logger.error(
+                    'iman_account_summary: Error in %s (rolled back to savepoint): %s',
+                    method.__name__, e
+                )
 
     # ────────────────────────────────────────────────────────────────────────
     # Fix 1: Update formula + subformula for acc_rec & acc_pay
