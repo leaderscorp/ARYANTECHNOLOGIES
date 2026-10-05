@@ -7,16 +7,17 @@ _logger = logging.getLogger(__name__)
 # ── Formula fixes for top-level lines ──────────────────────────────────────
 # {line_code: (formula, subformula)}
 FORMULA_FIXES = {
-    # ACCOUNT RECEIVABLES → full account 110000 (same as Balance Sheet)
-    'acc_rec': ("[('account_id.code', '=', 110000)]", 'sum'),
+    # ACCOUNT RECEIVABLES → Partner Ledger style (asset_receivable accounts)
+    # 'sum' gives positive values (Debit - Credit) matching Partner Ledger
+    'acc_rec': ("[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]", 'sum'),
 
-    # ACCOUNT PAYABLES → full account 610000 (same as Balance Sheet)
-    # '-sum' flips sign to match Balance Sheet negative display
-    'acc_pay': ("[('account_id.code', '=', 610000)]", '-sum'),
+    # ACCOUNT PAYABLES → Partner Ledger style (liability_payable accounts)
+    # '-sum' flips sign to show negative values matching Partner Ledger
+    'acc_pay': ("[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]", '-sum'),
 }
 
 # ── Child lines to create under 'Total Receivable/Payable' ─────────────────
-# Same formulas as Balance Sheet 'Total Receivables' and 'Total Payables'
+# Same formulas as Partner Ledger - Total Receivables & Total Payables
 CHILD_LINES = [
     {
         'name': 'Total Receivables',
@@ -25,7 +26,7 @@ CHILD_LINES = [
         'foldable': False,
         'hide_if_zero': False,
         'formula': "[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]",
-        'subformula': 'sum',       # same as Balance Sheet Total Receivables
+        'subformula': 'sum',       # Partner Ledger style: positive (Debit - Credit)
     },
     {
         'name': 'Total Payables',
@@ -34,7 +35,7 @@ CHILD_LINES = [
         'foldable': False,
         'hide_if_zero': False,
         'formula': "[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]",
-        'subformula': '-sum',      # same as Balance Sheet Total Payables
+        'subformula': '-sum',      # Partner Ledger style: negative (Credit - Debit)
     },
 ]
 
@@ -43,17 +44,19 @@ class ImanAccountSummaryFix(models.AbstractModel):
     """
     Runs on every module install/upgrade to fix Account Summary report:
 
-    1. FORMULA FIX:
-       - ACCOUNT RECEIVABLES (acc_rec): full account 110000 balance
-       - ACCOUNT PAYABLES (acc_pay): full account 610000 balance with sign fix
+    1. FORMULA FIX (Partner Ledger style):
+       - ACCOUNT RECEIVABLES (acc_rec): asset_receivable accounts, 'sum'
+         → Shows POSITIVE values (same as Partner Ledger)
+       - ACCOUNT PAYABLES (acc_pay): liability_payable accounts, '-sum'
+         → Shows NEGATIVE values (same as Partner Ledger)
 
     2. REVERT: Restore acc_rec and acc_pay to top-level (no parent_id)
        (undoes a previous mistaken hierarchy change)
 
     3. TOTAL Receivable/Payable CHILDREN:
        - Make 'Total Receivable/Payable' foldable (bold, expandable)
-       - Add 'Total Receivables' child  → same as Balance Sheet Total Receivables
-       - Add 'Total Payables' child     → same as Balance Sheet Total Payables
+       - Add 'Total Receivables' child  → Partner Ledger Total Receivables (positive)
+       - Add 'Total Payables' child     → Partner Ledger Total Payables (negative)
        When user expands 'Total Receivable/Payable', they see both totals.
     """
     _name = 'iman.account.summary.fix'
@@ -69,7 +72,11 @@ class ImanAccountSummaryFix(models.AbstractModel):
     # Fix 1: Update formula + subformula for acc_rec & acc_pay
     # ────────────────────────────────────────────────────────────────────────
     def _fix_account_summary_formulas(self):
-        """Update ACCOUNT RECEIVABLES and ACCOUNT PAYABLES to match Balance Sheet."""
+        """Update ACCOUNT RECEIVABLES and ACCOUNT PAYABLES to match Partner Ledger.
+
+        Account Receivable: asset_receivable accounts with 'sum' → positive values
+        Account Payable: liability_payable accounts with '-sum' → negative values
+        """
         try:
             reports = self._get_account_summary_reports()
             total_updated = 0
