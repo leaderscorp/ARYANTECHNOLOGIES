@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- ============================================================
+             Account Summary Report - Iman Company
+             This report mirrors the Balance Sheet Account Receivable value
+             ============================================================ -->
+
+        <record id="account_summary_report_iman" model="account.report">
+            <field name="name">Account Summary</field>
+            <field name="filter_date_range" eval="False"/>
+            <field name="filter_unfold_all" eval="False"/>
+            <field name="filter_journals" eval="False"/>
+            <field name="filter_analytic" eval="True"/>
+            <field name="filter_show_draft" eval="False"/>
+            <field name="filter_period_comparison" eval="False"/>
+            <field name="filter_growth_comparison" eval="False"/>
+        </record>
+
+        <!-- Line 1: BANK AND CASH BALANCE -->
+        <record id="account_summary_line_bank_cash" model="account.report.line">
+            <field name="name">BANK AND CASH BALANCE</field>
+            <field name="report_id" ref="account_summary_report_iman"/>
+            <field name="code">bank_cash_bal</field>
+            <field name="sequence">0</field>
+            <field name="foldable" eval="True"/>
+            <field name="hide_if_zero" eval="False"/>
+        </record>
+        <record id="account_summary_expr_bank_cash" model="account.report.expression">
+            <field name="report_line_id" ref="account_summary_line_bank_cash"/>
+            <field name="label">balance</field>
+            <field name="engine">domain</field>
+            <field name="formula">[('account_id.code', 'in', [200010, 200020, 200030, 200040, 200050, 200060, 200070, 200080, 200090, 200100, 200110, 200120, 200130, 200140, 200150, 200160, 200170, 200180, 200190, 200200, 200210, 200220, 200230, 200240, 210010, 210020, 210030, 210040, 210050])]</field>
+            <field name="subformula">sum</field>
+            <field name="date_scope">strict_range</field>
+        </record>
+
+        <!-- Line 2: ACCOUNT RECEIVABLES (Same as Balance Sheet formula) -->
+        <record id="account_summary_line_acc_rec" model="account.report.line">
+            <field name="name">ACCOUNT RECEIVABLES</field>
+            <field name="report_id" ref="account_summary_report_iman"/>
+            <field name="code">acc_rec</field>
+            <field name="sequence">1</field>
+            <field name="foldable" eval="True"/>
+            <field name="hide_if_zero" eval="False"/>
+        </record>
+        <record id="account_summary_expr_acc_rec" model="account.report.expression">
+            <field name="report_line_id" ref="account_summary_line_acc_rec"/>
+            <field name="label">balance</field>
+            <field name="engine">domain</field>
+            <!-- Same formula as Balance Sheet Account Receivable line -->
+            <field name="formula">['&amp;', ('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]</field>
+            <field name="subformula">sum</field>
+            <field name="date_scope">strict_range</field>
+        </record>
+
+        <!-- Line 3: EARNEST MONEY -->
+        <record id="account_summary_line_earnest" model="account.report.line">
+            <field name="name">EARNEST MONEY</field>
+            <field name="report_id" ref="account_summary_report_iman"/>
+            <field name="code">earnest_mon</field>
+            <field name="sequence">2</field>
+            <field name="foldable" eval="True"/>
+            <field name="hide_if_zero" eval="False"/>
+        </record>
+        <record id="account_summary_expr_earnest" model="account.report.expression">
+            <field name="report_line_id" ref="account_summary_line_earnest"/>
+            <field name="label">balance</field>
+            <field name="engine">domain</field>
+            <field name="formula">['&amp;', ('account_id.code', '=', 100120), ('balance', '!=', 0)]</field>
+            <field name="subformula">sum</field>
+            <field name="date_scope">strict_range</field>
+        </record>
+
+        <!-- Line 4: PERFORMANCE BOND -->
+        <record id="account_summary_line_perf_bond" model="account.report.line">
+            <field name="name">PERFORMANCE BOND</field>
+            <field name="report_id" ref="account_summary_report_iman"/>
+            <field name="code">perf_bond</field>
+            <field name="sequence">3</field>
+            <field name="foldable" eval="True"/>
+            <field name="hide_if_zero" eval="False"/>
+        </record>
+        <record id="account_summary_expr_perf_bond" model="account.report.expression">
+            <field name="report_line_id" ref="account_summary_line_perf_bond"/>
+            <field name="label">balance</field>
+            <field name="engine">domain</field>
+            <field name="formula">[('account_id.code', '=', 300060)]</field>
+            <field name="subformula">sum</field>
+            <field name="date_scope">strict_range</field>
+        </record>
+
+        <!-- Line 5: ADVANCES TO EMPLOYEES -->
+        <record id="account_summary_line_adv_emp" model="account.report.line">
+            <field name="name">ADVANCES TO EMPLOYEES</field>
+            <field name="report_id" ref="account_summary_report_iman"/>
+            <field name="code">adv_to_emp</field>
+            <field name="sequence">4</field>
+            <field name="foldable" eval="True"/>
+            <field name="hide_if_zero" eval="False"/>
+        </record>
+        <record id="account_summary_expr_adv_emp" model="account.report.expression">
+            <field name="report_line_id" ref="account_summary_line_adv_emp"/>
+            <field name="label">balance</field>
+            <field name="engine">domain</field>
+            <field name="formula">['&amp;', ('partner_id.ref', '=', 'EMPLOYEE'), ('account_id.account_type', 'in', ('asset_receivable', 'liability_payable'))]</field>
+            <field name="subformula">sum</field>
+            <field name="date_scope">strict_range</field>
+        </record>
+
+        <!-- Line 6: PREPAYMENT -->
+        <record id="account_summary_line_prepayment" model="account.report.line">
+            <field name="name">PREPAYMENT</field>
+            <field name="report_id" ref="account_summary_report_iman"/>
+            <field name="code">PRE_PAY</field>
+            <field name="sequence">5</field>
+            <field name="foldable" eval="True"/>
+            <field name="hide_if_zero" eval="False"/>
+        </record>
+        <record id="account_summary_expr_prepayment" model="account.report.expression">
+            <field name="report_line_id" ref="account_summary_line_prepayment"/>
+            <field name="label">balance</field>
+            <field name="engine">domain</field>
+            <field name="formula">[('account_id.code', '=', 400001)]</field>
+            <field name="subformula">sum</field>
+            <field name="date_scope">strict_range</field>
+        </record>
+
+        <!-- Line 7: INVESTMENT -->
+        <record id="account_summary_line_investment" model="account.report.line">
+            <field name="name">INVESTMENT</field>
+            <field name="report_id" ref="account_summary_report_iman"/>
+            <field name="code">INV_PK</field>
+            <field name="sequence">6</field>
+            <field name="foldable" eval="False"/>
+            <field name="hide_if_zero" eval="False"/>
+        </record>
+        <record id="account_summary_expr_investment" model="account.report.expression">
+            <field name="report_line_id" ref="account_summary_line_investment"/>
+            <field name="label">balance</field>
+            <field name="engine">domain</field>
+            <field name="formula">[('account_id.code', 'in', [101710, 101711])]</field>
+            <field name="subformula">sum</field>
+            <field name="date_scope">strict_range</field>
+        </record>
+
+        <!-- Line 8: ACCOUNT PAYABLES -->
+        <record id="account_summary_line_acc_pay" model="account.report.line">
+            <field name="name">ACCOUNT PAYABLES</field>
+            <field name="report_id" ref="account_summary_report_iman"/>
+            <field name="code">acc_pay</field>
+            <field name="sequence">7</field>
+            <field name="foldable" eval="True"/>
+            <field name="hide_if_zero" eval="False"/>
+        </record>
+        <record id="account_summary_expr_acc_pay" model="account.report.expression">
+            <field name="report_line_id" ref="account_summary_line_acc_pay"/>
+            <field name="label">balance</field>
+            <field name="engine">domain</field>
+            <field name="formula">['&amp;', ('account_id.code', '=', 610000), ('partner_id.ref', 'not in', ['EMPLOYEE', 'RELATED PARTY']), ('account_id.account_type', '=', 'liability_payable')]</field>
+            <field name="subformula">sum</field>
+            <field name="date_scope">strict_range</field>
+        </record>
+
+        <!-- Line 9: STOCK VALUATION -->
+        <record id="account_summary_line_stock_val" model="account.report.line">
+            <field name="name">STOCK VALUATION</field>
+            <field name="report_id" ref="account_summary_report_iman"/>
+            <field name="code">stk_val</field>
+            <field name="sequence">8</field>
+            <field name="foldable" eval="True"/>
+            <field name="hide_if_zero" eval="False"/>
+        </record>
+        <record id="account_summary_expr_stock_val" model="account.report.expression">
+            <field name="report_line_id" ref="account_summary_line_stock_val"/>
+            <field name="label">balance</field>
+            <field name="engine">domain</field>
+            <field name="formula">[('account_id.code', 'in', [100030, 100040, 100050])]</field>
+            <field name="subformula">sum</field>
+            <field name="date_scope">strict_range</field>
+        </record>
+
+        <!-- Line 10: Due to related party -->
+        <record id="account_summary_line_due_related" model="account.report.line">
+            <field name="name">Due to related party</field>
+            <field name="report_id" ref="account_summary_report_iman"/>
+            <field name="code">IM_CL_dtrrr</field>
+            <field name="sequence">9</field>
+            <field name="foldable" eval="True"/>
+            <field name="hide_if_zero" eval="False"/>
+        </record>
+        <record id="account_summary_expr_due_related" model="account.report.expression">
+            <field name="report_line_id" ref="account_summary_line_due_related"/>
+            <field name="label">balance</field>
+            <field name="engine">domain</field>
+            <field name="formula">['&amp;', ('partner_id.ref', '=', 'RELATED PARTY'), ('account_id.account_type', 'in', ('asset_receivable', 'liability_payable'))]</field>
+            <field name="subformula">sum</field>
+            <field name="date_scope">strict_range</field>
+        </record>
+
+        <!-- Line 11: Total -->
+        <record id="account_summary_line_total" model="account.report.line">
+            <field name="name">Total</field>
+            <field name="report_id" ref="account_summary_report_iman"/>
+            <field name="code">tot_sales</field>
+            <field name="sequence">10</field>
+            <field name="foldable" eval="False"/>
+            <field name="hide_if_zero" eval="False"/>
+        </record>
+        <record id="account_summary_expr_total" model="account.report.expression">
+            <field name="report_line_id" ref="account_summary_line_total"/>
+            <field name="label">balance</field>
+            <field name="engine">aggregation</field>
+            <field name="formula">bank_cash_bal.balance+acc_rec.balance+earnest_mon.balance+INV_PK.balance+perf_bond.balance+adv_to_emp.balance+PRE_PAY.balance+acc_pay.balance+stk_val.balance+IM_CL_dtrrr.balance</field>
+            <field name="date_scope">strict_range</field>
+        </record>
+
+    </data>
+</odoo>
