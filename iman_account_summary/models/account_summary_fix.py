@@ -20,13 +20,13 @@ _logger = logging.getLogger(__name__)
 #   For asset_receivable: debit > credit → 'sum' = POSITIVE (+)
 #   For liability_payable: credit > debit → 'sum' = NEGATIVE (-)
 FORMULA_FIXES = {
-    # ACCOUNT RECEIVABLES → Partner Ledger balance column: PLUS (+) values
+    # ACCOUNT RECEIVABLES → Plus (+) values
     'acc_rec': (
         "[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]",
-        'sum'
+        '-sum'
     ),
 
-    # ACCOUNT PAYABLES → Partner Ledger balance column: MINUS (-) values
+    # ACCOUNT PAYABLES → Minus (-) values
     'acc_pay': (
         "[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]",
         'sum'
@@ -42,7 +42,7 @@ CHILD_LINES = [
         'foldable': False,
         'hide_if_zero': False,
         'formula': "[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]",
-        'subformula': 'sum',      # 'sum' → POSITIVE (+) matching Partner Ledger customer balances
+        'subformula': '-sum',      # '-sum' → POSITIVE (+) values
     },
     {
         'name': 'Total Payables',
@@ -51,7 +51,7 @@ CHILD_LINES = [
         'foldable': False,
         'hide_if_zero': False,
         'formula': "[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]",
-        'subformula': 'sum',      # 'sum' → NEGATIVE (-) matching Partner Ledger vendor balances
+        'subformula': 'sum',      # 'sum' → NEGATIVE (-) values
     },
 ]
 

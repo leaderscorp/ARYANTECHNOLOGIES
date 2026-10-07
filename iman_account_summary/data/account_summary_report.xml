@@ -50,7 +50,7 @@
             <field name="label">balance</field>
             <field name="engine">domain</field>
             <field name="formula">[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]</field>
-            <field name="subformula">sum</field>
+            <field name="subformula">-sum</field>
             <field name="date_scope">strict_range</field>
         </record>
 
