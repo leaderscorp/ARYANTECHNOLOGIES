@@ -10,52 +10,48 @@ _logger = logging.getLogger(__name__)
 # Goal: Match Partner Ledger balance column exactly (DYNAMIC - no hardcoded account codes)
 #
 #   Partner Ledger Balance = debit - credit per partner
-#   Receivable partners  → mostly POSITIVE (customer owes us)
-#   Payable partners     → mostly NEGATIVE (we owe vendor)
+#   Receivable partners  → POSITIVE (+) (customer owes us)
+#   Payable partners     → NEGATIVE (-) (we owe vendor)
 #
 #   Odoo domain engine:
 #     'sum'  = debit - credit
-#     '-sum' = credit - debit (negated)
+#     '-sum' = credit - debit
 #
-#   This company's data:
-#     acc_rec with 'sum'  = NEGATIVE → use '-sum' to get POSITIVE (+) = Partner Ledger plus values
-#     acc_pay with '-sum' = NEGATIVE (✓) = Partner Ledger minus values
+#   For asset_receivable: debit > credit → 'sum' = POSITIVE (+)
+#   For liability_payable: credit > debit → 'sum' = NEGATIVE (-)
 FORMULA_FIXES = {
     # ACCOUNT RECEIVABLES → Partner Ledger balance column: PLUS (+) values
-    # Dynamic: all asset_receivable trade accounts (non_trade=False)
     'acc_rec': (
         "[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]",
-        '-sum'
+        'sum'
     ),
 
     # ACCOUNT PAYABLES → Partner Ledger balance column: MINUS (-) values
-    # Dynamic: all liability_payable trade accounts (non_trade=False)
     'acc_pay': (
         "[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]",
-        '-sum'
+        'sum'
     ),
 }
 
 # ── Child lines to create under 'Total Receivable/Payable' ─────────────────
-# Same formulas as Balance Sheet 'Total Receivables' and 'Total Payables'
 CHILD_LINES = [
     {
         'name': 'Total Receivables',
         'code': 'tot_rec_sub',
-        'sequence_offset': 1,      # parent_seq + 1
+        'sequence_offset': 1,
         'foldable': False,
         'hide_if_zero': False,
         'formula': "[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]",
-        'subformula': 'sum',       # same as Balance Sheet Total Receivables
+        'subformula': 'sum',      # 'sum' → POSITIVE (+) matching Partner Ledger customer balances
     },
     {
         'name': 'Total Payables',
         'code': 'tot_pay_sub',
-        'sequence_offset': 2,      # parent_seq + 2
+        'sequence_offset': 2,
         'foldable': False,
         'hide_if_zero': False,
         'formula': "[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]",
-        'subformula': '-sum',      # same as Balance Sheet Total Payables
+        'subformula': 'sum',      # 'sum' → NEGATIVE (-) matching Partner Ledger vendor balances
     },
 ]
 
@@ -64,20 +60,20 @@ class ImanAccountSummaryFix(models.AbstractModel):
     """
     Runs on every module install/upgrade to fix Account Summary report:
 
-    1. FORMULA FIX (Partner Ledger approach):
-       - ACCOUNT RECEIVABLES (acc_rec): asset_receivable account_type → sum
-         → Shows POSITIVE values (+) matching Partner Ledger balance column
-       - ACCOUNT PAYABLES (acc_pay): liability_payable account_type → -sum
-         → Shows NEGATIVE values (-) matching Partner Ledger balance column
+    1. FORMULA FIX (Dynamic - Partner Ledger approach):
+       - ACCOUNT RECEIVABLES (acc_rec): asset_receivable, non_trade=False
+         subformula='sum' → POSITIVE (+) values matching Partner Ledger customer balances
+       - ACCOUNT PAYABLES (acc_pay): liability_payable, non_trade=False
+         subformula='sum' → NEGATIVE (-) values matching Partner Ledger vendor balances
 
     2. REVERT: Restore acc_rec and acc_pay to top-level (no parent_id)
-       (undoes a previous mistaken hierarchy change)
 
-    3. TOTAL Receivable/Payable CHILDREN:
-       - Make 'Total Receivable/Payable' foldable (bold, expandable)
-       - Add 'Total Receivables' child  → asset_receivable type (positive)
-       - Add 'Total Payables' child     → liability_payable type (negative)
-       When user expands 'Total Receivable/Payable', they see both totals.
+    3. TOTAL Receivable/Payable PARENT & CHILDREN:
+       - Create / ensure 'Total Receivable/Payable' parent line with code 'tot_rec_pay_parent'
+       - Make it foldable with aggregated NET value (tot_rec_sub.balance + tot_pay_sub.balance)
+         displayed right in front of 'Total Receivable/Payable'
+       - Add 'Total Receivables' child → POSITIVE (+) asset_receivable
+       - Add 'Total Payables' child   → NEGATIVE (-) liability_payable
     """
     _name = 'iman.account.summary.fix'
     _description = 'Iman Account Summary Formula Fix'
@@ -85,8 +81,7 @@ class ImanAccountSummaryFix(models.AbstractModel):
     def _register_hook(self):
         super()._register_hook()
         # Each method is wrapped in its own savepoint so that if one fails,
-        # the PostgreSQL transaction is NOT left in an aborted state and
-        # subsequent methods (and Odoo's check_null_constraints) still work.
+        # the PostgreSQL transaction is NOT left in an aborted state.
         for method in [
             self._fix_account_summary_formulas,
             self._revert_hierarchy_fix,
@@ -106,8 +101,8 @@ class ImanAccountSummaryFix(models.AbstractModel):
     # ────────────────────────────────────────────────────────────────────────
     def _fix_account_summary_formulas(self):
         """Update ACCOUNT RECEIVABLES and ACCOUNT PAYABLES to match Partner Ledger.
-        acc_rec → asset_receivable type → sum  → POSITIVE (+) values (Partner Ledger style)
-        acc_pay → liability_payable type → -sum → NEGATIVE (-) values (Partner Ledger style)
+        acc_rec → asset_receivable (non_trade=False) → 'sum' → POSITIVE (+) Partner Ledger values
+        acc_pay → liability_payable (non_trade=False) → 'sum' → NEGATIVE (-) Partner Ledger values
         """
         try:
             reports = self._get_account_summary_reports()
@@ -126,7 +121,7 @@ class ImanAccountSummaryFix(models.AbstractModel):
                     if not expr:
                         continue
 
-                    # Always force-update to ensure correct sign is applied on every upgrade
+                    # Always force-update to ensure correct formula and sign are applied
                     expr.sudo().write({'formula': formula, 'subformula': subformula})
                     total_updated += 1
                     _logger.info(
@@ -145,8 +140,6 @@ class ImanAccountSummaryFix(models.AbstractModel):
     def _revert_hierarchy_fix(self):
         """
         Restore ACCOUNT RECEIVABLES and ACCOUNT PAYABLES to top-level.
-        A previous version of this module mistakenly moved them as children
-        which hid them from the top of the report.
         """
         try:
             reports = self._get_account_summary_reports()
@@ -163,7 +156,7 @@ class ImanAccountSummaryFix(models.AbstractModel):
 
                 # Restore tot_sales sequence if it was pushed
                 tot = self._find_line(report, 'tot_sales')
-                if tot and tot.sequence > 15:
+                if tot and tot.sequence > 15 and tot.sequence < 9000:
                     tot.sudo().write({'sequence': 10})
 
         except Exception as e:
@@ -175,18 +168,16 @@ class ImanAccountSummaryFix(models.AbstractModel):
     # ────────────────────────────────────────────────────────────────────────
     def _setup_total_rec_pay_children(self):
         """
-        Find 'Total Receivable/Payable' line, make it foldable (bold),
-        and create/update two child lines underneath it.
-        To avoid the 'Total Total...' bottom line generated by Odoo,
-        we remove the expression from the parent line so it has no value.
+        Find or create 'Total Receivable/Payable' line, make it foldable (bold),
+        create two child lines underneath it, and set an aggregation
+        expression on the parent so it shows the NET value (matching
+        Partner Ledger total = receivables + payables combined).
         """
         try:
             reports = self._get_account_summary_reports()
 
             for report in reports:
-                # ── 1. Clean up corrupted child lines ─────────────────────
-                # Remove any previously generated children or corrupted lines
-                # that were accidentally renamed to 'Receivables / Payables'
+                # ── 1. Clean up previously generated child lines ───────────
                 bad_children = self.env['account.report.line'].search([
                     ('report_id', '=', report.id),
                     '|',
@@ -195,75 +186,114 @@ class ImanAccountSummaryFix(models.AbstractModel):
                 ])
                 if bad_children:
                     bad_children.sudo().unlink()
-                    _logger.info('iman_account_summary: Cleaned up %s corrupted child lines.', len(bad_children))
+                    _logger.info('iman_account_summary: Cleaned up %s old child lines.', len(bad_children))
 
-                # ── 2. Find parent line ────────────────────────────────────
-                # The real parent must be top-level (no parent_id)
+                # ── 2. Find or create parent line ──────────────────────────
                 parent_line = self.env['account.report.line'].search([
                     ('report_id', '=', report.id),
-                    ('parent_id', '=', False),
-                    '|', '|',
+                    '|', '|', '|',
+                    ('code', '=', 'tot_rec_pay_parent'),
                     ('name', 'ilike', 'Total Receivable'),
                     ('name', 'ilike', 'Receivable/Payable'),
                     ('name', 'ilike', 'Receivables / Payables'),
                 ], limit=1)
 
                 if not parent_line:
-                    _logger.warning(
-                        'iman_account_summary: "Total Receivable/Payable" not found '
-                        'in report "%s". Skipping child setup.', report.name
-                    )
-                    continue
+                    _logger.info('iman_account_summary: Creating "Total Receivable/Payable" parent line in "%s".', report.name)
+                    parent_line = self.env['account.report.line'].sudo().create({
+                        'report_id': report.id,
+                        'name': 'Total Receivable/Payable',
+                        'code': 'tot_rec_pay_parent',
+                        'sequence': 8,
+                        'foldable': True,
+                        'hide_if_zero': False,
+                    })
+                else:
+                    parent_line.sudo().write({
+                        'name': 'Total Receivable/Payable',
+                        'foldable': True,
+                        'code': 'tot_rec_pay_parent',
+                    })
 
                 parent_seq = parent_line.sequence
 
-                # ── 3. Restore Parent & Remove Expression ──────────────────
-                # Make parent foldable so it's clickable.
-                # Rename it back to what the user expects.
-                parent_line.sudo().write({
-                    'name': 'Total Receivable/Payable',
-                    'foldable': True,
-                    'code': 'tot_rec_pay_parent', # Assign code for future safety
-                })
-                
-                # Odoo adds 'Total <Name>' at the bottom of a foldable section
-                # ONLY IF the parent line computes a value.
-                # By removing its expressions, it becomes purely a visual folder,
-                # avoiding the 'Total Total Receivable/Payable' issue completely!
+                # Remove any existing parent expressions (will recreate below)
                 parent_exprs = self.env['account.report.expression'].search([
                     ('report_line_id', '=', parent_line.id)
                 ])
                 if parent_exprs:
                     parent_exprs.sudo().unlink()
-                    _logger.info('iman_account_summary: Removed expressions from parent line to prevent bottom total.')
 
-                # ── 4. Create child lines ──────────────────────────────────
+                # ── 3. Create / update child lines ─────────────────────────
                 for child_def in CHILD_LINES:
-                    # Give children a significantly higher sequence
                     child_seq = parent_seq + 10 + child_def['sequence_offset']
 
-                    child_line = self.env['account.report.line'].sudo().create({
-                        'report_id': report.id,
-                        'name': child_def['name'],
-                        'code': child_def['code'],
-                        'parent_id': parent_line.id,
-                        'sequence': child_seq,
-                        'foldable': child_def['foldable'],
-                        'hide_if_zero': child_def['hide_if_zero'],
-                    })
+                    child_line = self.env['account.report.line'].search([
+                        ('report_id', '=', report.id),
+                        ('code', '=', child_def['code']),
+                    ], limit=1)
+
+                    if child_line:
+                        child_line.sudo().write({
+                            'name': child_def['name'],
+                            'parent_id': parent_line.id,
+                            'sequence': child_seq,
+                            'foldable': child_def['foldable'],
+                            'hide_if_zero': child_def['hide_if_zero'],
+                        })
+                    else:
+                        child_line = self.env['account.report.line'].sudo().create({
+                            'report_id': report.id,
+                            'name': child_def['name'],
+                            'code': child_def['code'],
+                            'parent_id': parent_line.id,
+                            'sequence': child_seq,
+                            'foldable': child_def['foldable'],
+                            'hide_if_zero': child_def['hide_if_zero'],
+                        })
+
                     _logger.info(
-                        'iman_account_summary: Created child "%s" under "%s".',
-                        child_def['name'], parent_line.name
+                        'iman_account_summary: Configured child "%s" (subformula=%s) under "%s".',
+                        child_def['name'], child_def['subformula'], parent_line.name
                     )
 
-                    self.env['account.report.expression'].sudo().create({
-                        'report_line_id': child_line.id,
-                        'label': 'balance',
-                        'engine': 'domain',
-                        'formula': child_def['formula'],
-                        'subformula': child_def['subformula'],
-                        'date_scope': 'strict_range',
-                    })
+                    child_expr = self.env['account.report.expression'].search([
+                        ('report_line_id', '=', child_line.id),
+                        ('label', '=', 'balance'),
+                    ], limit=1)
+
+                    if child_expr:
+                        child_expr.sudo().write({
+                            'engine': 'domain',
+                            'formula': child_def['formula'],
+                            'subformula': child_def['subformula'],
+                            'date_scope': 'strict_range',
+                        })
+                    else:
+                        self.env['account.report.expression'].sudo().create({
+                            'report_line_id': child_line.id,
+                            'label': 'balance',
+                            'engine': 'domain',
+                            'formula': child_def['formula'],
+                            'subformula': child_def['subformula'],
+                            'date_scope': 'strict_range',
+                        })
+
+                # ── 4. Add aggregation expression to parent ────────────────
+                # Parent displays total in front of 'Total Receivable/Payable':
+                # NET = Total Receivables (+) + Total Payables (-)
+                self.env['account.report.expression'].sudo().create({
+                    'report_line_id': parent_line.id,
+                    'label': 'balance',
+                    'engine': 'aggregation',
+                    'formula': 'tot_rec_sub.balance + tot_pay_sub.balance',
+                    'subformula': 'if_other_false',
+                    'date_scope': 'strict_range',
+                })
+                _logger.info(
+                    'iman_account_summary: Added aggregation expression to '
+                    '"Total Receivable/Payable" parent (NET = receivables + payables).'
+                )
 
                 # ── 5. Move 'Total' (tot_sales) to LAST position ──────────
                 tot_line = self._find_line(report, 'tot_sales')
