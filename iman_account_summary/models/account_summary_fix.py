@@ -80,6 +80,16 @@ class ImanAccountSummaryFix(models.AbstractModel):
 
     def _register_hook(self):
         super()._register_hook()
+        # Clean up any bad subformula 'if_other_false' in existing database expressions
+        try:
+            with self.env.cr.savepoint():
+                bad_exprs = self.env['account.report.expression'].search([('subformula', '=', 'if_other_false')])
+                if bad_exprs:
+                    bad_exprs.sudo().write({'subformula': False})
+                    _logger.info('iman_account_summary: Cleared invalid subformula "if_other_false" from %s expressions.', len(bad_exprs))
+        except Exception as e:
+            _logger.error('iman_account_summary: Error cleaning up if_other_false expressions: %s', e)
+
         # Each method is wrapped in its own savepoint so that if one fails,
         # the PostgreSQL transaction is NOT left in an aborted state.
         for method in [
@@ -287,7 +297,7 @@ class ImanAccountSummaryFix(models.AbstractModel):
                     'label': 'balance',
                     'engine': 'aggregation',
                     'formula': 'tot_rec_sub.balance + tot_pay_sub.balance',
-                    'subformula': 'if_other_false',
+                    'subformula': False,
                     'date_scope': 'strict_range',
                 })
                 _logger.info(
