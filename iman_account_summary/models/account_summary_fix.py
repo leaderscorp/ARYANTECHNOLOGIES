@@ -7,15 +7,17 @@ _logger = logging.getLogger(__name__)
 # ── Formula fixes for top-level lines ──────────────────────────────────────
 # {line_code: (formula, subformula)}
 # Partner Ledger approach:
-#   asset_receivable accounts → natural debit balance → positive (customer owes us)
-#   liability_payable accounts → natural credit balance → negative (we owe vendor)
-#   Both use plain 'sum' (debit - credit) to mirror Partner Ledger exactly.
+#   asset_receivable accounts → natural debit balance → POSITIVE (customer owes us)
+#   liability_payable accounts → natural credit balance → NEGATIVE (we owe vendor)
+#
+#   acc_rec → 'sum'  = debit - credit → receivable accounts have debit balance → POSITIVE ✓
+#   acc_pay → '-sum' = -(debit - credit) → payable accounts have credit balance → NEGATIVE ✓
 FORMULA_FIXES = {
-    # ACCOUNT RECEIVABLES → Partner Ledger: asset_receivable type, plus values
+    # ACCOUNT RECEIVABLES → Partner Ledger balance column: PLUS (+) values
     'acc_rec': ("[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]", 'sum'),
 
-    # ACCOUNT PAYABLES → Partner Ledger: liability_payable type, minus values
-    'acc_pay': ("[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]", 'sum'),
+    # ACCOUNT PAYABLES → Partner Ledger balance column: MINUS (-) values
+    'acc_pay': ("[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]", '-sum'),
 }
 
 # ── Child lines to create under 'Total Receivable/Payable' ─────────────────
@@ -48,9 +50,9 @@ class ImanAccountSummaryFix(models.AbstractModel):
 
     1. FORMULA FIX (Partner Ledger approach):
        - ACCOUNT RECEIVABLES (acc_rec): asset_receivable account_type → sum
-         → Shows POSITIVE values (customer owes us), matching Partner Ledger
-       - ACCOUNT PAYABLES (acc_pay): liability_payable account_type → sum
-         → Shows NEGATIVE values (we owe vendor), matching Partner Ledger
+         → Shows POSITIVE values (+) matching Partner Ledger balance column
+       - ACCOUNT PAYABLES (acc_pay): liability_payable account_type → -sum
+         → Shows NEGATIVE values (-) matching Partner Ledger balance column
 
     2. REVERT: Restore acc_rec and acc_pay to top-level (no parent_id)
        (undoes a previous mistaken hierarchy change)
@@ -88,8 +90,8 @@ class ImanAccountSummaryFix(models.AbstractModel):
     # ────────────────────────────────────────────────────────────────────────
     def _fix_account_summary_formulas(self):
         """Update ACCOUNT RECEIVABLES and ACCOUNT PAYABLES to match Partner Ledger.
-        acc_rec → asset_receivable type → sum → POSITIVE (Partner Ledger style)
-        acc_pay → liability_payable type → sum → NEGATIVE (Partner Ledger style)
+        acc_rec → asset_receivable type → sum  → POSITIVE (+) values (Partner Ledger style)
+        acc_pay → liability_payable type → -sum → NEGATIVE (-) values (Partner Ledger style)
         """
         try:
             reports = self._get_account_summary_reports()
@@ -108,13 +110,13 @@ class ImanAccountSummaryFix(models.AbstractModel):
                     if not expr:
                         continue
 
-                    if expr.formula != formula or expr.subformula != subformula:
-                        expr.sudo().write({'formula': formula, 'subformula': subformula})
-                        total_updated += 1
-                        _logger.info(
-                            'iman_account_summary: Updated expression for "%s" in "%s".',
-                            code, report.name
-                        )
+                    # Always force-update to ensure correct sign is applied on every upgrade
+                    expr.sudo().write({'formula': formula, 'subformula': subformula})
+                    total_updated += 1
+                    _logger.info(
+                        'iman_account_summary: Set "%s" subformula="%s" in "%s".',
+                        code, subformula, report.name
+                    )
 
             _logger.info('iman_account_summary: Formula fix done (%s updated).', total_updated)
 
