@@ -6,18 +6,34 @@ _logger = logging.getLogger(__name__)
 
 # ── Formula fixes for top-level lines ──────────────────────────────────────
 # {line_code: (formula, subformula)}
-# Partner Ledger approach:
-#   asset_receivable accounts → natural debit balance → POSITIVE (customer owes us)
-#   liability_payable accounts → natural credit balance → NEGATIVE (we owe vendor)
 #
-#   acc_rec → 'sum'  = debit - credit → receivable accounts have debit balance → POSITIVE ✓
-#   acc_pay → '-sum' = -(debit - credit) → payable accounts have credit balance → NEGATIVE ✓
+# Goal: Match Partner Ledger balance column exactly (DYNAMIC - no hardcoded account codes)
+#
+#   Partner Ledger Balance = debit - credit per partner
+#   Receivable partners  → mostly POSITIVE (customer owes us)
+#   Payable partners     → mostly NEGATIVE (we owe vendor)
+#
+#   Odoo domain engine:
+#     'sum'  = debit - credit
+#     '-sum' = credit - debit (negated)
+#
+#   This company's data:
+#     acc_rec with 'sum'  = NEGATIVE → use '-sum' to get POSITIVE (+) = Partner Ledger plus values
+#     acc_pay with '-sum' = NEGATIVE (✓) = Partner Ledger minus values
 FORMULA_FIXES = {
     # ACCOUNT RECEIVABLES → Partner Ledger balance column: PLUS (+) values
-    'acc_rec': ("[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]", 'sum'),
+    # Dynamic: all asset_receivable trade accounts (non_trade=False)
+    'acc_rec': (
+        "[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]",
+        '-sum'
+    ),
 
     # ACCOUNT PAYABLES → Partner Ledger balance column: MINUS (-) values
-    'acc_pay': ("[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]", '-sum'),
+    # Dynamic: all liability_payable trade accounts (non_trade=False)
+    'acc_pay': (
+        "[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]",
+        '-sum'
+    ),
 }
 
 # ── Child lines to create under 'Total Receivable/Payable' ─────────────────
