@@ -296,7 +296,7 @@ class ImanAccountSummaryFix(models.AbstractModel):
                     'report_line_id': parent_line.id,
                     'label': 'balance',
                     'engine': 'aggregation',
-                    'formula': 'tot_rec_sub.balance + tot_pay_sub.balance',
+                    'formula': '-(tot_rec_sub.balance + tot_pay_sub.balance)',
                     'subformula': False,
                     'date_scope': 'strict_range',
                 })
