@@ -29,7 +29,7 @@ FORMULA_FIXES = {
     # ACCOUNT PAYABLES → Minus (-) values
     'acc_pay': (
         "[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]",
-        'sum'
+        '-sum'
     ),
 }
 
@@ -51,7 +51,7 @@ CHILD_LINES = [
         'foldable': False,
         'hide_if_zero': False,
         'formula': "[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]",
-        'subformula': 'sum',      # 'sum' → NEGATIVE (-) values
+        'subformula': '-sum',      # '-sum' → NEGATIVE (-) values
     },
 ]
 
