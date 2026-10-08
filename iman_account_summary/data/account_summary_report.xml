@@ -31,7 +31,7 @@
             <field name="report_line_id" ref="account_summary_line_bank_cash"/>
             <field name="label">balance</field>
             <field name="engine">domain</field>
-            <field name="formula">[('account_id.code', 'in', [200010, 200020, 200030, 200040, 200050, 200060, 200070, 200080, 200090, 200100, 200110, 200120, 200130, 200140, 200150, 200160, 200170, 200180, 200190, 200200, 200210, 200220, 200230, 200240, 210010, 210020, 210030, 210040, 210050])]</field>
+            <field name="formula">[('account_id.account_type', '=', 'asset_cash')]</field>
             <field name="subformula">sum</field>
             <field name="date_scope">strict_range</field>
         </record>

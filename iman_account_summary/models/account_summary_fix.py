@@ -20,6 +20,12 @@ _logger = logging.getLogger(__name__)
 #   For asset_receivable: debit > credit → 'sum' = POSITIVE (+)
 #   For liability_payable: credit > debit → 'sum' = NEGATIVE (-)
 FORMULA_FIXES = {
+    # BANK AND CASH BALANCE → Match Balance Sheet: sum([('account_id.account_type', '=', 'asset_cash')])
+    'bank_cash_bal': (
+        "[('account_id.account_type', '=', 'asset_cash')]",
+        'sum'
+    ),
+
     # ACCOUNT RECEIVABLES → Plus (+) values
     'acc_rec': (
         "[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]",
