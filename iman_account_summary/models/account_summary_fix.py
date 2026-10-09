@@ -32,10 +32,46 @@ FORMULA_FIXES = {
         '-sum'
     ),
 
+    # EARNEST MONEY → Match code 100120 or account name containing 'Earnest'
+    'earnest_mon': (
+        "['|', ('account_id.code', 'in', ['100120']), ('account_id.name', 'ilike', 'Earnest')]",
+        'sum'
+    ),
+
+    # PERFORMANCE BOND → Match code 300060 or account name containing 'Performance'
+    'perf_bond': (
+        "['|', ('account_id.code', 'in', ['300060']), ('account_id.name', 'ilike', 'Performance')]",
+        'sum'
+    ),
+
+    # ADVANCES TO EMPLOYEES → Match account name containing 'Advances to Employees' or partner ref EMPLOYEE
+    'adv_to_emp': (
+        "['|', ('account_id.name', 'ilike', 'Advances to Employees'), '&', ('partner_id.ref', '=', 'EMPLOYEE'), ('account_id.account_type', 'in', ('asset_receivable', 'liability_payable'))]",
+        'sum'
+    ),
+
+    # PREPAYMENT → Match code 400001, account_type asset_prepayments, or account name containing 'Prepayment'
+    'PRE_PAY': (
+        "['|', '|', ('account_id.code', '=', '400001'), ('account_id.account_type', '=', 'asset_prepayments'), ('account_id.name', 'ilike', 'Prepayment')]",
+        'sum'
+    ),
+
+    # INVESTMENT → Match codes 101710/101711 or account name containing 'Investment'
+    'INV_PK': (
+        "['|', ('account_id.code', 'in', ['101710', '101711']), ('account_id.name', 'ilike', 'Investment')]",
+        'sum'
+    ),
+
     # ACCOUNT PAYABLES → Minus (-) values
     'acc_pay': (
         "[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]",
         '-sum'
+    ),
+
+    # STOCK VALUATION → Match stock codes, name containing 'Stock Valuation', or 'Stock'
+    'stk_val': (
+        "['|', '|', ('account_id.code', 'in', ['100030', '100040', '100050']), ('account_id.name', 'ilike', 'Stock Valuation'), ('account_id.name', 'ilike', 'Stock')]",
+        'sum'
     ),
 }
 
