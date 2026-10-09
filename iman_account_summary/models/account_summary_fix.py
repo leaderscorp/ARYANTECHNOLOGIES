@@ -135,6 +135,7 @@ class ImanAccountSummaryFix(models.AbstractModel):
         # Each method is wrapped in its own savepoint so that if one fails,
         # the PostgreSQL transaction is NOT left in an aborted state.
         for method in [
+            self._remove_due_to_related_party,
             self._fix_account_summary_formulas,
             self._revert_hierarchy_fix,
             self._setup_total_rec_pay_children,
@@ -147,6 +148,42 @@ class ImanAccountSummaryFix(models.AbstractModel):
                     'iman_account_summary: Error in %s (rolled back to savepoint): %s',
                     method.__name__, e
                 )
+
+    # ────────────────────────────────────────────────────────────────────────
+    # Fix 0: Remove 'Due to related party' line and update Total formula
+    # ────────────────────────────────────────────────────────────────────────
+    def _remove_due_to_related_party(self):
+        """Unlink / Delete 'Due to related party' line and its expressions from all Account Summary reports in DB."""
+        try:
+            reports = self._get_account_summary_reports()
+            for report in reports:
+                due_lines = self.env['account.report.line'].search([
+                    ('report_id', '=', report.id),
+                    '|',
+                    ('code', '=', 'IM_CL_dtrrr'),
+                    ('name', 'ilike', 'Due to related party'),
+                ])
+                if due_lines:
+                    exprs = self.env['account.report.expression'].search([('report_line_id', 'in', due_lines.ids)])
+                    if exprs:
+                        exprs.sudo().unlink()
+                    due_lines.sudo().unlink()
+                    _logger.info('iman_account_summary: Removed "Due to related party" line from "%s".', report.name)
+
+                # Ensure Total formula excludes IM_CL_dtrrr.balance
+                tot_line = self._find_line(report, 'tot_sales')
+                if tot_line:
+                    tot_expr = self.env['account.report.expression'].search([
+                        ('report_line_id', '=', tot_line.id),
+                        ('label', '=', 'balance'),
+                    ], limit=1)
+                    if tot_expr and 'IM_CL_dtrrr' in (tot_expr.formula or ''):
+                        new_formula = tot_expr.formula.replace('+IM_CL_dtrrr.balance', '').replace('IM_CL_dtrrr.balance+', '')
+                        tot_expr.sudo().write({'formula': new_formula})
+                        _logger.info('iman_account_summary: Updated "Total" formula to exclude IM_CL_dtrrr.')
+
+        except Exception as e:
+            _logger.error('iman_account_summary: Error removing due to related party: %s', e)
 
     # ────────────────────────────────────────────────────────────────────────
     # Fix 1: Update formula + subformula for acc_rec & acc_pay
