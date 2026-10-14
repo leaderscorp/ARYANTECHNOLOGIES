@@ -67,7 +67,7 @@
                         </group>
 
                         <group>
-                            <field name="location_dest_id" readonly="state in ('sent','approved')"/>
+                            <field name="location_dest_id" readonly="transfer_created or state == 'approved'"/>
                             <field name="date_field" readonly="1"/>
                             <field name="description" readonly="state not in ['sent', 'approved']"/>
                         </group>

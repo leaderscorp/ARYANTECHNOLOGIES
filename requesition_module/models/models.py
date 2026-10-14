@@ -83,10 +83,20 @@ class Requisition(models.Model):
         inverse_name='req_id'
     )
 
+    def _default_location_dest_id(self):
+        loc = self.env['stock.location'].browse(28)
+        if loc.exists():
+            return loc.id
+        picking_type = self.env['stock.picking.type'].browse(43)
+        if picking_type.exists() and picking_type.default_location_dest_id:
+            return picking_type.default_location_dest_id.id
+        return False
+
     location_dest_id = fields.Many2one(
         comodel_name='stock.location',
         domain=[('id', 'in', [28])],
-        string='Destination Location'
+        string='Destination Location',
+        default=lambda self: self._default_location_dest_id()
     )
 
     transfer_created = fields.Boolean(default=False)
@@ -157,6 +167,8 @@ class Requisition(models.Model):
     def print_warehouse_ids(self):
         if self.req_picking_type:
             print(self.req_picking_type.name)
+            if not self.location_dest_id and self.req_picking_type.default_location_dest_id:
+                self.location_dest_id = self.req_picking_type.default_location_dest_id
 
     # @api.onchange('req_line_ids', 'req_picking_type')
     # def fix_source_destination(self):
@@ -237,40 +249,65 @@ class Requisition(models.Model):
         }
 
     def action_transfer(self):
-        self.transfer_created = True
-        operation_type = self.req_picking_type
-
+        transfer_record = False
         for rec in self:
+            operation_type = rec.req_picking_type
+            if not operation_type:
+                raise ValidationError(_("Please select a Warehouse / Operation Type before creating a transfer."))
+
+            src_location = operation_type.default_location_src_id
+            if not src_location:
+                raise ValidationError(_("The selected Warehouse / Operation Type does not have a default Source Location configured."))
+
+            dest_location = rec.location_dest_id or operation_type.default_location_dest_id
+            if not dest_location:
+                loc_28 = self.env['stock.location'].browse(28)
+                if loc_28.exists():
+                    dest_location = loc_28
+
+            if not dest_location:
+                raise ValidationError(_("Please select a Destination Location before creating a transfer."))
+
+            if not rec.location_dest_id:
+                rec.location_dest_id = dest_location
+
             line_list = []
             for line in rec.req_line_ids:
+                try:
+                    qty = float(line.product_uom_quantity or 0.0)
+                except (ValueError, TypeError):
+                    qty = 0.0
+
                 line_list.append(
                     Command.create({
                         'description_picking': line.product_id.name,
                         'product_id': line.product_id.id,
-                        'product_uom_qty': line.product_uom_quantity,
+                        'product_uom_qty': qty,
                         'product_uom': line.product_id.uom_id.id,  # Required in Odoo 19
-                        'location_id': operation_type.default_location_src_id.id,
-                        'location_dest_id': rec.location_dest_id.id,
+                        'location_id': src_location.id,
+                        'location_dest_id': dest_location.id,
                     })
                 )
 
             vals = {
                 'picking_type_id': operation_type.id,
-                'location_id': operation_type.default_location_src_id.id,  # Added
-                'location_dest_id': rec.location_dest_id.id,
+                'location_id': src_location.id,
+                'location_dest_id': dest_location.id,
                 'origin': rec.name,
                 'move_type': 'one',
                 'move_ids': line_list,
             }
 
-            transfer_record = self.env['stock.picking'].create(vals)  # No list wrapper
+            transfer_record = self.env['stock.picking'].create(vals)
             rec.req_transfer_id = transfer_record
+            rec.transfer_created = True
 
-        return {
-            'type': 'ir.actions.act_window',
-            'res_id': transfer_record.id,
-            'res_model': 'stock.picking',
-            'view_mode': 'form',
-            'context': {'stock_picking_id': transfer_record.id},
-            'view_id': rec.env.ref('stock.view_picking_form').id,
-        }
+        if transfer_record:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_id': transfer_record.id,
+                'res_model': 'stock.picking',
+                'view_mode': 'form',
+                'context': {'stock_picking_id': transfer_record.id},
+                'view_id': self.env.ref('stock.view_picking_form').id,
+            }
